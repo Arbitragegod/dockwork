@@ -551,7 +551,12 @@
       <input class="fi" type="text" placeholder="Search projects, locations, specialties…" style="flex:1;" onkeyup="filterBrowse(this.value)" onkeydown="if(event.key==='Enter')filterBrowse(this.value)">
       <button class="btn-sm gold" style="white-space:nowrap;" onclick="filterBrowse(this.previousElementSibling.value)">Search</button>
     </div>
-    <div class="fbar">
+    
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px;">
+      <div style="font-size:13px;color:var(--mist);" id="browseCount">0 active projects</div>
+      <button class="btn-gold" onclick="openPostJob()" style="font-size:12px;padding:9px 18px;">&#x2B; Post a Project</button>
+    </div>
+<div class="fbar">
       <div class="fc active" onclick="filterByType('All',this)">All</div>
       <div class="fc" onclick="filterByType('RFP',this)">RFP</div>
       <div class="fc" onclick="filterByType('RFQ',this)">RFQ</div>
@@ -3603,6 +3608,23 @@
   </div>
 </div>
 
+
+<!-- POST A JOB MODAL -->
+<div id="postJobOverlay" style="display:none;position:fixed;inset:0;background:rgba(15,26,32,.75);z-index:800;align-items:center;justify-content:center;padding:16px;" onclick="if(event.target===this)closePostJob()">
+  <div style="background:white;width:100%;max-width:500px;border-radius:12px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.3);max-height:90vh;overflow-y:auto;">
+    <div style="background:var(--slate);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.4);margin-bottom:4px;">NEW POSTING</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:white;">What would you like to post?</div>
+      </div>
+      <button onclick="closePostJob()" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:22px;cursor:pointer;line-height:1;">&#x2715;</button>
+    </div>
+    <div style="padding:20px;" id="postJobOptions">
+      <!-- Options injected by JS based on role -->
+    </div>
+  </div>
+</div>
+
 <script>
 function joinPrompt(icon, title, sub) {
   if(_cu && _cu.tier === 'charter') return;
@@ -4300,6 +4322,69 @@ function openCtcSupModal() {
   var ov=document.getElementById('ctcSupRecOverlay'); if(ov) ov.style.display='flex';
 }
 function closeCtcSupModal() { var ov=document.getElementById('ctcSupRecOverlay'); if(ov) ov.style.display='none'; }
+
+
+
+/* -- POST A JOB FLOW -- */
+function openPostJob() {
+  if(!_cu) { joinPrompt('&#x1F4CB;','Post a Job','Sign in to post jobs, RFQs, and project listings on DockWork.'); return; }
+  var opts = document.getElementById('postJobOptions');
+  if(!opts) return;
+
+  var isOwner = _cu.role === 'owner' || _cu.role === 'marina' || _cu.role === 'dolphin';
+  var isContractor = _cu.role === 'contractor';
+  var isSupplier = _isSupplier ? _isSupplier() : (_cu.role === 'supplier' || _cu.role === 'ddinc');
+
+  var cards = [];
+
+  if(isOwner || isContractor || isSupplier) {
+    // Everyone can see what's relevant to them
+  }
+
+  if(isOwner) {
+    cards.push(makePostOption('&#x1F4CB;','RFP','Request for Proposal','Invite qualified contractors to submit formal competitive bids with full project specs.','#eff6ff','#bfdbfe','#1d4ed8','rfp'));
+    cards.push(makePostOption('&#x1F3F7;','RFB','Request for Bid','Open competitive bidding on a clearly defined project scope. Best for straightforward jobs.','#fff7ed','#fed7aa','#c2410c','rfb'));
+    cards.push(makePostOption('&#x1F50D;','RFI','Request for Information','Get expert input and scoping advice before committing to a full project posting.','#f5f3ff','#ddd6fe','#6d28d9','rfi'));
+    cards.push(makePostOption('&#x1F527;','Supplier RFQ','Request Supplier Quotes','Get pricing directly from certified suppliers for materials, equipment, or hardware.','#f0fdfa','#99f6e4','#0f766e','sup-rfq'));
+  }
+
+  if(isContractor) {
+    cards.push(makePostOption('&#x1F527;','Supplier RFQ','Request Material Quotes','Get competitive pricing from verified suppliers for your current project materials.','#f0fdfa','#99f6e4','#0f766e','sup-rfq'));
+    cards.push(makePostOption('&#x1F4CB;','RFP','Post an RFP','Post a formal proposal request if you are acting as a general contractor on a project.','#eff6ff','#bfdbfe','#1d4ed8','rfp'));
+  }
+
+  if(isSupplier) {
+    opts.innerHTML = '<div style="text-align:center;padding:30px;color:var(--mist);">'
+      + '<div style="font-size:40px;margin-bottom:12px;">&#x1F527;</div>'
+      + '<div style="font-size:16px;color:var(--slate);font-weight:500;margin-bottom:8px;">Suppliers respond to RFQs</div>'
+      + '<div style="font-size:13px;line-height:1.7;">As a supplier, you respond to RFQ postings from owners and contractors — you do not post jobs. Browse the <strong>RFQ</strong> filter on the Active Projects page to find material requests to quote on.</div>'
+      + '<button class="btn-ghost" onclick="closePostJob();filterByType(\'RFQ\',document.querySelector(\'.fc\'))" style="margin-top:16px;font-size:12px;">Browse RFQs &#x2192;</button>'
+      + '</div>';
+    document.getElementById('postJobOverlay').style.display='flex';
+    return;
+  }
+
+  opts.innerHTML = cards.join('');
+  document.getElementById('postJobOverlay').style.display='flex';
+}
+
+function makePostOption(icon, type, title, desc, bg, border, color, key) {
+  return '<div onclick="selectPostType(\''+key+'\',\''+type+'\',\''+title+'\')" style="background:'+bg+';border:1.5px solid '+border+';border-radius:10px;padding:16px;margin-bottom:10px;cursor:pointer;transition:.15s;" onmouseover="this.style.borderColor=\''+color+'\'" onmouseout="this.style.borderColor=\''+border+'\'"><div style="display:flex;align-items:center;gap:12px;"><div style="font-size:26px;flex-shrink:0;">'+icon+'</div><div><div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;"><span style="font-family:\'DM Mono\',monospace;font-size:11px;font-weight:600;color:'+color+';">'+type+'</span></div><div style="font-size:15px;font-weight:500;color:var(--ink);margin-bottom:3px;">'+title+'</div><div style="font-size:12px;color:var(--mist);line-height:1.6;">'+desc+'</div></div><div style="margin-left:auto;color:'+color+';font-size:18px;">&#x2192;</div></div></div>';
+}
+
+function selectPostType(key, type, title) {
+  closePostJob();
+  // Navigate to the post form with the type pre-selected
+  sp('apply');
+  if(typeof selType === 'function') selType(null, key);
+  // Show a toast confirming the selection
+  if(typeof _showInfoToast === 'function') _showInfoToast('Posting a ' + type + ' — fill in your project details below.');
+}
+
+function closePostJob() {
+  var ov = document.getElementById('postJobOverlay');
+  if(ov) ov.style.display='none';
+}
 
 </script>
 
