@@ -133,7 +133,7 @@
   </ul>
   <div class="nav-right">
     <div class="bell" onclick="sp('notifications')">🔔<div class="bell-dot"></div></div>
-    <span id="siLabel" style="display:none;font-size:11px;color:var(--mist);align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--teal);display:inline-block;"></span><span id="siName">Signed in</span></span>
+    <span id="siLabel" style="display:none;font-size:11px;color:var(--mist);align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--teal);display:inline-block;"></span><span id="siName">Signed in</span><span id="siTierBadge" class="badge charter" style="font-size:8px;display:none;margin-left:5px;vertical-align:middle;">&#x2B50; Charter</span></span>
     <button class="btn-ghost" id="dashBtn" style="display:none;font-size:12px;" onclick="goDash()">Dashboard</button>
     <button class="btn-ghost" id="signOutBtn" style="display:none;font-size:12px;" onclick="signOut()">Sign Out</button>
     <button class="btn-ghost" id="signInBtn" onclick="openRealSignIn()" style="font-size:12px;">Sign In</button>
@@ -917,7 +917,7 @@
     </aside>
     <main class="dm">
       <div id="owner-overview" style="display: block;">
-        <div class="dt">Good morning, Robert.</div>
+        <div class="dt">Good morning, Robert. <span class="badge charter" style="font-size:10px;vertical-align:middle;">Charter Member</span></div>
         <div class="dss">3 active projects · 6 new bids to review</div>
         <div class="dstats">
           <div class="dsc ga"><div class="dsn">3</div><div class="dsl">Active projects</div></div>
@@ -1003,7 +1003,7 @@
         <div style="padding:0 12px 16px;border-bottom:1px solid var(--border);margin-bottom:10px;">
           <div style="font-size:15px;font-weight:500;color:var(--ink);">Gulf Coast Marine Builders</div>
           <div style="font-size:13px;color:var(--mist);">Gold Verified · Tampa, FL</div>
-          <div style="margin-top:7px;display:flex;gap:5px;"><span class="badge gold">Gold</span><span class="badge charter">Charter</span></div>
+          <div style="margin-top:7px;display:flex;gap:5px;"><span class="badge gold">Gold Verified</span><span class="badge charter">Charter Member</span></div>
           <button class="btn-ghost" onclick="openCtcSupModal()" style="width:100%;margin-top:12px;font-size:11px;border-color:var(--teal);color:var(--teal);padding:7px 10px;">&#x1F527; Request Supplier Quotes</button>
         </div>
         <div class="dns">Main</div>
@@ -2521,7 +2521,7 @@
     <button class="edit-profile-btn" onclick="openCust('page-marina-harbour-cay','Harbour Cay Marina','&#x26F5;')">&#x270F; Edit Profile</button>
     <div class="prof-av" style="font-size:26px;">&#x26F5;</div>
     <div class="prof-name" style="font-size:24px;">Harbour Cay Marina</div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;"><span class="badge verified">Verified Marina</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;"><span class="badge verified">Verified Marina</span><span class="badge charter">Charter Member</span></div>
     <div style="font-size:13px;color:rgba(255,255,255,.7);margin-bottom:3px;">&#x1F4CD; Fort Lauderdale, FL &middot; 185 Slips &middot; Est. 1998</div>
     <div style="font-size:13px;color:rgba(255,255,255,.7);margin-bottom:14px;">&#x2693; South Florida &middot; Verified Marina Member</div>
     <div class="prof-stats"><div><div class="ps-num">185</div><div class="ps-lbl">Slips</div></div><div><div class="ps-num">28yr</div><div class="ps-lbl">In operation</div></div><div><div class="ps-num">5</div><div class="ps-lbl">Active bids</div></div><div><div class="ps-num">4.8&#x2605;</div><div class="ps-lbl">Rating</div></div></div>
@@ -3605,6 +3605,8 @@
 
 <script>
 function joinPrompt(icon, title, sub) {
+  if(_cu && _cu.tier === 'charter') return;
+
 var el = document.getElementById('joinPrompt');
 if (!el) return;
 document.getElementById('jpIcon').innerHTML = icon || '&#x1F512;';
@@ -3919,10 +3921,10 @@ function selRole(role) {
 function doSignIn() {
   if (!_sr) return;
   var map = {
-    owner:      {name:'Robert Ashworth',          dash:'owner-dash',       label:'Homeowner Demo',    ownPage:null},
-    contractor: {name:'Gulf Coast Marine Builders',dash:'contractor-dash', label:'Gulf Coast Marine',  ownPage:'page-contractor-profile'},
-    supplier:   {name:'Gulf Marine Supply Co.',    dash:'supplier-dash',   label:'Gulf Marine Supply', ownPage:'page-supplier-profile'},
-    marina:     {name:'Bayshore Landing Marina',   dash:'marina-bayshore', label:'Bayshore Landing',   ownPage:'page-marina-bayshore'},
+    owner:      {name:'Robert Ashworth',          dash:'owner-dash',       label:'Charter Member · Owner',    ownPage:null,    tier:'charter'},
+    contractor: {name:'Gulf Coast Marine Builders',dash:'contractor-dash', label:'Charter Member · Contractor', ownPage:'page-contractor-profile', tier:'charter'},
+    supplier:   {name:'Gulf Marine Supply Co.',    dash:'supplier-dash',   label:'Charter Member · Supplier', ownPage:'page-supplier-profile', tier:'charter'},
+    marina:     {name:'Bayshore Landing Marina',   dash:'marina-bayshore', label:'Charter Member · Marina', ownPage:'page-marina-bayshore', tier:'charter'},
     ddinc:      {name:'Decks & Docks Lumber Co.', dash:'dd-profile',  label:'Decks & Docks',      ownPage:'page-dd-profile'}
   };
   _cu = {role:_sr, name:map[_sr].name, dash:map[_sr].dash, ownPage:map[_sr].ownPage};
