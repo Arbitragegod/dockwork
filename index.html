@@ -3952,7 +3952,7 @@ function doSignIn() {
     marina:     {name:'Bayshore Landing Marina',   dash:'marina-bayshore', label:'Charter Member · Marina', ownPage:'page-marina-bayshore', tier:'charter'},
     ddinc:      {name:'Decks & Docks Lumber Co.', dash:'dd-profile',  label:'Decks & Docks',      ownPage:'page-dd-profile'}
   };
-  _cu = {role:_sr, name:map[_sr].name, dash:map[_sr].dash, ownPage:map[_sr].ownPage};
+  _cu = {role:_sr, name:map[_sr].name, dash:map[_sr].dash, ownPage:map[_sr].ownPage, tier:map[_sr].tier||'standard'};
   closeSignIn();
   _updateNav();
   _updateEditBtns();
