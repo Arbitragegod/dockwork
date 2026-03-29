@@ -3630,7 +3630,7 @@
 
 <script>
 function joinPrompt(icon, title, sub) {
-  if(_cu && _cu.tier === 'charter') return;
+  if(_cu) return; // signed-in members never see join prompts
 
 var el = document.getElementById('joinPrompt');
 if (!el) return;
@@ -4377,11 +4377,8 @@ function makePostOption(icon, type, title, desc, bg, border, color, key) {
 
 function selectPostType(key, type, title) {
   closePostJob();
-  // Navigate to the post form with the type pre-selected
   sp('apply');
   if(typeof selType === 'function') selType(null, key);
-  // Show a toast confirming the selection
-  if(typeof _showInfoToast === 'function') _showInfoToast('Posting a ' + type + ' — fill in your project details below.');
 }
 
 function closePostJob() {
