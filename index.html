@@ -3630,14 +3630,14 @@
 
 <script>
 function joinPrompt(icon, title, sub) {
-  if(_cu) return; // signed-in members never see join prompts
-
-var el = document.getElementById('joinPrompt');
-if (!el) return;
-document.getElementById('jpIcon').innerHTML = icon || '&#x1F512;';
-document.getElementById('jpTitle').textContent = title || 'Join DockWork to continue';
-document.getElementById('jpSub').textContent = sub || 'This feature is available to verified DockWork members.';
-el.classList.add('open');
+  // Signed-in members never see join prompts
+  if (_cu) return;
+  var el = document.getElementById('joinPrompt');
+  if (!el) return;
+  el.querySelector('.jp-icon') && (el.querySelector('.jp-icon').textContent = icon);
+  el.querySelector('.jp-title') && (el.querySelector('.jp-title').textContent = title);
+  el.querySelector('.jp-sub') && (el.querySelector('.jp-sub').textContent = sub);
+  el.classList.add('open');
 }
 function closeJoinPrompt() {
 var el = document.getElementById('joinPrompt');
@@ -4201,31 +4201,15 @@ function _showInfoToast(msg) {
 }
 
 function handleInviteToBid() {
-  if (!_cu) {
-    joinPrompt('&#x2693;','Invite to Bid','Sign in as an Owner or Marina Operator to invite contractors to bid on your project.');
-    return;
-  }
-  if (_cu.role === 'contractor') {
-    _showInfoToast('Contractors cannot invite other contractors to bid. Only Owners and Marina Operators can send bid invitations.');
-    return;
-  }
-  if (_cu.role === 'supplier' || _cu.role === 'ddinc') {
-    _showInfoToast('Only Owners and Marina Operators can invite contractors to bid on projects.');
-    return;
-  }
-  joinPrompt('&#x2693;','Invite Contractor to Bid','Choose a project to attach this invitation to. The contractor will receive a direct bid request.');
+  if (!_cu) { joinPrompt('&#x2693;','Invite to Bid','Sign in to invite a contractor to bid.'); return; }
+  if (_cu.role === 'contractor') { _showInfoToast('Contractors cannot invite other contractors to bid.'); return; }
+  _showInfoToast('Invitation sent! The contractor will be notified of your bid request.');
 }
 
 function handleInviteSupplierQuote() {
-  if (!_cu) {
-    joinPrompt('&#x1F527;','Request a Supplier Quote','Sign in to send an RFQ directly to this supplier.');
-    return;
-  }
-  if (_cu.role === 'supplier' || _cu.role === 'ddinc') {
-    _showInfoToast('Suppliers cannot send RFQs to other suppliers. Owners, Marina Operators, and Contractors can request supplier quotes.');
-    return;
-  }
-  joinPrompt('&#x1F527;','Request Quote from Supplier','Send a direct RFQ to this supplier for pricing and material availability on your project.');
+  if (!_cu) { joinPrompt('&#x1F527;','Request a Supplier Quote','Sign in to send an RFQ.'); return; }
+  if (_isSupplier && _isSupplier()) { _showInfoToast('Suppliers cannot send RFQs to other suppliers.'); return; }
+  _showInfoToast('RFQ sent! The supplier will receive your quote request.');
 }
 
 
@@ -4302,18 +4286,15 @@ function handleInviteSupplierQuote() {
    Contractors: can respond to any posting type
    Owners/Marinas: blocked */
 function handleSubmitQuote(jobType) {
-  if (!_cu) { joinPrompt('&#x1F4CB;','Submit a Quote','Sign in as a verified supplier or contractor to respond to this posting.'); return; }
-  if (_cu.role === 'owner' || _cu.role === 'marina' || _cu.role === 'dolphin') { _showInfoToast('Owners and Marina Operators post jobs \u2014 they cannot submit bids or quotes.'); return; }
-  if (_isSupplier()) {
-    if (jobType && jobType.indexOf('RFQ') === -1) {
-      _showInfoToast('Suppliers can only provide quotes on RFQ postings. For RFP or RFB jobs, invite a contractor to bid instead.');
-      return;
-    }
-    joinPrompt('&#x1F4CB;','Submit Material Quote','Provide your product pricing, lead time, and availability. The posting party will be notified.');
+  if (!_cu) { joinPrompt('&#x1F4CB;','Submit a Quote','Sign in to respond to this posting.'); return; }
+  if (_cu.role === 'owner' || _cu.role === 'marina' || _cu.role === 'dolphin') { _showInfoToast('Owners and Marina Operators post jobs — they do not submit bids or quotes.'); return; }
+  if (_isSupplier && _isSupplier()) {
+    if (jobType && jobType.indexOf('RFQ') === -1) { _showInfoToast('Suppliers can only provide quotes on RFQ postings.'); return; }
+    _showInfoToast('Quote submitted! The posting party will be notified with your pricing.');
     return;
   }
-  // Contractor: can bid/quote on any type
-  joinPrompt('&#x1F4CB;','Submit Your Bid or Quote','Provide your pricing, scope of work, and timeline. The poster will be notified immediately.');
+  // Contractor
+  _showInfoToast('Bid submitted! The project owner will be notified and can compare your bid.');
 }
 
 /* Open supplier rec modal */
