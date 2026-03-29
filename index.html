@@ -4485,6 +4485,57 @@ function closeCtcSupModal() {
   if (ov) ov.style.display='none';
 }
 
+
+
+/* -- ROLE & PERMISSION FUNCTIONS -- */
+
+function _isSupplier() {
+  return _cu && (_cu.role === 'supplier' || _cu.role === 'ddinc');
+}
+
+/* Invite a CONTRACTOR to bid: Owners, Marinas, AND Suppliers allowed. Contractors blocked. */
+function handleInviteToBid() {
+  if (!_cu) { joinPrompt('&#x2693;','Invite to Bid','Sign in to invite a contractor to bid on your project.'); return; }
+  if (_cu.role === 'contractor') { _showInfoToast('Contractors cannot invite other contractors to bid. Only Owners, Marina Operators, and Suppliers can send bid invitations.'); return; }
+  joinPrompt('&#x2693;','Invite Contractor to Bid','Choose a project to attach this invitation to. The contractor will receive a direct bid request.');
+}
+
+/* Request a quote FROM a supplier: Owners, Marinas, Contractors allowed. Suppliers blocked. */
+function handleInviteSupplierQuote() {
+  if (!_cu) { joinPrompt('&#x1F527;','Request a Supplier Quote','Sign in to send an RFQ directly to this supplier.'); return; }
+  if (_isSupplier()) { _showInfoToast('Suppliers cannot send RFQs to other suppliers. Owners, Marina Operators, and Contractors can request supplier quotes.'); return; }
+  joinPrompt('&#x1F527;','Request Quote from Supplier','Send a direct RFQ to this supplier for pricing and material availability on your project.');
+}
+
+/* Submit a quote ON a posting:
+   Suppliers: can ONLY respond to RFQ postings (not RFP/RFB/RFI)
+   Contractors: can respond to any posting type
+   Owners/Marinas: blocked */
+function handleSubmitQuote(jobType) {
+  if (!_cu) { joinPrompt('&#x1F4CB;','Submit a Quote','Sign in as a verified supplier or contractor to respond to this posting.'); return; }
+  if (_cu.role === 'owner' || _cu.role === 'marina' || _cu.role === 'dolphin') { _showInfoToast('Owners and Marina Operators post jobs \u2014 they cannot submit bids or quotes.'); return; }
+  if (_isSupplier()) {
+    if (jobType && jobType.indexOf('RFQ') === -1) {
+      _showInfoToast('Suppliers can only provide quotes on RFQ postings. For RFP or RFB jobs, invite a contractor to bid instead.');
+      return;
+    }
+    joinPrompt('&#x1F4CB;','Submit Material Quote','Provide your product pricing, lead time, and availability. The posting party will be notified.');
+    return;
+  }
+  // Contractor: can bid/quote on any type
+  joinPrompt('&#x1F4CB;','Submit Your Bid or Quote','Provide your pricing, scope of work, and timeline. The poster will be notified immediately.');
+}
+
+/* Open supplier rec modal */
+function openSupplierRecModal() { var ov=document.getElementById('supRecOverlay'); if(ov) ov.style.display='flex'; }
+function closeSupplierRecModal() { var ov=document.getElementById('supRecOverlay'); if(ov) ov.style.display='none'; }
+function openCtcSupModal() {
+  if(!_cu){ joinPrompt('&#x1F527;','Request Supplier Quotes','Sign in to send RFQs to verified suppliers.'); return; }
+  if(_isSupplier()){ _showInfoToast('Suppliers cannot send RFQs to other suppliers.'); return; }
+  var ov=document.getElementById('ctcSupRecOverlay'); if(ov) ov.style.display='flex';
+}
+function closeCtcSupModal() { var ov=document.getElementById('ctcSupRecOverlay'); if(ov) ov.style.display='none'; }
+
 </script>
 
 <div id="thunderbit-crx-side-bar" style="display:block;opacity:1;pointer-events:all;top:0;right:0;z-index:9007199254740991;position:fixed;pointer-events:none;user-select:none;"></div><button id="open-side-panel" style="width:0;height:0;opacity:0;user-select:none;pointer-events:all;position:absolute;bottom:0;right:0;padding:0;border:0;outline:none;"></button><div id="give-freely-root-ejkiikneibegknkgimmihdpcbcedgmpo" class="give-freely-root" data-extension-id="ejkiikneibegknkgimmihdpcbcedgmpo" data-extension-name="Volume Booster" style="display: block;"></div></body></html>
