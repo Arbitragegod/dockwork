@@ -3956,7 +3956,10 @@ if (type === 'Gold Verified Only') {
 rows[i].style.display = rows[i].textContent.indexOf('Gold Verified') >= 0 ? '' : 'none';
 continue;
 }
-rows[i].style.display = rows[i].textContent.indexOf(type) >= 0 ? '' : 'none';
+// Use only the first badge text to avoid bleed-through from adjacent cards
+var badge = rows[i].querySelector('.badge.open');
+var badgeText = badge ? badge.textContent : '';
+rows[i].style.display = badgeText.indexOf(type) >= 0 ? '' : 'none';
 }
 }
 function filterSC(el, tag, selector) {
