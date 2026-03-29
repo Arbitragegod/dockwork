@@ -3633,9 +3633,9 @@ function joinPrompt(icon, title, sub) {
   if (_cu) return;
   var el = document.getElementById('joinPrompt');
   if (!el) return;
-  el.querySelector && el.querySelector('.jp-icon') && (el.querySelector('.jp-icon').textContent = icon);
-  el.querySelector && el.querySelector('.jp-title') && (el.querySelector('.jp-title').textContent = title);
-  el.querySelector && el.querySelector('.jp-sub') && (el.querySelector('.jp-sub').textContent = sub);
+  if(el.querySelector('.jp-icon')) el.querySelector('.jp-icon').textContent = icon;
+  if(el.querySelector('.jp-title')) el.querySelector('.jp-title').textContent = title;
+  if(el.querySelector('.jp-sub')) el.querySelector('.jp-sub').textContent = sub;
   el.classList.add('open');
 }
 function closeJoinPrompt() {
@@ -4200,13 +4200,13 @@ function _showInfoToast(msg) {
 }
 
 function handleInviteToBid() {
-  if (!_cu) { joinPrompt('&#x2693;','Invite to Bid','Sign in to invite a contractor to bid.'); return; }
+  if (!_cu) { joinPrompt('&#x2693;','Invite to Bid','Sign in to invite a contractor.'); return; }
   if (_cu.role === 'contractor') { _showInfoToast('Contractors cannot invite other contractors to bid.'); return; }
   _showInfoToast('✓ Invitation sent! The contractor will be notified.');
 }
 
 function handleInviteSupplierQuote() {
-  if (!_cu) { joinPrompt('&#x1F527;','Request a Supplier Quote','Sign in to send an RFQ.'); return; }
+  if (!_cu) { joinPrompt('&#x1F527;','Request a Quote','Sign in to send an RFQ.'); return; }
   if (typeof _isSupplier === 'function' && _isSupplier()) { _showInfoToast('Suppliers cannot send RFQs to other suppliers.'); return; }
   _showInfoToast('✓ RFQ sent! The supplier will receive your quote request.');
 }
