@@ -3621,7 +3621,43 @@
   </div>
 </div>
 
-<script>function joinPrompt(icon, title, sub) {
+<script>
+/* ================================================================
+   TEST MODE — flip this flag to bypass all joinPrompt() calls
+   true  = all actions work without signing in (testing)
+   false = normal behaviour (production)
+   ================================================================ */
+var TEST_MODE = true;
+
+/* Banner shown when TEST MODE is active */
+(function(){
+  if(!TEST_MODE) return;
+  var b = document.createElement('div');
+  b.id = 'test-mode-banner';
+  b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#dc2626;color:white;font-size:11px;font-family:monospace;letter-spacing:1px;text-align:center;padding:4px 12px;display:flex;align-items:center;justify-content:center;gap:12px;';
+  b.innerHTML = '&#x26A0; TEST MODE ACTIVE — joinPrompt() disabled &nbsp;&nbsp;<button onclick="TEST_MODE=false;document.getElementById(\'test-mode-banner\').remove();" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:white;font-size:10px;cursor:pointer;padding:2px 8px;border-radius:3px;">Disable</button>';
+  document.addEventListener('DOMContentLoaded', function(){ document.body.prepend(b); });
+  window.addEventListener('load', function(){ if(!document.getElementById('test-mode-banner')) document.body.prepend(b); });
+})();
+
+/* Wrap joinPrompt so TEST_MODE bypasses it entirely */
+document.addEventListener('DOMContentLoaded', function(){
+  var _origJoinPrompt = window.joinPrompt;
+  window.joinPrompt = function(icon, title, sub) {
+    if(TEST_MODE) {
+      /* In test mode, show a quick non-blocking toast instead of the modal */
+      var t = document.createElement('div');
+      t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e3a5f;color:white;padding:10px 18px;border-radius:6px;font-size:12px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.3);max-width:360px;text-align:center;border:1px solid rgba(255,255,255,.15);';
+      t.innerHTML = '<span style="opacity:.6;font-size:10px;">TEST MODE → </span>' + title;
+      document.body.appendChild(t);
+      setTimeout(function(){ if(t.parentNode) t.parentNode.removeChild(t); }, 2000);
+      return;
+    }
+    if(_origJoinPrompt) _origJoinPrompt(icon, title, sub);
+  };
+});
+
+function joinPrompt(icon, title, sub) {
 var el = document.getElementById('joinPrompt');
 if (!el) return;
 document.getElementById('jpIcon').innerHTML = icon || '&#x1F512;';
