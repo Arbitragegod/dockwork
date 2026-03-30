@@ -971,10 +971,10 @@ async function confirmRoleSwitch() {
         <div class="dt"><span id="dw-greeting">Good morning</span>, <span id="dw-firstname"></span>. <span class="badge charter" style="font-size:10px;vertical-align:middle;">Charter Member</span></div>
         <div class="dss"><span class="dw-dash-subtitle">Welcome to DockWork</span></div>
         <div class="dstats">
-          <div class="dsc ga"><div class="dsn">3</div><div class="dsl">Active projects</div></div>
-          <div class="dsc"><div class="dsn">6</div><div class="dsl">New bids</div></div>
-          <div class="dsc"><div class="dsn">2</div><div class="dsl">Awarded</div></div>
-          <div class="dsc"><div class="dsn">1</div><div class="dsl">RFI responses</div></div>
+          <div class="dsc ga"><div class="dsn"><span class="dw-stat-projects">0</span></div><div class="dsl">Active projects</div></div>
+          <div class="dsc"><div class="dsn"><span class="dw-stat-bids">0</span></div><div class="dsl">New bids</div></div>
+          <div class="dsc"><div class="dsn"><span class="dw-stat-awarded">0</span></div><div class="dsl">Awarded</div></div>
+          <div class="dsc"><div class="dsn"><span class="dw-stat-rfi">0</span></div><div class="dsl">RFI responses</div></div>
         </div>
         <div style="background:rgba(184,147,74,0.05);border:1px solid var(--border-gold);border-radius:10px;padding:16px;margin-bottom:20px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
@@ -1160,12 +1160,12 @@ async function confirmRoleSwitch() {
       <div class="ds-inner">
         <div style="padding:0 12px 16px;border-bottom:1px solid var(--border);margin-bottom:10px;">
           <div style="font-size:15px;font-weight:500;color:var(--ink);"><span class="dw-sup-name"></span></div>
-          <div style="font-size:13px;color:var(--mist);">Certified Supplier · Pensacola, FL</div>
-          <div style="margin-top:7px;"><span class="badge supplier">Certified Supplier</span></div>
+          <div style="font-size:13px;color:var(--mist);"><span class="dw-role-label">Supplier</span></div>
+          <div style="margin-top:7px;"><span class="badge supplier dw-role-badge">Marine Supplier</span></div><div style="margin-top:10px;"><button onclick="openRoleSwitcher()" style="font-size:11px;color:var(--blue,#2563eb);background:none;border:none;cursor:pointer;padding:0;text-decoration:underline;">&#x270F; Edit account type</button></div>
         </div>
         <div class="dns">Main</div>
         <div class="dn" onclick="dt('supplier','overview')"><span class="dn-icon">📊</span>Overview</div>
-        <div class="dn" onclick="dt('supplier','rfqs')"><span class="dn-icon">📥</span>RFQ Inbox <span style="background:var(--red);color:white;font-size:8px;padding:1px 5px;border-radius:8px;margin-left:3px;">5</span></div>
+        <div class="dn" onclick="dt('supplier','rfqs')"><span class="dn-icon">📥</span>RFQ Inbox <span id="dw-rfq-badge" style="background:var(--red);color:white;font-size:8px;padding:1px 5px;border-radius:8px;margin-left:3px;display:none;">0</span></div>
         <div class="dn" onclick="dt('supplier','catalog')"><span class="dn-icon">📦</span>My Catalog</div>
         <div class="dn" onclick="sp('messages')"><span class="dn-icon">💬</span>Messages</div>
         <div class="dn" onclick="sp('notifications')"><span class="dn-icon">🔔</span>Notifications</div>
@@ -1175,16 +1175,16 @@ async function confirmRoleSwitch() {
     </aside>
     <main class="dm">
       <div id="supplier-overview" style="display: block;">
-        <div class="dt">Supplier Overview</div><div class="dss">5 new RFQs waiting for your response.</div>
+        <div class="dt">Supplier Overview</div><div class="dss"><span class="dw-dash-subtitle">Your RFQ inbox will show new requests here.</span></div>
         <div class="dstats">
-          <div class="dsc ga"><div class="dsn">5</div><div class="dsl">New RFQs</div></div>
-          <div class="dsc"><div class="dsn">12</div><div class="dsl">Active quotes</div></div>
-          <div class="dsc"><div class="dsn">48</div><div class="dsl">Products listed</div></div>
-          <div class="dsc"><div class="dsn">4.8★</div><div class="dsl">Rating</div></div>
+          <div class="dsc ga"><div class="dsn"><span class="dw-stat-rfq">0</span></div><div class="dsl">New RFQs</div></div>
+          <div class="dsc"><div class="dsn"><span class="dw-stat-active">0</span></div><div class="dsl">Active quotes</div></div>
+          <div class="dsc"><div class="dsn"><span class="dw-stat-products">0</span></div><div class="dsl">Products listed</div></div>
+          <div class="dsc"><div class="dsn"><span class="dw-stat-rating">-</span></div><div class="dsl">Rating</div></div>
         </div>
         <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--ink);margin-bottom:12px;">Recent RFQs</div>
         
-        <div class="card"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;"><div><span class="badge open">RFQ · Open</span><div class="br-title">20,000 lb Boat Lift Equipment — 1 Unit</div><div style="font-size:14px;color:var(--mist);">Coastal Construction · Gold · Due Apr 1</div></div><button class="btn-sm gold" onclick="if(_cu){return;}joinPrompt('🔧','Submit Quotes — Members Only','Respond to RFQs and submit quotes to verified contractors. Apply as a Certified Supplier.')">Submit Quote →</button></div></div>
+        <div style="text-align:center;padding:40px 24px;color:#94a3b8;"><div style="font-size:36px;margin-bottom:12px;">&#x1F4E5;</div><div style="font-size:15px;font-weight:500;color:#475569;margin-bottom:8px;">No RFQs yet</div><div style="font-size:13px;line-height:1.7;">Quote requests from verified contractors will appear here.</div></div>
       </div>
       <div id="supplier-rfqs" style="display:none;">
         <div class="dt">RFQ Inbox</div><div class="dss">Incoming quote requests from verified contractors only.</div>
@@ -2658,14 +2658,48 @@ function showSignUp(){document.getElementById("authFormSignIn").style.display="n
 function clearAuthError(){var el=document.getElementById("authError");if(el){el.style.display="none";el.textContent="";}} 
 function showAuthError(msg){var el=document.getElementById("authError");if(el){el.textContent=msg;el.style.display="block";}}
 function _dashForRole(r){return{owner:"owner-dash",marina:"marina-bayshore",contractor:"contractor-dash",supplier:"supplier-dash"}[r]||"owner-dash";}
-async function doRealSignIn(){
-  var email=document.getElementById("authEmail").value.trim();
-  var password=document.getElementById("authPassword").value;
-  if(!email||!password){showAuthError("Please enter your email and password.");return;}
-  var r=await _supabase.auth.signInWithPassword({email,password});
-  if(r.error){showAuthError(r.error.message);return;}
-  var p=await _supabase.from("dw_users").select("*").eq("id",r.data.user.id).single();
-  if(p.data){_cu={role:p.data.role,name:p.data.full_name||email,dash:_dashForRole(p.data.role),tier:p.data.tier,ownPage:null};closeRealAuth();_updateNav();sp(_cu.dash);_showInfoToast("✓ Welcome back, "+_cu.name+"!");}
+async function doRealSignIn() {
+  var email = document.getElementById('authEmail').value.trim();
+  var password = document.getElementById('authPassword').value;
+  var errEl = document.getElementById('authError');
+  if (errEl) { errEl.textContent = ''; errEl.style.display = 'none'; }
+  if (!email || !password) {
+    if (errEl) { errEl.textContent = 'Please enter your email and password.'; errEl.style.display = 'block'; }
+    return;
+  }
+  var btn = document.querySelector('#authFormSignIn .btn-gold');
+  if (btn) { btn.textContent = 'Signing in…'; btn.disabled = true; }
+
+  var result = await _supabase.auth.signInWithPassword({ email: email, password: password });
+  if (result.error) {
+    if (errEl) { errEl.textContent = result.error.message; errEl.style.display = 'block'; }
+    if (btn) { btn.textContent = 'Sign In →'; btn.disabled = false; }
+    return;
+  }
+
+  var user = result.data.user;
+  // Load profile from dw_users to get their chosen role
+  var profile = await _supabase.from('dw_users').select('*').eq('id', user.id).single();
+  var role = (profile.data && profile.data.role) ? profile.data.role : 'owner';
+  var name = (profile.data && profile.data.full_name) ? profile.data.full_name : email;
+  var company = (profile.data && profile.data.company_name) ? profile.data.company_name : name;
+  var dashMap = {owner:'owner-dash', marina:'marina-bayshore', contractor:'contractor-dash', supplier:'supplier-dash'};
+
+  _cu = {
+    role: role,
+    name: name,
+    company: company,
+    email: email,
+    id: user.id,
+    dash: dashMap[role] || 'owner-dash',
+    tier: (profile.data && profile.data.tier) ? profile.data.tier : 'standard',
+    ownPage: null
+  };
+  closeRealAuth();
+  _updateNav();
+  _updateDashboard();
+  sp(_cu.dash);
+  _showInfoToast('✓ Welcome back, ' + name + '!');
 }
 async function doRealSignUp() {
   var nameEl = document.getElementById('signupName');
@@ -2673,56 +2707,39 @@ async function doRealSignUp() {
   var passEl = document.getElementById('signupPassword');
   var roleEl = document.getElementById('signupRole');
   var errEl = document.getElementById('authError');
-
   var name = nameEl ? nameEl.value.trim() : '';
   var email = emailEl ? emailEl.value.trim() : '';
   var password = passEl ? passEl.value : '';
   var role = roleEl ? roleEl.value : 'owner';
-
-  // Clear any previous error
   if (errEl) { errEl.textContent = ''; errEl.style.display = 'none'; }
-
-  // Validate
   if (!name) { if(errEl){errEl.textContent='Please enter your full name.';errEl.style.display='block';} return; }
   if (!email || !email.includes('@')) { if(errEl){errEl.textContent='Please enter a valid email address.';errEl.style.display='block';} return; }
   if (!password || password.length < 6) { if(errEl){errEl.textContent='Password must be at least 6 characters.';errEl.style.display='block';} return; }
   if (!role) role = 'owner';
-
-  // Button loading state
   var btn = document.getElementById('signupSubmitBtn') || document.querySelector('#authFormSignUp .btn-gold');
   if (btn) { btn.textContent = 'Creating account…'; btn.disabled = true; }
-
   try {
     var result = await _supabase.auth.signUp({ email: email, password: password });
-
     if (result.error) {
       if (errEl) { errEl.textContent = result.error.message; errEl.style.display = 'block'; }
       if (btn) { btn.textContent = 'Create Account →'; btn.disabled = false; }
       return;
     }
-
     var user = result.data && result.data.user;
     if (!user) {
       if (errEl) { errEl.textContent = 'Unexpected error. Please try again.'; errEl.style.display = 'block'; }
       if (btn) { btn.textContent = 'Create Account →'; btn.disabled = false; }
       return;
     }
-
-    // Insert profile
     var company = document.getElementById('signupCompany') ? document.getElementById('signupCompany').value.trim() : '';
-    await _supabase.from('dw_users').insert({
-      id: user.id, email: email, full_name: name,
-      company_name: company || null, role: role, tier: 'standard'
-    });
-
-    // Sign them in immediately
-    _cu = { role: role, name: name, dash: _dashForRole(role), tier: 'standard', ownPage: null };
+    await _supabase.from('dw_users').insert({ id: user.id, email: email, full_name: name, company_name: company || null, role: role, tier: 'standard' });
+    var dashMap = {owner:'owner-dash', marina:'marina-bayshore', contractor:'contractor-dash', supplier:'supplier-dash'};
+    _cu = { role: role, name: name, company: company || name, email: email, id: user.id, dash: dashMap[role] || 'owner-dash', tier: 'standard', ownPage: null };
     closeRealAuth();
     _updateNav();
-    sp(_cu.dash);
     _updateDashboard();
+    sp(_cu.dash);
     _showInfoToast('✓ Welcome to DockWork, ' + name + '!');
-
   } catch(e) {
     if (errEl) { errEl.textContent = 'Something went wrong. Please try again.'; errEl.style.display = 'block'; }
     if (btn) { btn.textContent = 'Create Account →'; btn.disabled = false; }
