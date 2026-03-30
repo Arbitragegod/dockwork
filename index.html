@@ -205,7 +205,7 @@ async function confirmRoleSwitch() {
   <div class="nav-right">
     <div class="bell" onclick="sp('notifications')">🔔<div class="bell-dot"></div></div>
     <span id="siLabel" style="display:none;font-size:11px;color:var(--mist);align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--teal);display:inline-block;"></span><span id="siName">Signed in</span><span id="siTierBadge" class="badge charter" style="font-size:8px;display:none;margin-left:5px;vertical-align:middle;">&#x2B50; Charter</span></span>
-    <button class="btn-ghost" id="dashBtn" style="display:none;font-size:12px;" onclick="goDash()">Dashboard</button>
+    <button class="btn-gold" id="dashBtn" style="display:none;font-size:13px;font-weight:500;padding:7px 16px;" onclick="goDash()">⚓ My Dashboard</button>
     <button class="btn-ghost" id="signOutBtn" style="display:none;font-size:12px;" onclick="realSignOut()">Sign Out</button>
     <button class="btn-ghost" id="signInBtn" onclick="openRealSignIn()" style="font-size:12px;">Sign In</button>
     
@@ -882,6 +882,7 @@ async function confirmRoleSwitch() {
         <div class="dn" onclick="dt('owner','photos')"><span class="dn-icon">📷</span>Photo Log</div>
         <div class="dn" onclick="sp('supplier-profile')"><span class="dn-icon">🔩</span>Supplier Catalog</div>
         <div class="dn" onclick="sp('browse')"><span class="dn-icon">🔍</span>Browse</div>
+        <div class="dn" onclick="dt('owner','matrix')"><span class="dn-icon">🗂️</span>Action Center</div>
       </div>
     </aside>
     <main class="dm">
@@ -962,6 +963,7 @@ async function confirmRoleSwitch() {
         <div class="dns">Profile</div>
         <div class="dn" onclick="sp('contractor-profile')"><span class="dn-icon">👤</span>My Profile</div>
         <div class="dn" onclick="dt('contractor','photos')"><span class="dn-icon">📷</span>Photo Log</div>
+        <div class="dn" onclick="dt('contractor','matrix')"><span class="dn-icon">🗂️</span>Action Center</div>
       </div>
     </aside>
     <main class="dm">
@@ -1070,6 +1072,7 @@ async function confirmRoleSwitch() {
         <div class="dn" onclick="sp('notifications')"><span class="dn-icon">🔔</span>Notifications</div>
         <div class="dns">Profile</div>
         <div class="dn" onclick="sp('supplier-profile')"><span class="dn-icon">🏪</span>My Storefront</div>
+        <div class="dn" onclick="dt('supplier','matrix')"><span class="dn-icon">🗂️</span>Action Center</div>
       </div>
     </aside>
     <main class="dm">
@@ -3096,4 +3099,241 @@ async function submitForgotPassword(){
 
 })();
 </script>
-</body></html>
+<script>
+// ── Action Center + Dashboard wiring ──────────────────────────
+(function() {
+
+  // Register 'matrix' as a valid tab for dt() by extending the tabs array
+  // We patch dt() to handle 'matrix' before passing through
+  var _origDt = window.dt;
+  if (_origDt && !_origDt._matrixWrapped) {
+    window.dt = function(dash, tab) {
+      if (tab === 'matrix') {
+        // Hide all tab panels for this dash
+        var panels = ['overview','projects','post','photos','feed','bids','rfqs','catalog','matrix'];
+        panels.forEach(function(t) {
+          var el = document.getElementById(dash + '-' + t);
+          if (el) el.style.display = 'none';
+        });
+        var matrixEl = document.getElementById(dash + '-matrix');
+        if (matrixEl) matrixEl.style.display = 'block';
+        // Update sidebar active state
+        document.querySelectorAll('.dn').forEach(function(el) { el.classList.remove('active'); });
+        var trigger = document.querySelector('.dn[onclick="dt(\''+dash+'\',\'matrix\')"]');
+        if (trigger) trigger.classList.add('active');
+      } else {
+        _origDt(dash, tab);
+      }
+      // Auto-load data when navigating to key tabs
+      if (dash === 'owner' && tab === 'projects')   setTimeout(window._loadOwnerProjects, 80);
+      if (dash === 'owner' && tab === 'overview')   setTimeout(window._loadOwnerProjects, 80);
+      if (dash === 'contractor' && tab === 'overview') setTimeout(window._loadContractorJobs, 80);
+      if (dash === 'contractor' && tab === 'feed')     setTimeout(window._loadContractorJobs, 80);
+    };
+    window.dt._matrixWrapped = true;
+  }
+
+  // Wrap sp() to auto-load on dashboard entry
+  var _origSp2 = window.sp;
+  if (_origSp2 && !_origSp2._matrixWrapped) {
+    window.sp = function(page) {
+      _origSp2(page);
+      if (page === 'owner-dash')      setTimeout(function(){ window._loadOwnerProjects && window._loadOwnerProjects(); }, 200);
+      if (page === 'contractor-dash') setTimeout(function(){ window._loadContractorJobs && window._loadContractorJobs(); }, 200);
+      if (page === 'browse')          setTimeout(function(){ window._loadBrowseJobs && window._loadBrowseJobs(); }, 200);
+    };
+    window.sp._matrixWrapped = true;
+  }
+
+  // Hook submitPostProject to refresh owner list after successful post
+  var _origSubmit = window.submitPostProject;
+  if (typeof _origSubmit === 'function' && !_origSubmit._refreshWrapped) {
+    window.submitPostProject = function() {
+      var result = _origSubmit.apply(this, arguments);
+      // After a short delay (allow Supabase write to complete), refresh
+      setTimeout(function() {
+        if (window._loadOwnerProjects) window._loadOwnerProjects();
+        if (window._loadBrowseJobs)    window._loadBrowseJobs();
+      }, 1500);
+      return result;
+    };
+    window.submitPostProject._refreshWrapped = true;
+  }
+
+  // On owner-dash load: auto-load projects into the overview stats too
+  function _updateOwnerStats(projects) {
+    var statEl = document.querySelector('.dw-stat-projects');
+    if (statEl) statEl.textContent = projects ? projects.length : 0;
+  }
+
+  // Extend loadOwnerProjects to also update overview stats
+  var _origLoadOwner = window._loadOwnerProjects;
+  if (_origLoadOwner && !_origLoadOwner._statsWrapped) {
+    window._loadOwnerProjects = async function() {
+      await _origLoadOwner();
+      // Count projects and update stat
+      try {
+        var el = document.getElementById('owner-projects-list');
+        if (el) {
+          var count = el.children.length;
+          var statEl = document.querySelector('.dw-stat-projects');
+          if (statEl && count > 0) statEl.textContent = count;
+        }
+      } catch(e) {}
+    };
+    window._loadOwnerProjects._statsWrapped = true;
+  }
+
+  // Run on load
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      // If already on owner-dash, load data
+      var ownerDash = document.getElementById('owner-dash');
+      if (ownerDash && ownerDash.style.display !== 'none' && ownerDash.style.display !== '') {
+        if (window._loadOwnerProjects) window._loadOwnerProjects();
+      }
+    }, 400);
+  });
+
+})();
+// ── End Action Center wiring ───────────────────────────────────
+</script>
+</body></html
+      <div id="owner-matrix" style="display:none;">
+        <div class="dt">Action Center</div>
+        <div class="dss">Everything you can do as a property owner on DockWork.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;">
+
+          <div style="background:white;border:1px solid var(--border);border-radius:4px;padding:20px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--mist);margin-bottom:12px;">📋 PROJECTS</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button class="bsm g" onclick="dt('owner','post')">➕ Post a New Project</button>
+              <button class="bsm" onclick="dt('owner','projects')">📋 View My Projects</button>
+              <button class="bsm" onclick="sp('bid-compare')">⚖️ Compare Bids</button>
+            </div>
+          </div>
+
+          <div style="background:white;border:1px solid var(--border);border-radius:4px;padding:20px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--mist);margin-bottom:12px;">🔍 SOURCING</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button class="bsm" onclick="sp('contractors')">🔩 Browse Contractors</button>
+              <button class="bsm" onclick="sp('suppliers')">📦 Browse Suppliers</button>
+              <button class="bsm" onclick="sp('supplier-profile')">🛒 Supplier Catalog</button>
+            </div>
+          </div>
+
+          <div style="background:white;border:1px solid var(--border);border-radius:4px;padding:20px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--mist);margin-bottom:12px;">💬 COMMUNICATION</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button class="bsm" onclick="sp('messages')">💬 Messages</button>
+              <button class="bsm" onclick="sp('notifications')">🔔 Notifications</button>
+            </div>
+          </div>
+
+          <div style="background:white;border:1px solid var(--border);border-radius:4px;padding:20px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--mist);margin-bottom:12px;">📷 DOCUMENTATION</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button class="bsm" onclick="dt('owner','photos')">📷 Photo Log</button>
+              <button class="bsm" onclick="sp('browse')">🔍 Browse All Projects</button>
+            </div>
+          </div>
+
+        </div>
+        <div style="margin-top:16px;background:var(--gold-faint,#fffbf0);border:1px solid var(--gold);border-radius:4px;padding:16px;">
+          <div style="font-size:12px;font-weight:600;color:var(--gold);margin-bottom:6px;">⚓ QUICK START: Post your first project</div>
+          <div style="font-size:13px;color:var(--slate);line-height:1.6;">Post an RFP, RFQ, RFI, or RFB. Verified contractors and suppliers will respond with bids and quotes. You control who sees what.</div>
+          <button class="bsm g" style="margin-top:10px;" onclick="dt('owner','post')">Post a Project Now →</button>
+        </div>
+      </div>
+
+      <div id="contractor-matrix" style="display:none;">
+        <div class="dt">Action Center</div>
+        <div class="dss">Everything you can do as a licensed contractor on DockWork.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;">
+
+          <div style="background:white;border:1px solid var(--border);border-radius:4px;padding:20px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--mist);margin-bottom:12px;">📡 JOBS</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button class="bsm g" onclick="dt('contractor','feed')">📡 Browse Job Feed</button>
+              <button class="bsm" onclick="sp('browse')">🔍 Browse All Projects</button>
+              <button class="bsm" onclick="dt('contractor','bids')">📝 My Bid History</button>
+            </div>
+          </div>
+
+          <div style="background:white;border:1px solid var(--border);border-radius:4px;padding:20px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--mist);margin-bottom:12px;">🔩 MATERIALS</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button class="bsm" onclick="dt('contractor','rfqs')">🔩 My RFQs to Suppliers</button>
+              <button class="bsm" onclick="sp('supplier-profile')">📦 Supplier Catalog</button>
+              <button class="bsm" onclick="sp('suppliers')">🏪 Browse Suppliers</button>
+            </div>
+          </div>
+
+          <div style="background:white;border:1px solid var(--border);border-radius:4px;padding:20px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--mist);margin-bottom:12px;">💬 COMMUNICATION</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button class="bsm" onclick="sp('messages')">💬 Messages</button>
+              <button class="bsm" onclick="sp('notifications')">🔔 Notifications</button>
+            </div>
+          </div>
+
+          <div style="background:white;border:1px solid var(--border);border-radius:4px;padding:20px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--mist);margin-bottom:12px;">👤 PROFILE</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button class="bsm" onclick="sp('contractor-profile')">👤 My Public Profile</button>
+              <button class="bsm" onclick="dt('contractor','photos')">📷 Photo Log</button>
+            </div>
+          </div>
+
+        </div>
+        <div style="margin-top:16px;background:var(--gold-faint,#fffbf0);border:1px solid var(--gold);border-radius:4px;padding:16px;">
+          <div style="font-size:12px;font-weight:600;color:var(--gold);margin-bottom:6px;">⚓ QUICK START: Find your next job</div>
+          <div style="font-size:13px;color:var(--slate);line-height:1.6;">Browse open RFPs from verified owners. Submit bids, request supplier quotes, and track everything from one dashboard.</div>
+          <button class="bsm g" style="margin-top:10px;" onclick="dt('contractor','feed')">View Job Feed →</button>
+        </div>
+      </div>
+
+      <div id="supplier-matrix" style="display:none;">
+        <div class="dt">Action Center</div>
+        <div class="dss">Everything you can do as a verified supplier on DockWork.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;">
+
+          <div style="background:white;border:1px solid var(--border);border-radius:4px;padding:20px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--mist);margin-bottom:12px;">📥 QUOTES</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button class="bsm g" onclick="dt('supplier','rfqs')">📥 RFQ Inbox</button>
+              <button class="bsm" onclick="sp('browse')">🔍 Browse Active Projects</button>
+            </div>
+          </div>
+
+          <div style="background:white;border:1px solid var(--border);border-radius:4px;padding:20px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--mist);margin-bottom:12px;">📦 CATALOG</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button class="bsm" onclick="dt('supplier','catalog')">📦 Manage My Catalog</button>
+              <button class="bsm" onclick="sp('supplier-profile')">🏪 My Storefront</button>
+            </div>
+          </div>
+
+          <div style="background:white;border:1px solid var(--border);border-radius:4px;padding:20px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--mist);margin-bottom:12px;">💬 COMMUNICATION</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button class="bsm" onclick="sp('messages')">💬 Messages</button>
+              <button class="bsm" onclick="sp('notifications')">🔔 Notifications</button>
+            </div>
+          </div>
+
+          <div style="background:white;border:1px solid var(--border);border-radius:4px;padding:20px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--mist);margin-bottom:12px;">📊 ANALYTICS</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button class="bsm" onclick="dt('supplier','overview')">📊 Overview & Stats</button>
+            </div>
+          </div>
+
+        </div>
+        <div style="margin-top:16px;background:var(--gold-faint,#fffbf0);border:1px solid var(--gold);border-radius:4px;padding:16px;">
+          <div style="font-size:12px;font-weight:600;color:var(--gold);margin-bottom:6px;">⚓ QUICK START: Respond to quote requests</div>
+          <div style="font-size:13px;color:var(--slate);line-height:1.6;">Contractors submit RFQs for materials on active projects. Check your inbox and respond to win the supply contract.</div>
+          <button class="bsm g" style="margin-top:10px;" onclick="dt('supplier','rfqs')">Check RFQ Inbox →</button>
+        </div>
+      </div>
+>
