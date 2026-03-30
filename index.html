@@ -4350,9 +4350,7 @@ function selectPostType(key, type, title) {
   closePostJob();
   if (!_cu) { joinPrompt('&#x1F4CB;','Post a Job','Sign in to post a job.'); return; }
   var labels = {rfp:'Request for Proposal (RFP)',rfb:'Request for Bid (RFB)',rfi:'Request for Information (RFI)','sup-rfq':'Supplier RFQ'};
-  var label = labels[key] || type;
-  _showInfoToast('✓ ' + label + ' posting initiated — fill in your project details below.');
-  sp('apply');
+  _showInfoToast('✓ Posting a '+(labels[key]||type)+' — fill in the details below.');
 }
 
 function closePostJob() {
