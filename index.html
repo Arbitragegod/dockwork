@@ -904,7 +904,7 @@ async function confirmRoleSwitch() {
       <div id="owner-projects" style="display:none;">
         <div class="dt">My Projects</div><div class="dss">All jobs you have posted.</div>
         <div class="fbar"><div class="fc active" onclick="sortChip(this)">All</div><div class="fc" onclick="sortChip(this)">Active</div><div class="fc" onclick="sortChip(this)">Awarded</div><div class="fc" onclick="sortChip(this)">Closed</div></div>
-        <div id="dw-proj-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+        <div id="owner-projects-list" style="display:flex;flex-direction:column;gap:6px;"></div>
         <div id="dashRecs1"></div>
         </div>
         <div style="text-align:center;padding:48px 24px;color:var(--mist);">
@@ -988,7 +988,7 @@ async function confirmRoleSwitch() {
         
         
       </div>
-       <div id="dw-jobs-list" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;"></div>
+       <div id="contractor-jobs-list" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;"></div>
       <div id="contractor-bids" style="display:none;">
         <div class="dt">Bid History</div><div class="dss">All bids submitted on DockWork.</div>
         <div class="fbar"><div class="fc active" onclick="sortChip(this)">All</div><div class="fc" onclick="sortChip(this)">Won</div><div class="fc" onclick="sortChip(this)">Pending</div><div class="fc" onclick="sortChip(this)">Not Selected</div></div>
@@ -1938,10 +1938,7 @@ function signOut() {
   if (typeof toast==='function') toast('Signed out.');
 }
 function goDash() {
-  if (_cu) {
-    sp(_cu.dash);
-    setTimeout(function(){ if(window._updateDashboard) _updateDashboard(); }, 80);
-  }
+  if (_cu) sp(_cu.dash);
 }
 function _updateDashboard() {
   if (!_cu) return;
@@ -2509,7 +2506,7 @@ function showSignIn(){document.getElementById("authFormSignIn").style.display="b
 function showSignUp(){document.getElementById("authFormSignIn").style.display="none";document.getElementById("authFormSignUp").style.display="block";document.getElementById("authModalLabel").textContent="CREATE ACCOUNT";document.getElementById("authModalTitle").textContent="Join DockWork";clearAuthError();}
 function clearAuthError(){var el=document.getElementById("authError");if(el){el.style.display="none";el.textContent="";}} 
 function showAuthError(msg){var el=document.getElementById("authError");if(el){el.textContent=msg;el.style.display="block";}}
-function _dashForRole(r){return{owner:"owner-dash",marina:"owner-dash",contractor:"contractor-dash",supplier:"supplier-dash"}[r]||"owner-dash";}
+function _dashForRole(r){return{owner:"owner-dash",marina:"marina-bayshore",contractor:"contractor-dash",supplier:"supplier-dash"}[r]||"owner-dash";}
 async function doRealSignIn() {
   var email = document.getElementById('authEmail').value.trim();
   var password = document.getElementById('authPassword').value;
@@ -2621,68 +2618,33 @@ function _memberCard(user, type) {
   var label = _roleLabels[user.role] || 'Member';
   var name = user.full_name || user.email.split('@')[0];
   var company = user.company_name || '';
-  var displayName = company || name;
-  var initials = name.split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().substring(0,2);
-  var location = user.location ? '📍 ' + user.location : '📍 South Florida';
-  var since = new Date(user.created_at||Date.now()).getFullYear();
-  var uid = user.id;
+  var initials = name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().substring(0,2);
 
-  // Cache member for profile modal
-  window._dwMemberCache = window._dwMemberCache || {};
-  window._dwMemberCache[uid] = user;
-
-  if (type === 'contractor') {
-    return '<div class="ctc-card" style="border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;background:#fff;cursor:pointer;transition:box-shadow .15s;" ' +
-      'onmouseenter="this.style.boxShadow=\'0 4px 20px rgba(0,0,0,.1)\'" onmouseleave="this.style.boxShadow=\'\'"> ' +
-      '<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">' +
-        '<div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#0d2b45,#1a3d5c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;flex-shrink:0;">' + initials + '</div>' +
-        '<div style="flex:1;min-width:0;">' +
-          '<div style="font-weight:600;font-size:15px;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + displayName + '</div>' +
+  if (type === 'contractor' || type === 'supplier') {
+    return '<div class="ctc-card" style="border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;background:#fff;">' +
+      '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">' +
+        '<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0d2b45,#1a3d5c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;flex-shrink:0;">' + initials + '</div>' +
+        '<div>' +
+          '<div style="font-weight:600;font-size:14px;color:#1e293b;">' + (company || name) + '</div>' +
           '<div style="font-size:12px;color:#64748b;">' + label + '</div>' +
         '</div>' +
-        '<span style="background:#f0fdf4;color:#166534;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;border:1px solid #bbf7d0;">✓ Verified</span>' +
       '</div>' +
-      '<div style="font-size:12px;color:#64748b;margin-bottom:10px;">' + location + '</div>' +
-      '<div style="font-size:11px;color:#94a3b8;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #f1f5f9;">Marine Contractor · Member since ' + since + '</div>' +
-      '<div style="display:flex;gap:8px;">' +
-        '<button class="bsm g" style="flex:1;font-size:12px;" onclick="event.stopPropagation();openMemberProfile(window._dwMemberCache[\''+uid+'\'])">View Profile</button>' +
-        '<button class="bsm" style="flex:1;font-size:12px;" onclick="event.stopPropagation();inviteContractorToBid(window._dwMemberCache[\''+uid+'\'])">Invite to Bid</button>' +
-      '</div>' +
+      '<div style="font-size:12px;color:#94a3b8;">Member since ' + new Date(user.created_at||Date.now()).getFullYear() + '</div>' +
     '</div>';
   }
 
-  if (type === 'supplier') {
-    return '<div class="ctc-card" style="border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;background:#fff;cursor:pointer;transition:box-shadow .15s;" ' +
-      'onmouseenter="this.style.boxShadow=\'0 4px 20px rgba(0,0,0,.1)\'" onmouseleave="this.style.boxShadow=\'\'"> ' +
-      '<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">' +
-        '<div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#1a3d5c,#0891b2);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;flex-shrink:0;">' + initials + '</div>' +
-        '<div style="flex:1;min-width:0;">' +
-          '<div style="font-weight:600;font-size:15px;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + displayName + '</div>' +
-          '<div style="font-size:12px;color:#64748b;">' + label + '</div>' +
-        '</div>' +
-        '<span style="background:#eff6ff;color:#1d4ed8;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;border:1px solid #bfdbfe;">✓ Certified</span>' +
-      '</div>' +
-      '<div style="font-size:12px;color:#64748b;margin-bottom:10px;">' + location + '</div>' +
-      '<div style="font-size:11px;color:#94a3b8;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #f1f5f9;">Marine Supplier · Member since ' + since + '</div>' +
-      '<div style="display:flex;gap:8px;">' +
-        '<button class="bsm g" style="flex:1;font-size:12px;" onclick="event.stopPropagation();openMemberProfile(window._dwMemberCache[\''+uid+'\'])">View Profile</button>' +
-        '<button class="bsm" style="flex:1;font-size:12px;background:#0891b2;color:white;border-color:#0891b2;" onclick="event.stopPropagation();requestQuoteFromSupplier(window._dwMemberCache[\''+uid+'\'])">Request Quote</button>' +
-      '</div>' +
-    '</div>';
-  }
-
-  // marina / owner / default card
+  // marina / homeowner card
   return '<div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;background:#fff;">' +
     '<div style="display:flex;align-items:center;gap:12px;">' +
       '<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0d2b45,#1a3d5c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;flex-shrink:0;">' + initials + '</div>' +
       '<div>' +
-        '<div style="font-weight:600;font-size:14px;color:#1e293b;">' + displayName + '</div>' +
+        '<div style="font-weight:600;font-size:14px;color:#1e293b;">' + (company || name) + '</div>' +
         '<div style="font-size:12px;color:#64748b;">' + label + '</div>' +
-        '<div style="font-size:11px;color:#94a3b8;margin-top:2px;">' + location + '</div>' +
+        '<div style="font-size:11px;color:#94a3b8;margin-top:2px;">Member since ' + new Date(user.created_at||Date.now()).getFullYear() + '</div>' +
       '</div>' +
     '</div>' +
   '</div>';
-}}
+}
 
 function _emptyDirectoryState(icon, label) {
   return '<div style="text-align:center;padding:64px 24px;color:#94a3b8;grid-column:1/-1;">' +
@@ -2783,12 +2745,7 @@ async function submitForgotPassword(){
     suc.style.display='block';
     setTimeout(function(){closeForgotPassword();},4000);
   }catch(e){
-    var msg=e.message||'';
-    if(msg.indexOf('testing emails')!==-1||msg.indexOf('verify a domain')!==-1||msg.indexOf('500')!==-1||msg.indexOf('Error sending')!==-1){
-      err.textContent='Password reset email is temporarily unavailable. Please contact support at support@dockwork.com or sign in with your current password.';
-    } else {
-      err.textContent=msg||'Something went wrong. Please try again.';
-    }
+    err.textContent=e.message||'Something went wrong. Please try again.';
     err.style.display='block';
     btn.textContent='Send Reset Link →';btn.disabled=false;
   }
@@ -2958,7 +2915,7 @@ async function submitForgotPassword(){
     </div>
   </div>
 </div>
-<div id="forgotPasswordOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:4000;align-items:center;justify-content:center;" onclick="if(event.target===this)closeForgotPassword()"><div style="background:#fff;border-radius:16px;width:100%;max-width:400px;box-shadow:0 24px 80px rgba(0,0,0,.25);overflow:hidden;"><div style="background:linear-gradient(135deg,#0d2b45,#1a3d5c);padding:24px 28px;"><div style="font-size:11px;letter-spacing:2.5px;color:rgba(100,180,255,.7);margin-bottom:8px;">ACCOUNT RECOVERY</div><div style="font-size:20px;font-weight:600;color:#fff;">Reset your password</div><div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:4px;">Enter your email address below.</div></div><div style="padding:24px 28px;"><div id="forgotPwSuccess" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;padding:12px 16px;border-radius:8px;font-size:14px;margin-bottom:16px;text-align:center;">&#x2713; Reset link sent! Check your inbox.</div><div id="forgotPwError" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;"></div><div id="forgotPwForm"><div style="margin-bottom:16px;"><label style="font-size:12px;color:#64748b;display:block;margin-bottom:5px;">Email address</label><input id="forgotEmail" type="email" placeholder="you@example.com" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box;"/></div><div style="display:flex;gap:10px;"><button onclick="closeForgotPassword()" style="flex:1;padding:11px;border:1.5px solid #e2e8f0;border-radius:8px;background:#fff;font-size:14px;cursor:pointer;color:#64748b;">Cancel</button><button id="forgotSubmitBtn" onclick="submitForgotPassword()" style="flex:2;padding:11px;border:none;border-radius:8px;background:#0d2b45;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">Send Reset Link &rarr;</button></div></div></div></div></div>
+<div id="forgotPasswordOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:4000;align-items:center;justify-content:center;" onclick="if(event.target===this)closeForgotPassword()"><div style="background:#fff;border-radius:16px;width:100%;max-width:400px;box-shadow:0 24px 80px rgba(0,0,0,.25);overflow:hidden;"><div style="background:linear-gradient(135deg,#0d2b45,#1a3d5c);padding:24px 28px;"><div style="font-size:11px;letter-spacing:2.5px;color:rgba(100,180,255,.7);margin-bottom:8px;">ACCOUNT RECOVERY</div><div style="font-size:20px;font-weight:600;color:#fff;">Reset your password</div><div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:4px;">We'll send a reset link to your email.</div></div><div style="padding:24px 28px;"><div id="forgotPwSuccess" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;padding:12px 16px;border-radius:8px;font-size:14px;margin-bottom:16px;text-align:center;">&#x2713; Reset link sent! Check your inbox.</div><div id="forgotPwError" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;"></div><div id="forgotPwForm"><div style="margin-bottom:16px;"><label style="font-size:12px;color:#64748b;display:block;margin-bottom:5px;">Email address</label><input id="forgotEmail" type="email" placeholder="you@example.com" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box;"/></div><div style="display:flex;gap:10px;"><button onclick="closeForgotPassword()" style="flex:1;padding:11px;border:1.5px solid #e2e8f0;border-radius:8px;background:#fff;font-size:14px;cursor:pointer;color:#64748b;">Cancel</button><button id="forgotSubmitBtn" onclick="submitForgotPassword()" style="flex:2;padding:11px;border:none;border-radius:8px;background:#0d2b45;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">Send Reset Link &rarr;</button></div></div></div></div></div>
 
 <script>
 // DockWork Live Data Engine
@@ -2985,9 +2942,7 @@ async function submitForgotPassword(){
   function browseCard(p) {
     const typeLabel = (p.type || 'RFP').toUpperCase();
     const catLabel  = p.project_type || 'Marine Construction';
-    window._dwProjCache = window._dwProjCache || {};
-    window._dwProjCache[p.id] = p;
-    return '<div class="card" style="padding:28px 24px;cursor:pointer;border-radius:4px;" onclick="openProjectDetail(window._dwProjCache[\''+p.id+'\'])">' +
+    return '<div class="card" style="padding:28px 24px;cursor:pointer;border-radius:4px;">' +
       '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">' +
         '<span class="bdg op" style="font-size:11px;">' + typeLabel + ' · ' + catLabel + '</span>' +
         '<span style="font-size:12px;color:var(--mist);">' + timeAgo(p.created_at) + '</span>' +
@@ -3004,9 +2959,7 @@ async function submitForgotPassword(){
   function ownerRow(p) {
     const status = p.status || 'open';
     const badgeClass = status === 'open' ? 'op' : 'g';
-    window._dwProjCache = window._dwProjCache || {};
-    window._dwProjCache[p.id] = p;
-    return '<div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;" onclick="openProjectDetail(window._dwProjCache[\''+p.id+'\'])">' +
+    return '<div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;">' +
       '<div style="flex:1;min-width:0;">' +
         '<div style="font-family:\'Cormorant Garamond\',serif;font-size:17px;color:var(--ink);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + (p.title || 'Untitled') + '</div>' +
         '<div style="font-size:12px;color:var(--mist);">' + (p.project_type || '') + ' · ' + (p.location || '') + ' · Due ' + fmtDeadline(p.deadline) + ' · ' + fmtBudget(p.budget_range) + '</div>' +
@@ -3016,9 +2969,7 @@ async function submitForgotPassword(){
   }
 
   function contractorRow(p) {
-    window._dwProjCache = window._dwProjCache || {};
-    window._dwProjCache[p.id] = p;
-    return '<div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;" onclick="openProjectDetail(window._dwProjCache[\''+p.id+'\'])">' +
+    return '<div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;">' +
       '<div style="flex:1;min-width:0;">' +
         '<div style="font-family:\'Cormorant Garamond\',serif;font-size:17px;color:var(--ink);margin-bottom:3px;">' + (p.title || 'Untitled') + '</div>' +
         '<div style="font-size:12px;color:var(--mist);">' + (p.project_type || '') + ' · ' + (p.location || '') + ' · Due ' + fmtDeadline(p.deadline) + '</div>' +
@@ -3056,11 +3007,9 @@ async function submitForgotPassword(){
   }
 
   async function loadOwnerProjects() {
-    const el = document.getElementById('dw-proj-list');
+    const el = document.getElementById('owner-projects-list');
     if (!el) return;
-    // Always clear first so stale rows never persist
     el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--mist);font-size:14px;">Loading your projects…</div>';
-    window._dwProjCache = window._dwProjCache || {};
     try {
       const { data: { session } } = await _supabase.auth.getSession();
       const uid = session?.user?.id;
@@ -3080,11 +3029,9 @@ async function submitForgotPassword(){
   }
 
   async function loadContractorJobs() {
-    const el = document.getElementById('dw-jobs-list');
+    const el = document.getElementById('contractor-jobs-list');
     if (!el) return;
-    // Always clear first so stale rows never persist
     el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--mist);font-size:14px;">Loading matched jobs…</div>';
-    window._dwProjCache = window._dwProjCache || {};
     try {
       const { data, error } = await _supabase.from('dw_projects').select('*').eq('status','open').order('created_at', { ascending: false }).limit(30);
       if (error) throw error;
@@ -3118,47 +3065,24 @@ async function submitForgotPassword(){
           setTimeout(loadBrowseJobs, 80);
         }
         if (page === 'owner-dash') {
-          // Land on My Projects and load immediately, update sidebar
+          // Land on My Projects and load immediately
           setTimeout(function() {
-            if (window._updateDashboard) _updateDashboard();
             if (window.dt) { window.dt('owner', 'projects'); }
             setTimeout(loadOwnerProjects, 80);
           }, 60);
         }
         if (page === 'contractor-dash') {
-          // Land on Job Feed and load immediately, update sidebar
+          // Land on Job Feed and load immediately
           setTimeout(function() {
-            if (window._updateDashboard) _updateDashboard();
             if (window.dt) { window.dt('contractor', 'feed'); }
             setTimeout(loadContractorJobs, 80);
           }, 60);
         }
         if (page === 'supplier-dash') {
-          // Land on RFQ Inbox, update sidebar
+          // Land on RFQ Inbox
           setTimeout(function() {
-            if (window._updateDashboard) _updateDashboard();
             if (window.dt) { window.dt('supplier', 'rfqs'); }
           }, 60);
-        }
-        if (page === 'suppliers') {
-          setTimeout(function() {
-            if (window._loadDirectoryPage) window._loadDirectoryPage('page-suppliers','supplier','ctc-grid','🛒','Suppliers');
-          }, 80);
-        }
-        if (page === 'contractors') {
-          setTimeout(function() {
-            if (window._loadDirectoryPage) window._loadDirectoryPage('page-contractors','contractor','ctc-grid','🔨','Contractors');
-          }, 80);
-        }
-        if (page === 'homeowners') {
-          setTimeout(function() {
-            if (window._loadDirectoryPage) window._loadDirectoryPage('page-homeowners','owner','homeowner-grid','🏡','Homeowners');
-          }, 80);
-        }
-        if (page === 'marina-owners') {
-          setTimeout(function() {
-            if (window._loadDirectoryPage) window._loadDirectoryPage('page-marina-owners','marina','marina-grid','⚓','Marina Operators');
-          }, 80);
         }
       };
       window.sp._dwWrapped = true;
@@ -3182,559 +3106,13 @@ async function submitForgotPassword(){
     // Auto-load whichever section is active on first paint
     setTimeout(function() {
       if (document.getElementById('browse-jobs-list'))     loadBrowseJobs();
-      if (document.getElementById('dw-proj-list'))  loadOwnerProjects();
-      if (document.getElementById('dw-jobs-list')) loadContractorJobs();
+      if (document.getElementById('owner-projects-list'))  loadOwnerProjects();
+      if (document.getElementById('contractor-jobs-list')) loadContractorJobs();
     }, 150);
   });
 
 })();
 </script>
 <script></script>
-
-
-
-<!-- ═══ PROJECT MANAGEMENT MODAL ═══ -->
-<div id="projectDetailModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;overflow-y:auto;" onclick="if(event.target===this)closeProjectDetail()">
-  <div style="background:white;max-width:680px;width:92%;margin:48px auto 48px;border-radius:6px;overflow:hidden;box-shadow:0 32px 100px rgba(0,0,0,.35);">
-
-    <!-- Header -->
-    <div id="pdm-header" style="background:linear-gradient(135deg,#0d2b45,#1a3d5c);padding:28px 32px;">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
-        <div style="flex:1;">
-          <div id="pdm-badge" style="font-size:10px;letter-spacing:2px;color:rgba(100,180,255,.8);margin-bottom:8px;"></div>
-          <div id="pdm-title-display" style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:white;line-height:1.3;margin-bottom:6px;"></div>
-          <div id="pdm-location-display" style="font-size:13px;color:rgba(255,255,255,.6);"></div>
-        </div>
-        <button onclick="closeProjectDetail()" style="background:rgba(255,255,255,.12);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:20px;flex-shrink:0;line-height:30px;text-align:center;">×</button>
-      </div>
-    </div>
-
-    <!-- Stats strip -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border);">
-      <div style="padding:16px 20px;border-right:1px solid var(--border);">
-        <div style="font-size:10px;letter-spacing:1.5px;color:var(--mist);margin-bottom:4px;">BUDGET</div>
-        <div id="pdm-budget" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ink);"></div>
-      </div>
-      <div style="padding:16px 20px;border-right:1px solid var(--border);">
-        <div style="font-size:10px;letter-spacing:1.5px;color:var(--mist);margin-bottom:4px;">DEADLINE</div>
-        <div id="pdm-deadline" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ink);"></div>
-      </div>
-      <div style="padding:16px 20px;">
-        <div style="font-size:10px;letter-spacing:1.5px;color:var(--mist);margin-bottom:4px;">STATUS</div>
-        <div id="pdm-status-display" style="font-size:13px;font-weight:600;"></div>
-      </div>
-    </div>
-
-    <!-- Body -->
-    <div style="padding:28px 32px;">
-
-      <!-- Description (always shown) -->
-      <div style="margin-bottom:24px;">
-        <div style="font-size:10px;letter-spacing:1.5px;color:var(--mist);margin-bottom:8px;">PROJECT DESCRIPTION</div>
-        <div id="pdm-desc" style="font-size:14px;color:var(--slate);line-height:1.8;"></div>
-      </div>
-
-      <!-- OWNER/MARINA: Edit form -->
-      <div id="pdm-owner-section" style="display:none;">
-        <div style="border-top:1px solid var(--border);padding-top:24px;margin-bottom:20px;">
-          <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:16px;">✏️ Edit Posting</div>
-          <div style="display:flex;flex-direction:column;gap:14px;">
-            <div>
-              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">TITLE</label>
-              <input id="pdm-edit-title" class="fi" style="width:100%;" type="text">
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-              <div>
-                <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">BUDGET RANGE</label>
-                <input id="pdm-edit-budget" class="fi" type="text" placeholder="e.g. $45,000 – $75,000">
-              </div>
-              <div>
-                <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">DEADLINE</label>
-                <input id="pdm-edit-deadline" class="fi" type="date">
-              </div>
-            </div>
-            <div>
-              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">DESCRIPTION</label>
-              <textarea id="pdm-edit-desc" class="ft" style="height:120px;"></textarea>
-            </div>
-            <div>
-              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">STATUS</label>
-              <select id="pdm-edit-status" class="fs" style="width:auto;">
-                <option value="open">Open — Accepting bids</option>
-                <option value="awarded">Awarded</option>
-                <option value="closed">Closed</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button class="bsm g" onclick="saveProjectEdit()" id="pdm-save-btn">💾 Save Changes</button>
-          <button class="bsm" style="background:#fef2f2;border-color:#fecaca;color:#991b1b;" onclick="confirmCloseProject()">🗑 Close Project</button>
-          <button class="bsm" onclick="closeProjectDetail()">Cancel</button>
-        </div>
-        <div id="pdm-save-msg" style="display:none;margin-top:12px;font-size:13px;color:var(--teal);"></div>
-      </div>
-
-      <!-- CONTRACTOR: Job detail + bid + RFQ actions -->
-      <div id="pdm-contractor-section" style="display:none;">
-
-        <!-- Submit Bid -->
-        <div style="border-top:1px solid var(--border);padding-top:20px;margin-bottom:20px;">
-          <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:14px;">🔨 Submit a Bid</div>
-          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:14px;">
-            <div>
-              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">YOUR BID AMOUNT</label>
-              <input id="pdm-bid-amount" class="fi" type="text" placeholder="e.g. $62,000">
-            </div>
-            <div>
-              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">COVER NOTE (optional)</label>
-              <textarea id="pdm-bid-note" class="ft" style="height:80px;" placeholder="Experience, availability, why you're the right fit…"></textarea>
-            </div>
-          </div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="bsm g" onclick="submitBidFromModal()">📤 Submit Bid</button>
-            <button class="bsm" onclick="messageProjectOwner()">💬 Message Owner</button>
-            <button class="bsm" onclick="closeProjectDetail()">Close</button>
-          </div>
-          <div id="pdm-bid-msg" style="display:none;margin-top:10px;font-size:13px;color:var(--teal);"></div>
-        </div>
-
-        <!-- RFQ to Suppliers -->
-        <div style="border-top:1px solid var(--border);padding-top:20px;">
-          <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;">📦 Request Material Quotes from Suppliers</div>
-          <div style="font-size:13px;color:var(--mist);margin-bottom:12px);">Send an RFQ to registered suppliers for the materials you need on this project.</div>
-          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:14px;">
-            <div>
-              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">MATERIALS NEEDED</label>
-              <textarea id="pdm-rfq-desc" class="ft" style="height:70px;" placeholder="e.g. Marine-grade PT lumber 4,200 BF, stainless hardware, composite decking…"></textarea>
-            </div>
-            <div>
-              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">BUDGET RANGE (optional)</label>
-              <input id="pdm-rfq-budget" class="fi" type="text" placeholder="e.g. $15,000 – $25,000">
-            </div>
-          </div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="bsm" style="background:#0891b2;color:white;border-color:#0891b2;" onclick="submitRFQFromModal()">📤 Send RFQ to Suppliers</button>
-            <button class="bsm" onclick="closeProjectDetail();sp('suppliers')">🏪 Browse Suppliers</button>
-          </div>
-          <div id="pdm-rfq-msg" style="display:none;margin-top:10px;font-size:13px;color:var(--teal);"></div>
-        </div>
-
-      </div>
-
-      <!-- SUPPLIER: RFQ detail + quote action -->
-      <div id="pdm-supplier-section" style="display:none;">
-        <div style="border-top:1px solid var(--border);padding-top:20px;">
-          <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:14px;">📦 Submit a Quote</div>
-          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
-            <div>
-              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">QUOTE AMOUNT</label>
-              <input id="pdm-quote-amount" class="fi" type="text" placeholder="e.g. $21,500">
-            </div>
-            <div>
-              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">QUOTE DETAILS</label>
-              <textarea id="pdm-quote-note" class="ft" style="height:90px;" placeholder="Describe what's included, lead time, delivery terms…"></textarea>
-            </div>
-          </div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="bsm g" onclick="submitQuoteFromModal()">📤 Submit Quote</button>
-            <button class="bsm" onclick="closeProjectDetail();sp('messages')">💬 Message Poster</button>
-            <button class="bsm" onclick="closeProjectDetail()">Close</button>
-          </div>
-          <div id="pdm-quote-msg" style="display:none;margin-top:12px;font-size:13px;color:var(--teal);"></div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<script>
-// ── Project Detail Modal ───────────────────────────────────────────────────
-var _pdmProject = null;
-
-async function openProjectDetail(p) {
-  if (!p) return;
-  _pdmProject = p;
-
-  var typeLabel = (p.type || 'RFP').toUpperCase();
-  var catLabel  = p.project_type || 'Marine Construction';
-  document.getElementById('pdm-badge').textContent = typeLabel + ' · ' + catLabel;
-  document.getElementById('pdm-title-display').textContent = p.title || 'Untitled';
-  document.getElementById('pdm-location-display').textContent = p.location ? '📍 ' + p.location : '';
-  document.getElementById('pdm-budget').textContent = p.budget_range || 'TBD';
-  document.getElementById('pdm-deadline').textContent = p.deadline
-    ? new Date(p.deadline).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})
-    : 'Open';
-  var statusEl = document.getElementById('pdm-status-display');
-  statusEl.textContent = (p.status || 'open').toUpperCase();
-  statusEl.style.color = p.status === 'open' ? 'var(--teal)' : 'var(--mist)';
-  document.getElementById('pdm-desc').textContent = p.description || 'No description provided.';
-
-  // Hide all role sections
-  document.getElementById('pdm-owner-section').style.display = 'none';
-  document.getElementById('pdm-contractor-section').style.display = 'none';
-  document.getElementById('pdm-supplier-section').style.display = 'none';
-  document.getElementById('pdm-save-msg').style.display = 'none';
-  document.getElementById('pdm-bid-msg').style.display = 'none';
-  document.getElementById('pdm-quote-msg').style.display = 'none';
-
-  // Always get role + ID from live Supabase session — never trust stale _cu
-  var sessionData = await _supabase.auth.getSession();
-  var liveUid = sessionData?.data?.session?.user?.id || null;
-
-  // Get fresh role from dw_users
-  var role = 'guest';
-  if (liveUid) {
-    var profileRes = await _supabase.from('dw_users').select('role').eq('id', liveUid).single();
-    role = profileRes?.data?.role || window._cu?.role || 'guest';
-    // Keep _cu in sync
-    if (window._cu) { window._cu.id = liveUid; window._cu.role = role; }
-  }
-  var isOwnerRole = (role === 'owner' || role === 'marina');
-  var isMyProject = liveUid && p.owner_id === liveUid;
-
-  if (isOwnerRole && isMyProject) {
-    // Owner/marina viewing their OWN project — full edit, all fields enabled
-    ['pdm-edit-title','pdm-edit-budget','pdm-edit-deadline','pdm-edit-desc','pdm-edit-status','pdm-save-btn'].forEach(function(id){
-      var el = document.getElementById(id); if(el) el.disabled = false;
-    });
-    document.getElementById('pdm-edit-title').value = p.title || '';
-    document.getElementById('pdm-edit-budget').value = p.budget_range || '';
-    document.getElementById('pdm-edit-deadline').value = p.deadline ? p.deadline.substring(0,10) : '';
-    document.getElementById('pdm-edit-desc').value = p.description || '';
-    document.getElementById('pdm-edit-status').value = p.status || 'open';
-    document.getElementById('pdm-owner-section').style.display = 'block';
-  } else if (isOwnerRole && !isMyProject) {
-    // Owner/marina viewing someone else's project — show read-only info, no edit section
-    // Just close — they can see the full details in the top section already
-    document.getElementById('projectDetailModal').style.display = 'block';
-    document.body.style.overflow = 'hidden';
-    return; // no action section needed
-  } else if (role === 'contractor') {
-    document.getElementById('pdm-bid-amount').value = '';
-    document.getElementById('pdm-bid-note').value = '';
-    document.getElementById('pdm-contractor-section').style.display = 'block';
-  } else if (role === 'supplier') {
-    document.getElementById('pdm-quote-amount').value = '';
-    document.getElementById('pdm-quote-note').value = '';
-    document.getElementById('pdm-supplier-section').style.display = 'block';
-  }
-
-  document.getElementById('projectDetailModal').style.display = 'block';
-  document.body.style.overflow = 'hidden';
-}
-
-function closeProjectDetail() {
-  document.getElementById('projectDetailModal').style.display = 'none';
-  document.body.style.overflow = '';
-  _pdmProject = null;
-}
-
-async function saveProjectEdit() {
-  if (!_pdmProject) return;
-  var btn = document.getElementById('pdm-save-btn');
-  var msg = document.getElementById('pdm-save-msg');
-  btn.textContent = 'Saving…'; btn.disabled = true;
-  try {
-    var updates = {
-      title:        document.getElementById('pdm-edit-title').value.trim(),
-      budget_range: document.getElementById('pdm-edit-budget').value.trim(),
-      deadline:     document.getElementById('pdm-edit-deadline').value || null,
-      description:  document.getElementById('pdm-edit-desc').value.trim(),
-      status:       document.getElementById('pdm-edit-status').value
-    };
-    var result = await _supabase.from('dw_projects').update(updates).eq('id', _pdmProject.id);
-    if (result.error) throw new Error(result.error.message);
-    // Update cache
-    Object.assign(_pdmProject, updates);
-    if (window._dwProjCache && window._dwProjCache[_pdmProject.id]) {
-      Object.assign(window._dwProjCache[_pdmProject.id], updates);
-    }
-    // Refresh displays
-    document.getElementById('pdm-title-display').textContent = updates.title;
-    document.getElementById('pdm-budget').textContent = updates.budget_range || 'TBD';
-    document.getElementById('pdm-status-display').textContent = updates.status.toUpperCase();
-    document.getElementById('pdm-status-display').style.color = updates.status === 'open' ? 'var(--teal)' : 'var(--mist)';
-    msg.textContent = '✓ Saved successfully';
-    msg.style.color = 'var(--teal)';
-    msg.style.display = 'block';
-    // Refresh the lists
-    if (window._loadOwnerProjects) window._loadOwnerProjects();
-    if (window._loadBrowseJobs)    window._loadBrowseJobs();
-  } catch(e) {
-    msg.textContent = '✗ Error: ' + e.message;
-    msg.style.color = '#991b1b';
-    msg.style.display = 'block';
-  }
-  btn.textContent = '💾 Save Changes'; btn.disabled = false;
-}
-
-function confirmCloseProject() {
-  if (!_pdmProject) return;
-  if (!confirm('Mark this project as Closed? It will no longer appear in Browse.')) return;
-  document.getElementById('pdm-edit-status').value = 'closed';
-  saveProjectEdit();
-}
-
-async function submitBidFromModal() {
-  if (!_pdmProject) return;
-  var btn = document.querySelector('#pdm-contractor-section .bsm.g');
-  var msg = document.getElementById('pdm-bid-msg');
-  var amount = document.getElementById('pdm-bid-amount').value.trim();
-  var note   = document.getElementById('pdm-bid-note').value.trim();
-  if (!amount) { msg.textContent = 'Please enter a bid amount.'; msg.style.color='#991b1b'; msg.style.display='block'; return; }
-  btn.textContent = 'Submitting…'; btn.disabled = true;
-  try {
-    var result = await _supabase.from('dw_bids').insert([{
-      project_id: _pdmProject.id,
-      bidder_id:  window._cu?.id,
-      amount:     amount,
-      note:       note,
-      status:     'pending'
-    }]);
-    if (result.error) throw new Error(result.error.message);
-    msg.textContent = '✓ Bid submitted! The owner will be notified.';
-    msg.style.color = 'var(--teal)';
-    msg.style.display = 'block';
-    document.getElementById('pdm-bid-amount').value = '';
-    document.getElementById('pdm-bid-note').value = '';
-  } catch(e) {
-    msg.textContent = '✗ ' + e.message;
-    msg.style.color = '#991b1b';
-    msg.style.display = 'block';
-  }
-  btn.textContent = '📤 Submit Bid'; btn.disabled = false;
-}
-
-async function submitQuoteFromModal() {
-  if (!_pdmProject) return;
-  var btn = document.querySelector('#pdm-supplier-section .bsm.g');
-  var msg = document.getElementById('pdm-quote-msg');
-  var amount = document.getElementById('pdm-quote-amount').value.trim();
-  var note   = document.getElementById('pdm-quote-note').value.trim();
-  if (!amount) { msg.textContent = 'Please enter a quote amount.'; msg.style.color='#991b1b'; msg.style.display='block'; return; }
-  btn.textContent = 'Submitting…'; btn.disabled = true;
-  try {
-    var result = await _supabase.from('dw_quotes').insert([{
-      project_id: _pdmProject.id,
-      supplier_id: window._cu?.id,
-      amount:      amount,
-      note:        note,
-      status:      'pending'
-    }]);
-    if (result.error) throw new Error(result.error.message);
-    msg.textContent = '✓ Quote submitted! The poster will be notified.';
-    msg.style.color = 'var(--teal)';
-    msg.style.display = 'block';
-    document.getElementById('pdm-quote-amount').value = '';
-    document.getElementById('pdm-quote-note').value = '';
-  } catch(e) {
-    msg.textContent = '✗ ' + e.message;
-    msg.style.color = '#991b1b';
-    msg.style.display = 'block';
-  }
-  btn.textContent = '📤 Submit Quote'; btn.disabled = false;
-
-}
-
-function messageProjectOwner() {
-  if (!_pdmProject) return;
-  // Store context so messages page can pre-fill the thread
-  window._dwMessageContext = {
-    projectId: _pdmProject.id,
-    projectTitle: _pdmProject.title,
-    ownerId: _pdmProject.owner_id
-  };
-  closeProjectDetail();
-  sp('messages');
-  // Show a toast with context
-  if (window.toast) toast('Opening messages — project: ' + (_pdmProject.title||'').substring(0,40), 'info');
-}
-
-async function submitRFQFromModal() {
-  if (!_pdmProject) return;
-  var btn = document.querySelector('#pdm-contractor-section .bsm[onclick="submitRFQFromModal()"]');
-  var msg = document.getElementById('pdm-rfq-msg');
-  var desc   = document.getElementById('pdm-rfq-desc')?.value?.trim();
-  var budget = document.getElementById('pdm-rfq-budget')?.value?.trim();
-  if (!desc) {
-    msg.textContent = 'Please describe the materials needed.';
-    msg.style.color = '#991b1b';
-    msg.style.display = 'block';
-    return;
-  }
-  if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
-  try {
-    // Post as a supplier-RFQ type project so suppliers see it
-    var sessionData = await _supabase.auth.getSession();
-    var uid = sessionData?.data?.session?.user?.id;
-    var result = await _supabase.from('dw_projects').insert([{
-      owner_id:     uid,
-      title:        'Material RFQ — ' + (_pdmProject.title||'Project').substring(0,50),
-      description:  desc + (budget ? '\n\nBudget: ' + budget : '') + '\n\nLinked project: ' + (_pdmProject.title||''),
-      type:         'rfq',
-      project_type: 'Materials & Supply',
-      location:     _pdmProject.location || '',
-      budget_range: budget || '',
-      deadline:     _pdmProject.deadline || null,
-      status:       'open'
-    }]);
-    if (result.error) throw new Error(result.error.message);
-    msg.textContent = '✓ RFQ posted — registered suppliers will respond shortly.';
-    msg.style.color = 'var(--teal)';
-    msg.style.display = 'block';
-    document.getElementById('pdm-rfq-desc').value = '';
-    document.getElementById('pdm-rfq-budget').value = '';
-    if (window._loadBrowseJobs) window._loadBrowseJobs();
-  } catch(e) {
-    msg.textContent = '✗ ' + e.message;
-    msg.style.color = '#991b1b';
-    msg.style.display = 'block';
-  }
-  if (btn) { btn.textContent = '📤 Send RFQ to Suppliers'; btn.disabled = false; }
-}
-</script>
-
-
-<!-- ═══ MEMBER PROFILE MODAL ═══ -->
-<div id="memberProfileModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9100;overflow-y:auto;" onclick="if(event.target===this)closeMemberProfile()">
-  <div style="background:white;max-width:560px;width:92%;margin:60px auto 48px;border-radius:8px;overflow:hidden;box-shadow:0 32px 100px rgba(0,0,0,.3);">
-    <!-- Header -->
-    <div style="background:linear-gradient(135deg,#0d2b45,#1a3d5c);padding:32px;">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-        <div style="display:flex;align-items:center;gap:16px;">
-          <div id="mp-avatar" style="width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:20px;flex-shrink:0;"></div>
-          <div>
-            <div id="mp-name" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:4px;"></div>
-            <div id="mp-role-label" style="font-size:13px;color:rgba(255,255,255,.7);margin-bottom:6px;"></div>
-            <span id="mp-badge" style="background:rgba(255,255,255,.15);color:#fff;font-size:10px;padding:3px 10px;border-radius:20px;font-weight:600;"></span>
-          </div>
-        </div>
-        <button onclick="closeMemberProfile()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;line-height:30px;text-align:center;flex-shrink:0;">×</button>
-      </div>
-    </div>
-    <!-- Body -->
-    <div style="padding:28px 32px;">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
-        <div style="background:#f8fafc;border-radius:6px;padding:14px;">
-          <div style="font-size:10px;letter-spacing:1.5px;color:#94a3b8;margin-bottom:4px;">COMPANY</div>
-          <div id="mp-company" style="font-size:14px;color:#1e293b;font-weight:500;"></div>
-        </div>
-        <div style="background:#f8fafc;border-radius:6px;padding:14px;">
-          <div style="font-size:10px;letter-spacing:1.5px;color:#94a3b8;margin-bottom:4px;">LOCATION</div>
-          <div id="mp-location" style="font-size:14px;color:#1e293b;font-weight:500;"></div>
-        </div>
-        <div style="background:#f8fafc;border-radius:6px;padding:14px;">
-          <div style="font-size:10px;letter-spacing:1.5px;color:#94a3b8;margin-bottom:4px;">MEMBER SINCE</div>
-          <div id="mp-since" style="font-size:14px;color:#1e293b;font-weight:500;"></div>
-        </div>
-        <div style="background:#f8fafc;border-radius:6px;padding:14px;">
-          <div style="font-size:10px;letter-spacing:1.5px;color:#94a3b8;margin-bottom:4px;">STATUS</div>
-          <div style="font-size:14px;color:#16a34a;font-weight:600;">✓ Active Member</div>
-        </div>
-      </div>
-      <!-- Actions -->
-      <div id="mp-actions" style="border-top:1px solid #f1f5f9;padding-top:20px;display:flex;gap:10px;flex-wrap:wrap;"></div>
-      <div id="mp-action-msg" style="display:none;margin-top:12px;font-size:13px;color:#0891b2;"></div>
-    </div>
-  </div>
-</div>
-
-<script>
-// ── Member Profile Modal ─────────────────────────────────────────
-var _mpMember = null;
-
-function openMemberProfile(m) {
-  if (!m) return;
-  _mpMember = m;
-  var name = m.full_name || m.email?.split('@')[0] || 'Member';
-  var company = m.company_name || name;
-  var initials = name.split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().substring(0,2);
-  var role = m.role || 'member';
-  var roleLabels = { owner:'Homeowner / HOA', marina:'Marina Operator', contractor:'Marine Contractor', supplier:'Marine Supplier' };
-  var roleLabel = roleLabels[role] || 'Member';
-  var badgeText = role === 'contractor' ? '✓ Verified Contractor' : role === 'supplier' ? '✓ Certified Supplier' : '✓ Verified Member';
-  document.getElementById('mp-avatar').textContent = initials;
-  document.getElementById('mp-name').textContent = name;
-  document.getElementById('mp-role-label').textContent = roleLabel;
-  document.getElementById('mp-badge').textContent = badgeText;
-  document.getElementById('mp-company').textContent = company;
-  document.getElementById('mp-location').textContent = m.location || 'South Florida';
-  document.getElementById('mp-since').textContent = new Date(m.created_at||Date.now()).getFullYear();
-  document.getElementById('mp-action-msg').style.display = 'none';
-  // Build action buttons based on role
-  var actions = document.getElementById('mp-actions');
-  if (role === 'contractor') {
-    actions.innerHTML =
-      '<button class="bsm g" onclick="inviteContractorToBid(_mpMember)" style="flex:1;">📋 Invite to Bid</button>' +
-      '<button class="bsm" onclick="closeMemberProfile();sp('messages')" style="flex:1;">💬 Message</button>' +
-      '<button class="bsm" onclick="closeMemberProfile()">Close</button>';
-  } else if (role === 'supplier') {
-    actions.innerHTML =
-      '<button class="bsm g" style="flex:1;background:#0891b2;border-color:#0891b2;" onclick="requestQuoteFromSupplier(_mpMember)">📦 Request Quote</button>' +
-      '<button class="bsm" onclick="closeMemberProfile();sp('messages')" style="flex:1;">💬 Message</button>' +
-      '<button class="bsm" onclick="closeMemberProfile()">Close</button>';
-  } else {
-    actions.innerHTML = '<button class="bsm" onclick="closeMemberProfile()">Close</button>';
-  }
-  document.getElementById('memberProfileModal').style.display = 'block';
-  document.body.style.overflow = 'hidden';
-}
-
-function closeMemberProfile() {
-  document.getElementById('memberProfileModal').style.display = 'none';
-  document.body.style.overflow = '';
-  _mpMember = null;
-}
-
-async function inviteContractorToBid(m) {
-  var msg = document.getElementById('mp-action-msg');
-  // Get current user's open projects to pick from
-  var sessionData = await _supabase.auth.getSession();
-  var uid = sessionData?.data?.session?.user?.id;
-  if (!uid) { msg.textContent = 'Please sign in to invite contractors.'; msg.style.display='block'; return; }
-  var { data: projects } = await _supabase.from('dw_projects').select('id,title').eq('owner_id', uid).eq('status','open');
-  if (!projects || projects.length === 0) {
-    msg.textContent = 'You have no open projects to invite them to. Post a project first.';
-    msg.style.color = '#991b1b';
-    msg.style.display = 'block';
-    return;
-  }
-  // Use first open project (or could show a picker)
-  var proj = projects[0];
-  var result = await _supabase.from('dw_invites').insert([{
-    project_id: proj.id,
-    from_id: uid,
-    to_id: m.id,
-    type: 'bid_invite',
-    status: 'pending'
-  }]);
-  msg.textContent = result.error
-    ? '✗ ' + result.error.message
-    : '✓ Invitation sent to ' + (m.full_name||'contractor') + ' for "' + proj.title.substring(0,40) + '"';
-  msg.style.color = result.error ? '#991b1b' : '#0891b2';
-  msg.style.display = 'block';
-}
-
-async function requestQuoteFromSupplier(m) {
-  var msg = document.getElementById('mp-action-msg');
-  msg.textContent = 'Opening RFQ form…';
-  msg.style.color = '#0891b2';
-  msg.style.display = 'block';
-  setTimeout(function() {
-    closeMemberProfile();
-    // Navigate to contractor dash RFQ tab
-    var role = window._cu?.role;
-    if (role === 'contractor') {
-      goDash();
-      setTimeout(function(){ if(window.dt) dt('contractor','rfqs'); }, 300);
-    } else {
-      sp('browse');
-    }
-  }, 600);
-}
-</script>
-
 </body>
 </html>
