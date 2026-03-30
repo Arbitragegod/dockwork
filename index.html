@@ -1938,7 +1938,10 @@ function signOut() {
   if (typeof toast==='function') toast('Signed out.');
 }
 function goDash() {
-  if (_cu) sp(_cu.dash);
+  if (_cu) {
+    sp(_cu.dash);
+    setTimeout(function(){ if(window._updateDashboard) _updateDashboard(); }, 80);
+  }
 }
 function _updateDashboard() {
   if (!_cu) return;
@@ -3078,22 +3081,25 @@ async function submitForgotPassword(){
           setTimeout(loadBrowseJobs, 80);
         }
         if (page === 'owner-dash') {
-          // Land on My Projects and load immediately
+          // Land on My Projects and load immediately, update sidebar
           setTimeout(function() {
+            if (window._updateDashboard) _updateDashboard();
             if (window.dt) { window.dt('owner', 'projects'); }
             setTimeout(loadOwnerProjects, 80);
           }, 60);
         }
         if (page === 'contractor-dash') {
-          // Land on Job Feed and load immediately
+          // Land on Job Feed and load immediately, update sidebar
           setTimeout(function() {
+            if (window._updateDashboard) _updateDashboard();
             if (window.dt) { window.dt('contractor', 'feed'); }
             setTimeout(loadContractorJobs, 80);
           }, 60);
         }
         if (page === 'supplier-dash') {
-          // Land on RFQ Inbox
+          // Land on RFQ Inbox, update sidebar
           setTimeout(function() {
+            if (window._updateDashboard) _updateDashboard();
             if (window.dt) { window.dt('supplier', 'rfqs'); }
           }, 60);
         }
