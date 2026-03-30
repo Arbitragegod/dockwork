@@ -3360,13 +3360,22 @@ async function openProjectDetail(p) {
   var isMyProject = liveUid && p.owner_id === liveUid;
 
   if (isOwnerRole && isMyProject) {
-    // Owner/marina viewing their own project — full edit
+    // Owner/marina viewing their OWN project — full edit, all fields enabled
+    ['pdm-edit-title','pdm-edit-budget','pdm-edit-deadline','pdm-edit-desc','pdm-edit-status','pdm-save-btn'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.disabled = false;
+    });
     document.getElementById('pdm-edit-title').value = p.title || '';
     document.getElementById('pdm-edit-budget').value = p.budget_range || '';
     document.getElementById('pdm-edit-deadline').value = p.deadline ? p.deadline.substring(0,10) : '';
     document.getElementById('pdm-edit-desc').value = p.description || '';
     document.getElementById('pdm-edit-status').value = p.status || 'open';
     document.getElementById('pdm-owner-section').style.display = 'block';
+  } else if (isOwnerRole && !isMyProject) {
+    // Owner/marina viewing someone else's project — show read-only info, no edit section
+    // Just close — they can see the full details in the top section already
+    document.getElementById('projectDetailModal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    return; // no action section needed
   } else if (role === 'contractor') {
     document.getElementById('pdm-bid-amount').value = '';
     document.getElementById('pdm-bid-note').value = '';
@@ -3375,12 +3384,6 @@ async function openProjectDetail(p) {
     document.getElementById('pdm-quote-amount').value = '';
     document.getElementById('pdm-quote-note').value = '';
     document.getElementById('pdm-supplier-section').style.display = 'block';
-  } else if (isOwnerRole) {
-    // Owner viewing someone else's project — read only
-    document.getElementById('pdm-owner-section').style.display = 'block';
-    ['pdm-edit-title','pdm-edit-budget','pdm-edit-deadline','pdm-edit-desc','pdm-edit-status','pdm-save-btn'].forEach(function(id){
-      var el = document.getElementById(id); if(el) el.disabled = true;
-    });
   }
 
   document.getElementById('projectDetailModal').style.display = 'block';
