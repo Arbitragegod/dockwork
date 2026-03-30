@@ -3966,6 +3966,79 @@ function signOut() {
 function goDash() {
   if (_cu) sp(_cu.dash);
 }
+function _updateDashboard() {
+  if (!_cu) return;
+  var name = _cu.name || '';
+  var role = _cu.role || '';
+  var company = _cu.company || name;
+
+  // Helper to set text of an element safely
+  function setText(el, val) { if (el) el.textContent = val; }
+  function setHtml(el, val) { if (el) el.innerHTML = val; }
+
+  // Work out first name
+  var firstName = name.split(' ')[0];
+
+  // Time-based greeting
+  var hr = new Date().getHours();
+  var greet = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
+
+  // ── OWNER DASHBOARD ──────────────────────────────────────
+  if (role === 'owner' || role === 'marina') {
+    // Sidebar name + location
+    var sidebarName = document.querySelector('#page-owner-dash .sidebar .db-user-name, #page-owner-dash [class*="db-user"] div:first-child');
+    var allDivs = document.querySelectorAll('#page-owner-dash div');
+    allDivs.forEach(function(d) {
+      if (d.childElementCount === 0) {
+        if (d.textContent.trim() === 'Robert Ashworth') d.textContent = name;
+        if (d.textContent.trim() === 'Verified Owner · Delray Beach, FL') d.textContent = company || name;
+        if (d.textContent.trim().startsWith('Good morning, Robert') ||
+            d.textContent.trim().startsWith('Good afternoon, Robert') ||
+            d.textContent.trim().startsWith('Good evening, Robert')) {
+          d.textContent = greet + ', ' + firstName + '.';
+        }
+      }
+    });
+    // Also fix spans
+    document.querySelectorAll('#page-owner-dash span').forEach(function(s) {
+      if (s.textContent.trim() === 'Verified Owner') s.textContent = role === 'marina' ? 'Marina Operator' : 'Verified Owner';
+    });
+  }
+
+  // ── CONTRACTOR DASHBOARD ─────────────────────────────────
+  if (role === 'contractor') {
+    document.querySelectorAll('#page-contractor-dash div, #page-contractor-dash h2, #page-contractor-dash h3').forEach(function(d) {
+      if (d.childElementCount === 0) {
+        if (d.textContent.trim() === 'Gulf Coast Marine Builders') d.textContent = company || name;
+        if (d.textContent.trim() === 'Gold Verified · Tampa, FL') d.textContent = company || name;
+      }
+    });
+    var ctcPrevName = document.getElementById('ctcPrevName');
+    if (ctcPrevName) ctcPrevName.textContent = company || name;
+    document.querySelectorAll('#page-contractor-dash .mpf-prev-name').forEach(function(el){ el.textContent = company || name; });
+    document.querySelectorAll('#page-contractor-dash .mpf-prev-loc').forEach(function(el){ el.textContent = ''; });
+    document.querySelectorAll('#page-contractor-dash .badge.gold').forEach(function(el){ el.textContent = 'Charter Member'; });
+  }
+
+  // ── SUPPLIER DASHBOARD ───────────────────────────────────
+  if (role === 'supplier') {
+    document.querySelectorAll('#page-supplier-dash div').forEach(function(d) {
+      if (d.childElementCount === 0 && d.textContent.trim() === 'Gulf Marine Supply Co.') d.textContent = company || name;
+    });
+  }
+
+  // ── GREETING on any dash (dt class) ──────────────────────
+  document.querySelectorAll('.dt').forEach(function(el) {
+    if (el.childElementCount === 0 && (
+      el.textContent.includes('Good morning') ||
+      el.textContent.includes('Good afternoon') ||
+      el.textContent.includes('Good evening')
+    )) {
+      el.textContent = greet + ', ' + firstName + '.';
+    }
+  });
+}
+
 function _updateNav() {
   var si  = document.getElementById('siLabel');
   var sn  = document.getElementById('siName');
@@ -3991,6 +4064,8 @@ function _updateNav() {
     var dmb = document.getElementById('demoBtn');
     if (dmb) dmb.style.display='inline-block';
   }
+
+  if (typeof _updateDashboard === "function") _updateDashboard();
 }
 function _updateEditBtns() {
   document.querySelectorAll('.edit-profile-btn').forEach(function(b){b.style.display='none';});
@@ -4469,6 +4544,7 @@ async function doRealSignUp() {
     closeRealAuth();
     _updateNav();
     sp(_cu.dash);
+    if (typeof _updateDashboard === 'function') _updateDashboard();
     _showInfoToast('✓ Welcome to DockWork, ' + name + '!');
 
   } catch(e) {
