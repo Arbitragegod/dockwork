@@ -3056,23 +3056,43 @@ async function submitForgotPassword(){
 
   // Auto-wire sp(), dt(), filterByType() — runs immediately after page scripts load
   window.addEventListener('load', function() {
-    // Wrap sp()
+    // Wrap sp() — with default tab routing per dashboard
     var _sp = window.sp;
     if (typeof _sp === 'function' && !_sp._dwWrapped) {
       window.sp = function(page) {
         _sp(page);
-        if (page === 'browse')          setTimeout(loadBrowseJobs, 80);
-        if (page === 'owner-dash')      setTimeout(loadOwnerProjects, 80);
-        if (page === 'contractor-dash') setTimeout(loadContractorJobs, 80);
+        if (page === 'browse') {
+          setTimeout(loadBrowseJobs, 80);
+        }
+        if (page === 'owner-dash') {
+          // Land on My Projects and load immediately
+          setTimeout(function() {
+            if (window.dt) { window.dt('owner', 'projects'); }
+            setTimeout(loadOwnerProjects, 80);
+          }, 60);
+        }
+        if (page === 'contractor-dash') {
+          // Land on Job Feed and load immediately
+          setTimeout(function() {
+            if (window.dt) { window.dt('contractor', 'feed'); }
+            setTimeout(loadContractorJobs, 80);
+          }, 60);
+        }
+        if (page === 'supplier-dash') {
+          // Land on RFQ Inbox
+          setTimeout(function() {
+            if (window.dt) { window.dt('supplier', 'rfqs'); }
+          }, 60);
+        }
       };
       window.sp._dwWrapped = true;
     }
-    // Wrap dt()
+    // Wrap dt() — load live data on any relevant tab switch
     var _dt = window.dt;
     if (typeof _dt === 'function' && !_dt._dwWrapped) {
       window.dt = function(dash, tab) {
         _dt(dash, tab);
-        if (dash === 'owner'      && tab === 'projects')              setTimeout(loadOwnerProjects, 80);
+        if (dash === 'owner' && (tab === 'projects' || tab === 'overview')) setTimeout(loadOwnerProjects, 80);
         if (dash === 'contractor' && (tab === 'overview' || tab === 'feed')) setTimeout(loadContractorJobs, 80);
       };
       window.dt._dwWrapped = true;
