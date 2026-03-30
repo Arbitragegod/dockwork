@@ -2603,7 +2603,7 @@ async function realSignOut(){
   if(s.data&&s.data.session){
     var u=s.data.session.user;
     var p=await _supabase.from("dw_users").select("*").eq("id",u.id).single();
-    if(p.data){_cu={role:p.data.role,name:p.data.full_name||u.email,dash:_dashForRole(p.data.role),tier:p.data.tier,ownPage:null};_updateNav();}
+    if(p.data){_cu={role:p.data.role,name:p.data.full_name||u.email,company:p.data.company_name||'',id:u.id,email:u.email,dash:_dashForRole(p.data.role),tier:p.data.tier,ownPage:null};_updateNav();setTimeout(function(){if(window._updateDashboard)_updateDashboard();if(window._loadOwnerProjects&&_cu.role==='owner')_loadOwnerProjects();if(window._loadOwnerProjects&&_cu.role==='marina')_loadOwnerProjects();if(window._loadContractorJobs&&_cu.role==='contractor')_loadContractorJobs();},300);}
   }
 })();
 
