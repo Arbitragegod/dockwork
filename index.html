@@ -115,7 +115,74 @@
 .sup-rec-av{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden;}
 .sup-rec-av img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+var _newRole = null;
+
+function openRoleSwitcher() {
+  _newRole = null;
+  // Reset all cards
+  document.querySelectorAll('.role-switch-card').forEach(function(c){
+    c.style.border = '2px solid #e2e8f0';
+    c.style.background = '#fff';
+  });
+  // Pre-select current role
+  if (_cu && _cu.role) {
+    var cur = document.getElementById('rsc-' + _cu.role);
+    if (cur) { cur.style.border = '2px solid #0d2b45'; cur.style.background = '#f0f7ff'; }
+  }
+  var errEl = document.getElementById('roleSwitchError');
+  if (errEl) errEl.style.display = 'none';
+  var btn = document.getElementById('roleSwitchConfirmBtn');
+  if (btn) { btn.disabled = true; btn.style.opacity = '.5'; btn.textContent = 'Save Changes'; }
+  document.getElementById('roleSwitcherOverlay').style.display = 'flex';
+}
+
+function closeRoleSwitcher() {
+  document.getElementById('roleSwitcherOverlay').style.display = 'none';
+  _newRole = null;
+}
+
+function selectNewRole(role) {
+  _newRole = role;
+  document.querySelectorAll('.role-switch-card').forEach(function(c){
+    c.style.border = '2px solid #e2e8f0';
+    c.style.background = '#fff';
+  });
+  var sel = document.getElementById('rsc-' + role);
+  if (sel) { sel.style.border = '2px solid #0d2b45'; sel.style.background = '#f0f7ff'; }
+  var btn = document.getElementById('roleSwitchConfirmBtn');
+  if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+}
+
+async function confirmRoleSwitch() {
+  if (!_newRole || !_cu) return;
+  var btn = document.getElementById('roleSwitchConfirmBtn');
+  var errEl = document.getElementById('roleSwitchError');
+  if (btn) { btn.textContent = 'Saving...'; btn.disabled = true; }
+  if (errEl) errEl.style.display = 'none';
+
+  try {
+    // Update in Supabase if real account
+    if (_supabase && _cu.id) {
+      var result = await _supabase.from('dw_users').update({role: _newRole}).eq('id', _cu.id);
+      if (result.error) throw new Error(result.error.message);
+    }
+    // Update local session
+    var dashMap = {owner:'owner-dash', marina:'marina-bayshore', contractor:'contractor-dash', supplier:'supplier-dash'};
+    _cu.role = _newRole;
+    _cu.dash = dashMap[_newRole] || 'owner-dash';
+    closeRoleSwitcher();
+    _updateNav();
+    _updateDashboard();
+    sp(_cu.dash);
+    _showInfoToast('\u2713 Account type updated to ' + ({owner:'Homeowner / HOA', marina:'Marina Operator', contractor:'Marine Contractor', supplier:'Marine Supplier'}[_newRole] || _newRole));
+  } catch(e) {
+    if (errEl) { errEl.textContent = 'Failed to save: ' + e.message; errEl.style.display = 'block'; }
+    if (btn) { btn.textContent = 'Save Changes'; btn.disabled = false; btn.style.opacity = '1'; }
+  }
+}
+
+</script>
 <script>var _supabase=window.supabase.createClient("https://etdkvsgvspefjzauhtbb.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV0ZGt2c2d2c3BlZmp6YXVodGJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MDQwODMsImV4cCI6MjA4OTA4MDA4M30.K6Dbnx0IWJJTx644szuQnu_N0Ccc-2-M89Ad2e_IaU0");</script>
 </head>
 <body>
@@ -983,7 +1050,7 @@
       <div class="ds-inner">
         <div style="padding:0 12px 16px;border-bottom:1px solid var(--border);margin-bottom:10px;">
           <div style="font-size:15px;font-weight:500;color:var(--ink);"><span class="dw-ctc-name"></span></div>
-          <div style="font-size:13px;color:var(--mist);"><span class="dw-ctc-sub"></span></div>
+          <div style="font-size:13px;color:var(--mist);"><span class="dw-ctc-sub"></span><div style="margin-top:10px;"><button onclick="openRoleSwitcher()" style="font-size:11px;color:var(--blue,#2563eb);background:none;border:none;cursor:pointer;padding:0;text-decoration:underline;">&#x270F; Edit account type</button></div></div>
           <div style="margin-top:7px;display:flex;gap:5px;"><span class="badge gold">Gold Verified</span><span class="badge charter">Charter Member</span></div>
           <button class="btn-ghost" onclick="openCtcSupModal()" style="width:100%;margin-top:12px;font-size:11px;border-color:var(--teal);color:var(--teal);padding:7px 10px;">&#x1F527; Request Supplier Quotes</button>
         </div>
@@ -2760,6 +2827,45 @@ async function realSignOut(){
       </div>
       <div id="ppError" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;"></div>
       <div style="display:flex;gap:12px;justify-content:flex-end;"><button onclick="closePostProject()" style="padding:10px 20px;border:1.5px solid #e2e8f0;border-radius:8px;background:#fff;font-size:14px;cursor:pointer;color:#64748b;">Cancel</button><button onclick="submitPostProject()" id="ppSubmitBtn" style="padding:10px 24px;border:none;border-radius:8px;background:#d97706;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">Post Project</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="roleSwitcherOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:3000;align-items:center;justify-content:center;" onclick="if(event.target===this)closeRoleSwitcher()">
+  <div style="background:#fff;border-radius:16px;width:100%;max-width:440px;box-shadow:0 24px 80px rgba(0,0,0,.25);overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#0d2b45,#1a3d5c);padding:24px 28px;">
+      <div style="font-size:11px;letter-spacing:2.5px;color:rgba(100,180,255,.7);font-family:'DM Mono',monospace;margin-bottom:8px;">ACCOUNT TYPE</div>
+      <div style="font-size:20px;font-weight:600;color:#fff;">Change account type</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:4px;">Select the role that best describes how you use DockWork.</div>
+    </div>
+    <div style="padding:24px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+        <div class="role-switch-card" onclick="selectNewRole('owner')" id="rsc-owner" style="border:2px solid #e2e8f0;border-radius:12px;padding:16px;cursor:pointer;transition:all .15s;text-align:center;">
+          <div style="font-size:28px;margin-bottom:8px;">&#x1F3E1;</div>
+          <div style="font-size:13px;font-weight:600;color:#1e293b;">Homeowner / HOA</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:3px;">Post projects, review bids</div>
+        </div>
+        <div class="role-switch-card" onclick="selectNewRole('marina')" id="rsc-marina" style="border:2px solid #e2e8f0;border-radius:12px;padding:16px;cursor:pointer;transition:all .15s;text-align:center;">
+          <div style="font-size:28px;margin-bottom:8px;">&#x2693;</div>
+          <div style="font-size:13px;font-weight:600;color:#1e293b;">Marina Operator</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:3px;">Manage marina projects</div>
+        </div>
+        <div class="role-switch-card" onclick="selectNewRole('contractor')" id="rsc-contractor" style="border:2px solid #e2e8f0;border-radius:12px;padding:16px;cursor:pointer;transition:all .15s;text-align:center;">
+          <div style="font-size:28px;margin-bottom:8px;">&#x1F528;</div>
+          <div style="font-size:13px;font-weight:600;color:#1e293b;">Marine Contractor</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:3px;">Bid on projects</div>
+        </div>
+        <div class="role-switch-card" onclick="selectNewRole('supplier')" id="rsc-supplier" style="border:2px solid #e2e8f0;border-radius:12px;padding:16px;cursor:pointer;transition:all .15s;text-align:center;">
+          <div style="font-size:28px;margin-bottom:8px;">&#x1F6D2;</div>
+          <div style="font-size:13px;font-weight:600;color:#1e293b;">Marine Supplier</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:3px;">Respond to RFQs</div>
+        </div>
+      </div>
+      <div id="roleSwitchError" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;"></div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="closeRoleSwitcher()" style="flex:1;padding:11px;border:1.5px solid #e2e8f0;border-radius:8px;background:#fff;font-size:14px;cursor:pointer;color:#64748b;">Cancel</button>
+        <button id="roleSwitchConfirmBtn" onclick="confirmRoleSwitch()" disabled style="flex:2;padding:11px;border:none;border-radius:8px;background:#0d2b45;color:#fff;font-size:14px;font-weight:600;cursor:pointer;opacity:.5;">Save Changes</button>
+      </div>
     </div>
   </div>
 </div>
