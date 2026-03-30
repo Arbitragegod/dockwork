@@ -3262,7 +3262,7 @@ async function submitForgotPassword(){
 // ── Project Detail Modal ───────────────────────────────────────────────────
 var _pdmProject = null;
 
-function openProjectDetail(p) {
+async function openProjectDetail(p) {
   if (!p) return;
   _pdmProject = p;
 
@@ -3288,14 +3288,21 @@ function openProjectDetail(p) {
   document.getElementById('pdm-bid-msg').style.display = 'none';
   document.getElementById('pdm-quote-msg').style.display = 'none';
 
-  // Determine role
+  // Determine role — get live session for reliable user ID
   var role = window._cu ? window._cu.role : 'guest';
-  var isOwner = (role === 'owner' || role === 'marina');
-  var myId = window._cu ? window._cu.id : null;
-  var isMyProject = myId && p.owner_id === myId;
+  var isOwnerRole = (role === 'owner' || role === 'marina');
 
-  if (isOwner && isMyProject) {
-    // Owner/marina viewing their own project — show edit form
+  // Get user ID from live session (most reliable) or _cu
+  var sessionData = await _supabase.auth.getSession();
+  var liveUid = sessionData?.data?.session?.user?.id || window._cu?.id || null;
+
+  // Also update _cu.id if missing
+  if (liveUid && window._cu && !window._cu.id) window._cu.id = liveUid;
+
+  var isMyProject = liveUid && p.owner_id === liveUid;
+
+  if (isOwnerRole && isMyProject) {
+    // Owner/marina viewing their own project — full edit
     document.getElementById('pdm-edit-title').value = p.title || '';
     document.getElementById('pdm-edit-budget').value = p.budget_range || '';
     document.getElementById('pdm-edit-deadline').value = p.deadline ? p.deadline.substring(0,10) : '';
@@ -3310,10 +3317,12 @@ function openProjectDetail(p) {
     document.getElementById('pdm-quote-amount').value = '';
     document.getElementById('pdm-quote-note').value = '';
     document.getElementById('pdm-supplier-section').style.display = 'block';
-  } else {
-    // Owner viewing someone else's project — read only, show owner section without edit
+  } else if (isOwnerRole) {
+    // Owner viewing someone else's project — read only
     document.getElementById('pdm-owner-section').style.display = 'block';
-    document.getElementById('pdm-edit-title').closest('div.fi, div').style.display = 'none';
+    ['pdm-edit-title','pdm-edit-budget','pdm-edit-deadline','pdm-edit-desc','pdm-edit-status','pdm-save-btn'].forEach(function(id){
+      var el = document.getElementById(id); if(el) el.disabled = true;
+    });
   }
 
   document.getElementById('projectDetailModal').style.display = 'block';
