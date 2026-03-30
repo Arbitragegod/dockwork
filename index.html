@@ -3018,7 +3018,9 @@ async function submitForgotPassword(){
   async function loadOwnerProjects() {
     const el = document.getElementById('dw-proj-list');
     if (!el) return;
+    // Always clear first so stale rows never persist
     el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--mist);font-size:14px;">Loading your projects…</div>';
+    window._dwProjCache = window._dwProjCache || {};
     try {
       const { data: { session } } = await _supabase.auth.getSession();
       const uid = session?.user?.id;
@@ -3040,7 +3042,9 @@ async function submitForgotPassword(){
   async function loadContractorJobs() {
     const el = document.getElementById('dw-jobs-list');
     if (!el) return;
+    // Always clear first so stale rows never persist
     el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--mist);font-size:14px;">Loading matched jobs…</div>';
+    window._dwProjCache = window._dwProjCache || {};
     try {
       const { data, error } = await _supabase.from('dw_projects').select('*').eq('status','open').order('created_at', { ascending: false }).limit(30);
       if (error) throw error;
