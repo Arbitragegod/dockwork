@@ -911,7 +911,7 @@ async function confirmRoleSwitch() {
             <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--mist);margin-bottom:10px;">&#x1F527; RECOMMENDED SUPPLIERS</div>
             <div style="display:flex;flex-direction:column;gap:8px;">
               <div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('dd-profile')"><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;">&#x2B50; FEATURED SUPPLIER</div><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x1F527;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Verified Supplier</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Palm Beach, FL &middot; 40 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);"><span class="dw-stat-rating">-</span>&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Composite · Lumber · Piling · Seawall</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Supplier · All dock &amp; seawall materials</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteSupplierQuote()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Request Quote &#x2192;</button></div></div>
-              <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('supplier-profile')"><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;"><span class="dw-sup-name"></span></div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Pensacola, FL &middot; 12 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.8&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Lumber · Hardware · Dock Equipment</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Preferred Supplier · Marine supply house</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge verified" style="font-size:9px;">&#x2713; Preferred</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteSupplierQuote()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Request Quote &#x2192;</button></div></div>
+              
             </div>
             <div style="text-align:center;margin-top:10px;"><button class="btn-ghost" onclick="openSupplierRecModal()" style="font-size:11px;">Browse recommended suppliers &#x2192;</button></div>
           </div>
@@ -1242,7 +1242,7 @@ async function confirmRoleSwitch() {
 
 <!-- ═══ SUCCESS ═══ -->
 
-<div id="page-success" class="page"><div style="text-align:center;padding:64px 24px;color:#94a3b8;"><div style="font-size:48px;margin-bottom:16px;">&#x2705;</div><div style="font-size:20px;font-weight:500;color:#475569;margin-bottom:8px;">No completed projects yet</div><div style="font-size:14px;line-height:1.7;">Awarded and completed projects will appear here.</div></div></div>
+<div id="page-success" class="page"><div style="text-align:center;padding:64px 24px;color:#94a3b8;"><div style="font-size:48px;margin-bottom:16px;">&#x2705;</div><div style="font-size:20px;font-weight:500;color:#475569;margin-bottom:8px;">No completed projects yet</div><div style="font-size:14px;">Awarded and completed projects will appear here.</div></div></div>
 
 <div class="overlay" id="inviteModal">
   <div class="modal">
@@ -1568,12 +1568,7 @@ async function confirmRoleSwitch() {
 </div></div>
 
 
-<div id="page-ctc-atlantic-shore" class="page"><div style="text-align:center;padding:80px 24px;color:#94a3b8;">
-  <div style="font-size:48px;margin-bottom:16px;">🔨</div>
-  <div style="font-size:20px;font-weight:600;color:#475569;margin-bottom:8px;">Contractor Profile</div>
-  <div style="font-size:14px;line-height:1.7;">This profile page will be populated when a licensed contractor joins DockWork.</div>
-  <button class="btn-ghost" onclick="sp('contractors')" style="margin-top:20px;">Browse Contractors &rarr;</button>
-</div></div>
+<div id="page-ctc-atlantic-shore" class="page"><div style="text-align:center;padding:80px 24px;color:#94a3b8;"><div style="font-size:48px;margin-bottom:16px;">&#x1F528;</div><div style="font-size:20px;font-weight:600;color:#475569;margin-bottom:8px;">Contractor Profile</div><div style="font-size:14px;line-height:1.7;">This profile will be populated when a licensed contractor joins DockWork.</div><button class="btn-ghost" onclick="sp('contractors')" style="margin-top:20px;">Browse Contractors &rarr;</button></div></div>
 <!-- ═══ SUPPLIER RECOMMENDATION MODAL ═══ -->
 <div id="supRecOverlay" style="display:none;position:fixed;inset:0;background:rgba(15,26,32,.72);z-index:700;align-items:center;justify-content:center;padding:16px;" onclick="if(event.target===this)closeSupplierRecModal()">
   <div style="background:white;width:100%;max-width:560px;border-radius:12px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.25);max-height:85vh;overflow-y:auto;">
