@@ -2964,7 +2964,9 @@ async function submitForgotPassword(){
   function ownerRow(p) {
     const status = p.status || 'open';
     const badgeClass = status === 'open' ? 'op' : 'g';
-    return '<div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;" onclick="openProjectDetail(' + JSON.stringify(p).replace(/'/g,`&#39;`) + ')">' +
+    window._dwProjCache = window._dwProjCache || {};
+    window._dwProjCache[p.id] = p;
+    return '<div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;" onclick="openProjectDetail(window._dwProjCache[\''+p.id+'\'])">' +
       '<div style="flex:1;min-width:0;">' +
         '<div style="font-family:\'Cormorant Garamond\',serif;font-size:17px;color:var(--ink);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + (p.title || 'Untitled') + '</div>' +
         '<div style="font-size:12px;color:var(--mist);">' + (p.project_type || '') + ' · ' + (p.location || '') + ' · Due ' + fmtDeadline(p.deadline) + ' · ' + fmtBudget(p.budget_range) + '</div>' +
@@ -2974,7 +2976,9 @@ async function submitForgotPassword(){
   }
 
   function contractorRow(p) {
-    return '<div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;" onclick="openProjectDetail(' + JSON.stringify(p).replace(/'/g,`&#39;`) + ')">' +
+    window._dwProjCache = window._dwProjCache || {};
+    window._dwProjCache[p.id] = p;
+    return '<div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;" onclick="openProjectDetail(window._dwProjCache[\''+p.id+'\'])">' +
       '<div style="flex:1;min-width:0;">' +
         '<div style="font-family:\'Cormorant Garamond\',serif;font-size:17px;color:var(--ink);margin-bottom:3px;">' + (p.title || 'Untitled') + '</div>' +
         '<div style="font-size:12px;color:var(--mist);">' + (p.project_type || '') + ' · ' + (p.location || '') + ' · Due ' + fmtDeadline(p.deadline) + '</div>' +
