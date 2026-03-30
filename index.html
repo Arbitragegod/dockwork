@@ -3097,6 +3097,26 @@ async function submitForgotPassword(){
             if (window.dt) { window.dt('supplier', 'rfqs'); }
           }, 60);
         }
+        if (page === 'suppliers') {
+          setTimeout(function() {
+            if (window._loadDirectoryPage) window._loadDirectoryPage('page-suppliers','supplier','ctc-grid','🛒','Suppliers');
+          }, 80);
+        }
+        if (page === 'contractors') {
+          setTimeout(function() {
+            if (window._loadDirectoryPage) window._loadDirectoryPage('page-contractors','contractor','ctc-grid','🔨','Contractors');
+          }, 80);
+        }
+        if (page === 'homeowners') {
+          setTimeout(function() {
+            if (window._loadDirectoryPage) window._loadDirectoryPage('page-homeowners','owner','homeowner-grid','🏡','Homeowners');
+          }, 80);
+        }
+        if (page === 'marina-owners') {
+          setTimeout(function() {
+            if (window._loadDirectoryPage) window._loadDirectoryPage('page-marina-owners','marina','marina-grid','⚓','Marina Operators');
+          }, 80);
+        }
       };
       window.sp._dwWrapped = true;
     }
@@ -3212,27 +3232,51 @@ async function submitForgotPassword(){
         <div id="pdm-save-msg" style="display:none;margin-top:12px;font-size:13px;color:var(--teal);"></div>
       </div>
 
-      <!-- CONTRACTOR: Job detail + bid action -->
+      <!-- CONTRACTOR: Job detail + bid + RFQ actions -->
       <div id="pdm-contractor-section" style="display:none;">
-        <div style="border-top:1px solid var(--border);padding-top:20px;">
+
+        <!-- Submit Bid -->
+        <div style="border-top:1px solid var(--border);padding-top:20px;margin-bottom:20px;">
           <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:14px;">🔨 Submit a Bid</div>
-          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
+          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:14px;">
             <div>
               <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">YOUR BID AMOUNT</label>
               <input id="pdm-bid-amount" class="fi" type="text" placeholder="e.g. $62,000">
             </div>
             <div>
               <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">COVER NOTE (optional)</label>
-              <textarea id="pdm-bid-note" class="ft" style="height:90px;" placeholder="Brief intro — experience, availability, why you're the right fit…"></textarea>
+              <textarea id="pdm-bid-note" class="ft" style="height:80px;" placeholder="Experience, availability, why you're the right fit…"></textarea>
             </div>
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <button class="bsm g" onclick="submitBidFromModal()">📤 Submit Bid</button>
-            <button class="bsm" onclick="closeProjectDetail();sp('messages')">💬 Message Owner</button>
+            <button class="bsm" onclick="messageProjectOwner()">💬 Message Owner</button>
             <button class="bsm" onclick="closeProjectDetail()">Close</button>
           </div>
-          <div id="pdm-bid-msg" style="display:none;margin-top:12px;font-size:13px;color:var(--teal);"></div>
+          <div id="pdm-bid-msg" style="display:none;margin-top:10px;font-size:13px;color:var(--teal);"></div>
         </div>
+
+        <!-- RFQ to Suppliers -->
+        <div style="border-top:1px solid var(--border);padding-top:20px;">
+          <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;">📦 Request Material Quotes from Suppliers</div>
+          <div style="font-size:13px;color:var(--mist);margin-bottom:12px);">Send an RFQ to registered suppliers for the materials you need on this project.</div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:14px;">
+            <div>
+              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">MATERIALS NEEDED</label>
+              <textarea id="pdm-rfq-desc" class="ft" style="height:70px;" placeholder="e.g. Marine-grade PT lumber 4,200 BF, stainless hardware, composite decking…"></textarea>
+            </div>
+            <div>
+              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">BUDGET RANGE (optional)</label>
+              <input id="pdm-rfq-budget" class="fi" type="text" placeholder="e.g. $15,000 – $25,000">
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="bsm" style="background:#0891b2;color:white;border-color:#0891b2;" onclick="submitRFQFromModal()">📤 Send RFQ to Suppliers</button>
+            <button class="bsm" onclick="closeProjectDetail();sp('suppliers')">🏪 Browse Suppliers</button>
+          </div>
+          <div id="pdm-rfq-msg" style="display:none;margin-top:10px;font-size:13px;color:var(--teal);"></div>
+        </div>
+
       </div>
 
       <!-- SUPPLIER: RFQ detail + quote action -->
@@ -3445,7 +3489,66 @@ async function submitQuoteFromModal() {
     msg.style.display = 'block';
   }
   btn.textContent = '📤 Submit Quote'; btn.disabled = false;
+
+}
+
+function messageProjectOwner() {
+  if (!_pdmProject) return;
+  // Store context so messages page can pre-fill the thread
+  window._dwMessageContext = {
+    projectId: _pdmProject.id,
+    projectTitle: _pdmProject.title,
+    ownerId: _pdmProject.owner_id
+  };
+  closeProjectDetail();
+  sp('messages');
+  // Show a toast with context
+  if (window.toast) toast('Opening messages — project: ' + (_pdmProject.title||'').substring(0,40), 'info');
+}
+
+async function submitRFQFromModal() {
+  if (!_pdmProject) return;
+  var btn = document.querySelector('#pdm-contractor-section .bsm[onclick="submitRFQFromModal()"]');
+  var msg = document.getElementById('pdm-rfq-msg');
+  var desc   = document.getElementById('pdm-rfq-desc')?.value?.trim();
+  var budget = document.getElementById('pdm-rfq-budget')?.value?.trim();
+  if (!desc) {
+    msg.textContent = 'Please describe the materials needed.';
+    msg.style.color = '#991b1b';
+    msg.style.display = 'block';
+    return;
+  }
+  if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
+  try {
+    // Post as a supplier-RFQ type project so suppliers see it
+    var sessionData = await _supabase.auth.getSession();
+    var uid = sessionData?.data?.session?.user?.id;
+    var result = await _supabase.from('dw_projects').insert([{
+      owner_id:     uid,
+      title:        'Material RFQ — ' + (_pdmProject.title||'Project').substring(0,50),
+      description:  desc + (budget ? '\n\nBudget: ' + budget : '') + '\n\nLinked project: ' + (_pdmProject.title||''),
+      type:         'rfq',
+      project_type: 'Materials & Supply',
+      location:     _pdmProject.location || '',
+      budget_range: budget || '',
+      deadline:     _pdmProject.deadline || null,
+      status:       'open'
+    }]);
+    if (result.error) throw new Error(result.error.message);
+    msg.textContent = '✓ RFQ posted — registered suppliers will respond shortly.';
+    msg.style.color = 'var(--teal)';
+    msg.style.display = 'block';
+    document.getElementById('pdm-rfq-desc').value = '';
+    document.getElementById('pdm-rfq-budget').value = '';
+    if (window._loadBrowseJobs) window._loadBrowseJobs();
+  } catch(e) {
+    msg.textContent = '✗ ' + e.message;
+    msg.style.color = '#991b1b';
+    msg.style.display = 'block';
+  }
+  if (btn) { btn.textContent = '📤 Send RFQ to Suppliers'; btn.disabled = false; }
 }
 </script>
+
 </body>
 </html>
