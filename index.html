@@ -115,6 +115,8 @@
 .sup-rec-av{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden;}
 .sup-rec-av img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>var _supabase=window.supabase.createClient("https://etdkvsgvspefjzauhtbb.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV0ZGt2c2d2c3BlZmp6YXVodGJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDgwMjA4MTksImV4cCI6MjAyMzU5NjgxOX0.RxOiSBqQoGSXbFBrHuSaehMVwsXcl6U_WcGAeABYHzg");</script>
 </head>
 <body>
 
@@ -135,9 +137,9 @@
     <div class="bell" onclick="sp('notifications')">🔔<div class="bell-dot"></div></div>
     <span id="siLabel" style="display:none;font-size:11px;color:var(--mist);align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--teal);display:inline-block;"></span><span id="siName">Signed in</span><span id="siTierBadge" class="badge charter" style="font-size:8px;display:none;margin-left:5px;vertical-align:middle;">&#x2B50; Charter</span></span>
     <button class="btn-ghost" id="dashBtn" style="display:none;font-size:12px;" onclick="goDash()">Dashboard</button>
-    <button class="btn-ghost" id="signOutBtn" style="display:none;font-size:12px;" onclick="signOut()">Sign Out</button>
+    <button class="btn-ghost" id="signOutBtn" style="display:none;font-size:12px;" onclick="realSignOut()">Sign Out</button>
     <button class="btn-ghost" id="signInBtn" onclick="openRealSignIn()" style="font-size:12px;">Sign In</button>
-    <button class="btn-ghost" id="demoBtn" onclick="openSignIn()" style="font-size:11px;border-color:var(--teal);color:var(--teal);font-family:'DM Mono',monospace;letter-spacing:0.5px;">&#x25B6; Try Demo</button>
+    <button class="btn-ghost" id="demoBtn" onclick="openRealSignIn()" style="font-size:11px;border-color:var(--teal);color:var(--teal);font-family:'DM Mono',monospace;letter-spacing:0.5px;">&#x25B6; Try Demo</button>
     <button class="btn-gold" id="joinBtn" onclick="sp('apply')">Join Now</button>
     <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
   </div>
@@ -4201,10 +4203,40 @@ function _showInfoToast(msg) {
 
 
 
-function' && _isSupplier()) { _showInfoToast('Suppliers cannot send RFQs to other suppliers.'); return; }
   _showInfoToast('✓ RFQ sent! The supplier will receive your quote request.');
 
 
+
+function handleInviteToBid() {
+  if (!_cu) { joinPrompt('&#x2693;','Invite to Bid','Sign in to invite a contractor.'); return; }
+  if (_cu.role === 'contractor') { _showInfoToast('Contractors cannot invite other contractors to bid.'); return; }
+  _showInfoToast('✓ Invitation sent! The contractor will be notified.');
+}
+
+function handleInviteSupplierQuote() {
+  if (!_cu) { joinPrompt('&#x1F527;','Request a Quote','Sign in to send an RFQ.'); return; }
+  if (typeof _isSupplier === 'function' && _isSupplier()) { _showInfoToast('Suppliers cannot send RFQs to other suppliers.'); return; }
+  _showInfoToast('✓ RFQ sent! The supplier will receive your quote request.');
+}
+
+function handleSubmitQuote(jobType) {
+  if (!_cu) { joinPrompt('&#x1F4CB;','Submit a Quote','Sign in to respond to this posting.'); return; }
+  if (_cu.role==='owner'||_cu.role==='marina'||_cu.role==='dolphin') { _showInfoToast('Owners and Marina Operators post jobs — they do not submit bids.'); return; }
+  if (typeof _isSupplier==='function' && _isSupplier()) {
+    if (jobType && jobType.indexOf('RFQ')===-1) { _showInfoToast('Suppliers can only provide quotes on RFQ postings.'); return; }
+    _showInfoToast('✓ Quote submitted!'); return;
+  }
+  _showInfoToast('✓ Bid submitted! The project owner will be notified.');
+}
+
+function openSupplierRecModal() { var ov=document.getElementById('supRecOverlay'); if(ov)ov.style.display='flex'; }
+function closeSupplierRecModal() { var ov=document.getElementById('supRecOverlay'); if(ov)ov.style.display='none'; }
+function openCtcSupModal() {
+  if (!_cu) { joinPrompt('&#x1F527;','Request Quotes','Sign in to send RFQs.'); return; }
+  if (typeof _isSupplier==='function' && _isSupplier()) { _showInfoToast('Suppliers cannot send RFQs to other suppliers.'); return; }
+  var ov=document.getElementById('ctcSupRecOverlay'); if(ov)ov.style.display='flex';
+}
+function closeCtcSupModal() { var ov=document.getElementById('ctcSupRecOverlay'); if(ov)ov.style.display='none'; }
 
 /* ── MEMBERSHIP RECOMMENDATION ENGINE ── */
 var _ctcData = [
@@ -4232,25 +4264,11 @@ var _supData = [
 ];
 
 /* -- SUPPLIER REC MODAL -- */
-function openSupplierRecModal() {
-  var ov = document.getElementById('supRecOverlay');
-  if (ov) { ov.style.display='flex'; }
-}
-function closeSupplierRecModal() {
-  var ov = document.getElementById('supRecOverlay');
-  if (ov) ov.style.display='none';
-}
+
+
 /* -- CONTRACTOR SUPPLIER MODAL -- */
-function openCtcSupModal() {
-  if (!_cu) { joinPrompt('&#x1F527;','Request Supplier Quotes','Sign in to send RFQs to verified suppliers.'); return; }
-  if (_cu.role==='supplier'||_cu.role==='ddinc') { _showInfoToast('Suppliers cannot send RFQs to other suppliers.'); return; }
-  var ov = document.getElementById('ctcSupRecOverlay');
-  if (ov) ov.style.display='flex';
-}
-function closeCtcSupModal() {
-  var ov = document.getElementById('ctcSupRecOverlay');
-  if (ov) ov.style.display='none';
-}
+
+
 
 
 
@@ -4261,42 +4279,22 @@ function _isSupplier() {
 }
 
 /* Invite a CONTRACTOR to bid: Owners, Marinas, AND Suppliers allowed. Contractors blocked. */
-function handleInviteToBid() {
-  if (!_cu) { joinPrompt('&#x2693;','Invite to Bid','Sign in to invite a contractor to bid.'); return; }
-  if (_cu.role === 'contractor') { _showInfoToast('Contractors cannot invite other contractors to bid.'); return; }
-  _showInfoToast('✓ Invitation sent! The contractor will be notified of your bid request.');
-}
+
 
 /* Request a quote FROM a supplier: Owners, Marinas, Contractors allowed. Suppliers blocked. */
-function handleInviteSupplierQuote() {
-  if (!_cu) { joinPrompt('&#x1F527;','Request a Supplier Quote','Sign in to send an RFQ.'); return; }
-  if (typeof _isSupplier === 'function' && _isSupplier()) { _showInfoToast('Suppliers cannot send RFQs to other suppliers.'); return; }
-  _showInfoToast('✓ RFQ sent! The supplier will receive your quote request.');
-}
+
 
 /* Submit a quote ON a posting:
    Suppliers: can ONLY respond to RFQ postings (not RFP/RFB/RFI)
    Contractors: can respond to any posting type
    Owners/Marinas: blocked */
-function handleSubmitQuote(jobType) {
-  if (!_cu) { joinPrompt('&#x1F4CB;','Submit a Quote','Sign in to respond to this posting.'); return; }
-  if (_cu.role==='owner'||_cu.role==='marina'||_cu.role==='dolphin') { _showInfoToast('Owners and Marina Operators post jobs — they do not submit bids.'); return; }
-  if (typeof _isSupplier==='function' && _isSupplier()) {
-    if (jobType && jobType.indexOf('RFQ')===-1) { _showInfoToast('Suppliers can only quote on RFQ postings.'); return; }
-    _showInfoToast('✓ Quote submitted! The posting party will be notified.'); return;
-  }
-  _showInfoToast('✓ Bid submitted! The project owner will be notified.');
-}
+
 
 /* Open supplier rec modal */
-function openSupplierRecModal() { var ov=document.getElementById('supRecOverlay'); if(ov) ov.style.display='flex'; }
-function closeSupplierRecModal() { var ov=document.getElementById('supRecOverlay'); if(ov) ov.style.display='none'; }
-function openCtcSupModal() {
-  if(!_cu){ joinPrompt('&#x1F527;','Request Supplier Quotes','Sign in to send RFQs to verified suppliers.'); return; }
-  if(_isSupplier()){ _showInfoToast('Suppliers cannot send RFQs to other suppliers.'); return; }
-  var ov=document.getElementById('ctcSupRecOverlay'); if(ov) ov.style.display='flex';
-}
-function closeCtcSupModal() { var ov=document.getElementById('ctcSupRecOverlay'); if(ov) ov.style.display='none'; }
+
+
+
+
 
 
 
@@ -4342,6 +4340,53 @@ function closePostJob() {
   if(ov) ov.style.display='none';
 }
 
+
+/* DockWork Real Auth */
+function openRealSignIn(){showSignIn();document.getElementById("realAuthModal").style.display="flex";}
+function openRealSignUp(){showSignUp();document.getElementById("realAuthModal").style.display="flex";}
+function closeRealAuth(){document.getElementById("realAuthModal").style.display="none";clearAuthError();}
+function showSignIn(){document.getElementById("authFormSignIn").style.display="block";document.getElementById("authFormSignUp").style.display="none";document.getElementById("authModalLabel").textContent="SIGN IN";document.getElementById("authModalTitle").textContent="Welcome back";clearAuthError();}
+function showSignUp(){document.getElementById("authFormSignIn").style.display="none";document.getElementById("authFormSignUp").style.display="block";document.getElementById("authModalLabel").textContent="CREATE ACCOUNT";document.getElementById("authModalTitle").textContent="Join DockWork";clearAuthError();}
+function clearAuthError(){var el=document.getElementById("authError");if(el){el.style.display="none";el.textContent="";}} 
+function showAuthError(msg){var el=document.getElementById("authError");if(el){el.textContent=msg;el.style.display="block";}}
+function _dashForRole(r){return{owner:"owner-dash",marina:"marina-bayshore",contractor:"contractor-dash",supplier:"supplier-dash"}[r]||"owner-dash";}
+async function doRealSignIn(){
+  var email=document.getElementById("authEmail").value.trim();
+  var password=document.getElementById("authPassword").value;
+  if(!email||!password){showAuthError("Please enter your email and password.");return;}
+  var r=await _supabase.auth.signInWithPassword({email,password});
+  if(r.error){showAuthError(r.error.message);return;}
+  var p=await _supabase.from("dw_users").select("*").eq("id",r.data.user.id).single();
+  if(p.data){_cu={role:p.data.role,name:p.data.full_name||email,dash:_dashForRole(p.data.role),tier:p.data.tier,ownPage:null};closeRealAuth();_updateNav();sp(_cu.dash);_showInfoToast("✓ Welcome back, "+_cu.name+"!");}
+}
+async function doRealSignUp(){
+  var name=document.getElementById("signupName").value.trim();
+  var company=document.getElementById("signupCompany").value.trim();
+  var role=document.getElementById("signupRole").value;
+  var email=document.getElementById("signupEmail").value.trim();
+  var password=document.getElementById("signupPassword").value;
+  if(!name||!email||!password){showAuthError("Please fill in all required fields.");return;}
+  if(password.length<6){showAuthError("Password must be at least 6 characters.");return;}
+  var r=await _supabase.auth.signUp({email,password});
+  if(r.error){showAuthError(r.error.message);return;}
+  await _supabase.from("dw_users").insert({id:r.data.user.id,email:email,full_name:name,company_name:company||null,role:role,tier:"standard"});
+  _cu={role,name,dash:_dashForRole(role),tier:"standard",ownPage:null};
+  closeRealAuth();_updateNav();sp(_cu.dash);_showInfoToast("✓ Welcome to DockWork, "+name+"!");
+}
+async function realSignOut(){
+  await _supabase.auth.signOut();
+  _cu=null;_updateNav();sp("home");_showInfoToast("You have been signed out.");
+}
+(async function(){
+  var s=await _supabase.auth.getSession();
+  if(s.data&&s.data.session){
+    var u=s.data.session.user;
+    var p=await _supabase.from("dw_users").select("*").eq("id",u.id).single();
+    if(p.data){_cu={role:p.data.role,name:p.data.full_name||u.email,dash:_dashForRole(p.data.role),tier:p.data.tier,ownPage:null};_updateNav();}
+  }
+})();
+
 </script>
 
-<div id="thunderbit-crx-side-bar" style="display:block;opacity:1;pointer-events:all;top:0;right:0;z-index:9007199254740991;position:fixed;pointer-events:none;user-select:none;"></div><button id="open-side-panel" style="width:0;height:0;opacity:0;user-select:none;pointer-events:all;position:absolute;bottom:0;right:0;padding:0;border:0;outline:none;"></button><div id="give-freely-root-ejkiikneibegknkgimmihdpcbcedgmpo" class="give-freely-root" data-extension-id="ejkiikneibegknkgimmihdpcbcedgmpo" data-extension-name="Volume Booster" style="display: block;"></div></body></html>
+<div id="thunderbit-crx-side-bar" style="display:block;opacity:1;pointer-events:all;top:0;right:0;z-index:9007199254740991;position:fixed;pointer-events:none;user-select:none;"></div><button id="open-side-panel" style="width:0;height:0;opacity:0;user-select:none;pointer-events:all;position:absolute;bottom:0;right:0;padding:0;border:0;outline:none;"></button><div id="give-freely-root-ejkiikneibegknkgimmihdpcbcedgmpo" class="give-freely-root" data-extension-id="ejkiikneibegknkgimmihdpcbcedgmpo" data-extension-name="Volume Booster" style="display: block;"></div><div id="realAuthModal" style="display:none;position:fixed;inset:0;background:rgba(15,26,32,.8);z-index:900;align-items:center;justify-content:center;padding:16px;" onclick="if(event.target===this)closeRealAuth()"><div style="background:white;width:100%;max-width:420px;border-radius:12px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.3);"><div style="background:var(--slate);padding:22px 24px;display:flex;align-items:center;justify-content:space-between;"><div><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.4);margin-bottom:4px;" id="authModalLabel">SIGN IN</div><div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:white;" id="authModalTitle">Welcome back</div></div><button onclick="closeRealAuth()" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:22px;cursor:pointer;">&#x2715;</button></div><div style="padding:24px;"><div id="authError" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:10px 14px;border-radius:6px;font-size:13px;margin-bottom:16px;"></div><div id="authFormSignIn"><div style="margin-bottom:14px;"><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Email</label><input id="authEmail" type="email" placeholder="you@example.com" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px;box-sizing:border-box;"/></div><div style="margin-bottom:20px;"><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Password</label><input id="authPassword" type="password" placeholder="••••••••" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px;box-sizing:border-box;"/></div><button onclick="doRealSignIn()" class="btn-gold" style="width:100%;padding:12px;font-size:14px;">Sign In &#x2192;</button><div style="text-align:center;margin-top:16px;font-size:13px;color:var(--mist);">Don't have an account? <a href="#" onclick="showSignUp()" style="color:var(--blue);text-decoration:none;font-weight:500;">Join DockWork</a></div></div><div id="authFormSignUp" style="display:none;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;"><div><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Full Name</label><input id="signupName" type="text" placeholder="John Smith" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;box-sizing:border-box;"/></div><div><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Company (optional)</label><input id="signupCompany" type="text" placeholder="Acme Marine" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;box-sizing:border-box;"/></div></div><div style="margin-bottom:14px;"><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">I am a...</label><select id="signupRole" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px;box-sizing:border-box;background:white;"><option value="owner">Property Owner / HOA</option><option value="marina">Marina Operator</option><option value="contractor">Marine Contractor</option><option value="supplier">Marine Supplier</option></select></div><div style="margin-bottom:14px;"><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Email</label><input id="signupEmail" type="email" placeholder="you@example.com" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px;box-sizing:border-box;"/></div><div style="margin-bottom:20px;"><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Password</label><input id="signupPassword" type="password" placeholder="Min. 6 characters" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;box-sizing:border-box;"/></div><button onclick="doRealSignUp()" class="btn-gold" style="width:100%;padding:12px;font-size:14px;">Create Account &#x2192;</button><div style="text-align:center;margin-top:16px;font-size:13px;color:var(--mist);">Already a member? <a href="#" onclick="showSignIn()" style="color:var(--blue);text-decoration:none;font-weight:500;">Sign In</a></div></div></div></div></div>
+</body></html>
