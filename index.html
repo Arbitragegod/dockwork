@@ -139,7 +139,7 @@
     <button class="btn-ghost" id="dashBtn" style="display:none;font-size:12px;" onclick="goDash()">Dashboard</button>
     <button class="btn-ghost" id="signOutBtn" style="display:none;font-size:12px;" onclick="realSignOut()">Sign Out</button>
     <button class="btn-ghost" id="signInBtn" onclick="openRealSignIn()" style="font-size:12px;">Sign In</button>
-    <button class="btn-ghost" id="demoBtn" onclick="openRealSignIn()" style="font-size:11px;border-color:var(--teal);color:var(--teal);font-family:'DM Mono',monospace;letter-spacing:0.5px;">&#x25B6; Try DockWork</button>
+    <button class="btn-ghost" id="demoBtn" onclick="openRealSignIn()" style="font-size:11px;border-color:var(--teal);color:var(--teal);font-family:'DM Mono',monospace;letter-spacing:0.5px;"></button>
     <button class="btn-gold" id="joinBtn" onclick="openRealSignUp()">Join Now</button>
     <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
   </div>
@@ -2408,26 +2408,7 @@
 <div class="toast-wrap" id="toastWrap"></div>
 
 <!-- ═══ SIGN IN MODAL ═══ -->
-<div id="siOverlay" class="si-overlay" onclick="if(event.target===this)closeSignIn()">
-  <div class="si-modal">
-    <div class="si-head" style="background:linear-gradient(135deg,#0d2b45,#1a3d5c);">
-      <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2.5px;color:rgba(100,180,255,0.7);margin-bottom:8px;">&#x26F5; DOCKWORK</div>
-      <div class="si-logo">Dock<em>Work</em></div>
-      <div class="si-sub">Select your role to sign in and access the platform.</div>
-    </div>
-    <div class="si-body">
-      <span class="si-lbl">Sign in as...</span>
-      <div class="role-grid" style="grid-template-columns:repeat(2,1fr);">
-        <div class="role-card" id="rc-owner" onclick="selRole('owner')"><div class="role-icon">&#x1F3E1;</div><div class="role-name">Homeowner / HOA</div><div class="role-desc"><span class="dw-user-name"></span> &middot; Gulf Coast, FL</div></div>
-        <div class="role-card" id="rc-marina" onclick="selRole('marina')"><div class="role-icon">&#x2693;</div><div class="role-name">Marina Operator</div><div class="role-desc">Bayshore Landing Marina &middot; FL</div></div>
-        <div class="role-card" id="rc-contractor" onclick="selRole('contractor')"><div class="role-icon">&#x1F528;</div><div class="role-name">Marine Contractor</div><div class="role-desc"><span class="dw-ctc-name"></span> &middot; Tampa</div></div>
-        <div class="role-card" id="rc-supplier" onclick="selRole('supplier')"><div class="role-icon">&#x1F6D2;</div><div class="role-name">Marine Supplier</div><div class="role-desc"><span class="dw-sup-name"></span> &middot; Pensacola</div></div>
-      </div>
-      <button class="btn-gold" id="siConfirmBtn" disabled onclick="doSignIn()" style="width:100%;margin-top:16px;padding:12px;font-size:14px;">Sign In &#x2192;</button>
-      <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--mist);">New to DockWork? <a href="#" onclick="closeSignIn();openRealSignUp();" style="color:var(--blue);text-decoration:none;">Create a real account</a></div>
-    </div>
-  </div>
-</div>
+
 <!-- ═══ CUSTOMIZATION MODAL ═══ -->
 <div id="custOverlay" class="cust-overlay" onclick="if(event.target===this)closeCust()">
   <div class="cust-modal">
@@ -3920,43 +3901,10 @@ setTimeout(animateStats, 500);
 var _cu = null; // current user
 var _sr = null; // selected role
 
-function openSignIn() {
-  _sr = null;
-  document.querySelectorAll('.role-card').forEach(function(r){r.classList.remove('sel');});
-  var btn = document.getElementById('siConfirmBtn');
-  if (btn) btn.disabled = true;
-  var ov = document.getElementById('siOverlay');
-  if (ov) ov.classList.add('open');
-}
-function closeSignIn() {
-  var ov = document.getElementById('siOverlay');
-  if (ov) ov.classList.remove('open');
-}
-function selRole(role) {
-  _sr = role;
-  document.querySelectorAll('.role-card').forEach(function(r){r.classList.remove('sel');});
-  var el = document.getElementById('rc-'+role);
-  if (el) el.classList.add('sel');
-  var btn = document.getElementById('siConfirmBtn');
-  if (btn) btn.disabled = false;
-}
-function doSignIn() {
-  if (!_sr) return;
-  var accounts = {
-    owner:      {name:'<span class="dw-user-name"></span>',      role:'owner',      dash:'owner-dash',       tier:'charter', ownPage:null},
-    marina:     {name:'Bayshore Landing Marina', role:'marina',   dash:'marina-bayshore',  tier:'charter', ownPage:'page-marina-bayshore'},
-    contractor: {name:'<span class="dw-ctc-name"></span>', role:'contractor', dash:'contractor-dash', tier:'charter', ownPage:'page-contractor-profile'},
-    supplier:   {name:'<span class="dw-sup-name"></span>', role:'supplier',  dash:'supplier-dash',    tier:'charter', ownPage:'page-supplier-profile'}
-  };
-  var a = accounts[_sr]; if (!a) return;
-  _cu = {role:a.role, name:a.name, dash:a.dash, tier:a.tier, ownPage:a.ownPage};
-  closeSignIn();
-  _updateNav();
-  if(typeof _updateDashboard==='function') _updateDashboard();
-  if (typeof _updateEditBtns==='function') _updateEditBtns();
-  sp(_cu.dash);
-  _showInfoToast('✓ Signed in as '+a.name+'.');
-}
+
+
+
+
 function signOut() {
   _cu = null;
   _updateNav();
