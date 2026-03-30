@@ -241,7 +241,7 @@
             <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#7c3aed;background:#ede9fe;padding:4px 10px;border-radius:4px;font-weight:600;">Just Browsing</div>
           </div>
           <div style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;color:#0f2d54;line-height:1.05;margin-bottom:12px;">Browse the<br>Marketplace</div>
-          <div style="font-size:15px;color:#374151;line-height:1.75;margin-bottom:22px;">See 331 active projects, RFQs, and supplier listings from verified members across the platform. No account needed to browse.</div>
+          <div style="font-size:15px;color:#374151;line-height:1.75;margin-bottom:22px;">See <span class="dw-browse-count">0</span> active projects, RFQs, and supplier listings from verified members across the platform. No account needed to browse.</div>
           <div style="display:inline-flex;align-items:center;gap:8px;background:#7c3aed;color:white;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:11px 20px;border-radius:7px;font-weight:600;">Browse Now →</div>
           <div style="margin-top:14px;font-size:12px;color:#64748b;">✓ No account needed &nbsp;·&nbsp; ✓ 313 live projects</div>
         </div>
@@ -263,7 +263,7 @@
           <div style="font-size:10px;color:rgba(255,255,255,.72);margin-top:4px;letter-spacing:.5px;">Avg. first bid</div>
         </div>
         <div style="padding:0 28px;text-align:center;">
-          <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:white;line-height:1;">4.9★</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:28px;color:white;line-height:1;"><span class="dw-stat-rating">-</span>★</div>
           <div style="font-size:10px;color:rgba(255,255,255,.72);margin-top:4px;letter-spacing:.5px;">Avg. contractor rating</div>
         </div>
       </div>
@@ -459,7 +459,7 @@
       <div class="card" style="cursor:pointer;border-left:3px solid var(--blue);" onclick="sp('browse')">
         <div style="display:flex;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:6px;"><span class="badge open">RFP · Dock Repair</span><span style="font-size:13px;color:var(--mist);">2 days ago</span></div>
         <div class="card-t">Full Dock Rebuild &amp; Boat Lift — Pensacola Beach, FL</div>
-        <div style="font-size:14px;color:var(--mist);margin-bottom:14px;display:flex;align-items:center;gap:6px;">🏡 <span class="dw-user-name"></span> <span class="badge gold" style="font-size:7px;">Verified Owner</span></div>
+        <div style="font-size:14px;color:var(--mist);margin-bottom:14px;display:flex;align-items:center;gap:6px;">🏡 <span class="dw-user-name"></span> <span class="badge gold" style="font-size:7px;"><span class="dw-role-label">Member</span></span></div>
         <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:12px;"><div style="font-family:'Cormorant Garamond',serif;font-size:20px;">$85K–$120K</div><div style="font-size:14px;color:var(--teal);">6 bids</div></div>
       </div>
       <div class="card" style="cursor:pointer;border-left:3px solid var(--teal);" onclick="sp('browse')">
@@ -566,7 +566,7 @@
       <div class="fc" onclick="filterByType('Gold Verified Only',this)">Gold Verified Only</div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
-      <div style="font-size:15px;color:var(--mist);"><strong style="color:var(--slate);">331</strong> active projects</div>
+      <div style="font-size:15px;color:var(--mist);"><strong style="color:var(--slate);"><span class="dw-browse-count">0</span></strong> active projects</div>
       <select class="fs" style="width:auto;font-size:14px;padding:6px 11px;"><option>Most Recent</option><option>Budget: Highest</option><option>Deadline: Soonest</option><option>Fewest Bids</option></select>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px;">
@@ -603,7 +603,7 @@
         <div class="top-lbl">Top Match</div>
         <div style="margin-bottom:10px;display:flex;flex-wrap:wrap;gap:5px;"><span class="badge gold">Gold Verified</span><span class="badge charter">Charter Member</span></div>
         <div class="bc-name"><span class="dw-ctc-name"></span></div>
-        <div class="bc-stars">★★★★★ <span style="font-size:13px;color:var(--mist);">4.9 · 47 jobs</span></div>
+        <div class="bc-stars">★★★★★ <span style="font-size:13px;color:var(--mist);"><span class="dw-stat-rating">-</span> · <span class="dw-stat-done">0</span> jobs</span></div>
         <div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:3px;"><span style="color:var(--mist);">Specialty match</span><span style="font-weight:500;">98%</span></div><div class="match-bar"><div class="match-fill" style="width:98%;"></div></div></div>
         <div class="bc-price">$94,500</div>
         <div class="bc-time">⏱ 6 weeks · Start Apr 10</div>
@@ -884,7 +884,7 @@
         <div style="padding:0 12px 16px;border-bottom:1px solid var(--border);margin-bottom:10px;">
           <div style="font-size:15px;font-weight:500;color:var(--ink);"><span id="dw-user-name"></span></div>
           <div style="font-size:13px;color:var(--mist);"><span id="dw-user-sub">Verified Owner</span></div>
-          <div style="margin-top:7px;"><span class="badge verified">Verified Owner</span></div>
+          <div style="margin-top:7px;"><span class="badge verified"><span class="dw-role-badge">Verified Owner</span></span></div>
         </div>
         <div class="dns">Main</div>
         <div class="dn" onclick="dt('owner','overview')"><span class="dn-icon">📊</span>Overview</div>
@@ -918,14 +918,14 @@
             <button class="btn-ghost" onclick="sp('contractors')" style="font-size:11px;">View all &#x2192;</button>
           </div>
           <div style="display:flex;flex-direction:column;gap:10px;" id="dash-rec-ctc">
-            <div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('contractor-profile')"><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;">&#x2B50; TOP MATCH</div><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;"><span class="dw-ctc-name"></span></div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Tampa, FL &middot; 16 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.9&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Dock &amp; Pier · Seawall · Boat Lifts</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;"></div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div>
-            <div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('ctc-premier')"><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Verified Contractor</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Palm Beach, FL &middot; 18 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.9&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Composite Decking · Dock &amp; Pier</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;"></div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div>
+            <div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('contractor-profile')"><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;">&#x2B50; TOP MATCH</div><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;"><span class="dw-ctc-name"></span></div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Tampa, FL &middot; 16 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);"><span class="dw-stat-rating">-</span>&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Dock &amp; Pier · Seawall · Boat Lifts</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;"></div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div>
+            <div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('ctc-premier')"><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Verified Contractor</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Palm Beach, FL &middot; 18 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);"><span class="dw-stat-rating">-</span>&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Composite Decking · Dock &amp; Pier</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;"></div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div>
             <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('ctc-shoreline')"><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Verified Contractor</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Fort Lauderdale, FL &middot; 11 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.8&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Dock &amp; Pier · Seawall · Piling</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Gold Verified · South FL coverage</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge verified" style="font-size:9px;">&#x2713; Preferred</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div>
           </div>
           <div style="border-top:1px solid var(--border);margin-top:14px;padding-top:12px;">
             <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--mist);margin-bottom:10px;">&#x1F527; RECOMMENDED SUPPLIERS</div>
             <div style="display:flex;flex-direction:column;gap:8px;">
-              <div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('dd-profile')"><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;">&#x2B50; FEATURED SUPPLIER</div><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x1F527;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Verified Supplier</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Palm Beach, FL &middot; 40 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.9&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Composite · Lumber · Piling · Seawall</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Supplier · All dock &amp; seawall materials</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteSupplierQuote()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Request Quote &#x2192;</button></div></div>
+              <div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('dd-profile')"><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;">&#x2B50; FEATURED SUPPLIER</div><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x1F527;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Verified Supplier</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Palm Beach, FL &middot; 40 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);"><span class="dw-stat-rating">-</span>&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Composite · Lumber · Piling · Seawall</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Supplier · All dock &amp; seawall materials</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteSupplierQuote()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Request Quote &#x2192;</button></div></div>
               <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('supplier-profile')"><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x1F527;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;"><span class="dw-sup-name"></span></div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Pensacola, FL &middot; 12 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.8&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Lumber · Hardware · Dock Equipment</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Preferred Supplier · Marine supply house</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge verified" style="font-size:9px;">&#x2713; Preferred</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteSupplierQuote()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Request Quote &#x2192;</button></div></div>
             </div>
             <div style="text-align:center;margin-top:10px;"><button class="btn-ghost" onclick="openSupplierRecModal()" style="font-size:11px;">Browse recommended suppliers &#x2192;</button></div>
@@ -1004,9 +1004,9 @@
         <div class="dt">Job Feed</div><div class="dss">Your matched jobs will appear here as members post projects.</div>
         <div class="dstats">
           <div class="dsc ga"><div class="dsn"><span class="dw-stat-matches">0</span></div><div class="dsl">New matches</div></div>
-          <div class="dsc"><div class="dsn">4</div><div class="dsl">Active bids</div></div>
-          <div class="dsc"><div class="dsn">47</div><div class="dsl">Jobs done</div></div>
-          <div class="dsc"><div class="dsn">4.9★</div><div class="dsl">Rating</div></div>
+          <div class="dsc"><div class="dsn"><span class="dw-stat-active">0</span></div><div class="dsl">Active bids</div></div>
+          <div class="dsc"><div class="dsn"><span class="dw-stat-done">0</span></div><div class="dsl">Jobs done</div></div>
+          <div class="dsc"><div class="dsn"><span class="dw-stat-rating">-</span>★</div><div class="dsl">Rating</div></div>
         </div>
         <div style="background:white;border:1px solid var(--border);padding:14px 16px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
           <div><div style="font-size:15px;font-weight:500;">Availability Status</div><div style="font-size:14px;color:var(--mist);">Owners can see if you're taking bids</div></div>
@@ -1154,8 +1154,8 @@
     <div style="font-size:15px;color:rgba(255,255,255,.78);margin-bottom:3px;">Dock &amp; Pier · Seawall · Boat Lifts · Marine Electric</div>
     <div style="font-size:15px;color:rgba(255,255,255,.78);">📍 Tampa, FL · Licensed FL &amp; AL · Est. 2010</div>
     <div class="prof-stats">
-      <div><div class="ps-num">47</div><div class="ps-lbl">Jobs completed</div></div>
-      <div><div class="ps-num">4.9★</div><div class="ps-lbl">Rating</div></div>
+      <div><div class="ps-num"><span class="dw-stat-done">0</span></div><div class="ps-lbl">Jobs completed</div></div>
+      <div><div class="ps-num"><span class="dw-stat-rating">-</span>★</div><div class="ps-lbl">Rating</div></div>
       <div><div class="ps-num">14 yrs</div><div class="ps-lbl">In business</div></div>
       <div><div class="ps-num">$2M GL</div><div class="ps-lbl">Insurance</div></div>
     </div>
@@ -1308,7 +1308,7 @@
 
       <div style="background:rgba(184,147,74,0.06);border:1px solid var(--border-gold);border-radius:10px;padding:14px;margin-bottom:12px;">
         <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;">&#x2B50; PREMIUM &amp; CHARTER MEMBERS</div>
-        <div style="display:flex;flex-direction:column;gap:10px;"><div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('contractor-profile')"><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;">&#x2B50; TOP MATCH</div><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;"><span class="dw-ctc-name"></span></div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Tampa, FL &middot; 16 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.9&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Dock &amp; Pier · Seawall · Boat Lifts · Marine Electric</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Member · Matches dock &amp; seawall · South FL</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div><div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('ctc-premier')"><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Verified Contractor</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Palm Beach, FL &middot; 18 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.9&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Composite · Dock &amp; Pier · Seawall</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Member · Premium waterfront specialist</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div><div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('ctc-marsh-creek')"><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Marsh Creek Marine Construction</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Jacksonville, FL &middot; 21 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.8&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Dock &amp; Pier · Seawall · Dredging</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Member · 21 yrs experience</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div></div>
+        <div style="display:flex;flex-direction:column;gap:10px;"><div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('contractor-profile')"><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;">&#x2B50; TOP MATCH</div><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;"><span class="dw-ctc-name"></span></div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Tampa, FL &middot; 16 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);"><span class="dw-stat-rating">-</span>&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Dock &amp; Pier · Seawall · Boat Lifts · Marine Electric</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Member · Matches dock &amp; seawall · South FL</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div><div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('ctc-premier')"><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Verified Contractor</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Palm Beach, FL &middot; 18 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);"><span class="dw-stat-rating">-</span>&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Composite · Dock &amp; Pier · Seawall</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Member · Premium waterfront specialist</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div><div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('ctc-marsh-creek')"><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Marsh Creek Marine Construction</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Jacksonville, FL &middot; 21 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.8&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Dock &amp; Pier · Seawall · Dredging</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Member · 21 yrs experience</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div></div>
       </div>
 
       <div style="margin-bottom:20px;">
@@ -1671,7 +1671,7 @@
       <div style="background:rgba(184,147,74,0.06);border:1px solid var(--border-gold);border-radius:10px;padding:14px;margin-bottom:14px;">
         <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;">&#x2B50; FEATURED CHARTER SUPPLIERS</div>
         <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('dd-profile')"><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;">&#x2B50; FEATURED SUPPLIER</div><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x1F527;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Verified Supplier</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Palm Beach, FL &middot; 40 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.9&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Composite Decking · Lumber · Piling · Seawall · Hardware · Shore Power</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Supplier · Full product range · Same-week delivery Southeast</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteSupplierQuote()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Request Quote &#x2192;</button></div></div>
+          <div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('dd-profile')"><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;">&#x2B50; FEATURED SUPPLIER</div><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x1F527;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Verified Supplier</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Palm Beach, FL &middot; 40 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);"><span class="dw-stat-rating">-</span>&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Composite Decking · Lumber · Piling · Seawall · Hardware · Shore Power</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Supplier · Full product range · Same-week delivery Southeast</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteSupplierQuote()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Request Quote &#x2192;</button></div></div>
         </div>
       </div>
 
@@ -1705,7 +1705,7 @@
       <div style="background:rgba(184,147,74,0.06);border:1px solid var(--border-gold);border-radius:10px;padding:14px;margin-bottom:14px;">
         <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;">&#x2B50; CHARTER SUPPLIERS — PRIORITY RFQ</div>
         <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('dd-profile')"><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;">&#x2B50; FEATURED SUPPLIER</div><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x1F527;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Verified Supplier</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Palm Beach, FL &middot; 40 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.9&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Composite Decking · Lumber · Piling · Seawall · Hardware</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Supplier · Fastest quotes · Dedicated contractor account reps</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteSupplierQuote()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Request Quote &#x2192;</button></div></div>
+          <div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('dd-profile')"><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;">&#x2B50; FEATURED SUPPLIER</div><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x1F527;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Verified Supplier</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Palm Beach, FL &middot; 40 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);"><span class="dw-stat-rating">-</span>&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Composite Decking · Lumber · Piling · Seawall · Hardware</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Supplier · Fastest quotes · Dedicated contractor account reps</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteSupplierQuote()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Request Quote &#x2192;</button></div></div>
         </div>
       </div>
 
@@ -2050,19 +2050,90 @@ function goDash() {
 }
 function _updateDashboard() {
   if (!_cu) return;
-  var name=_cu.name||'', company=_cu.company||name, role=_cu.role||'';
-  var first=name.split(' ')[0];
-  var hr=new Date().getHours();
-  var greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+  var name = _cu.name || '';
+  var company = _cu.company || name;
+  var first = name.split(' ')[0];
+  var hr = new Date().getHours();
+  var greet = hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+  var role = _cu.role || '';
   var el;
-  if((el=document.getElementById('dw-greeting'))) el.textContent=greet;
-  if((el=document.getElementById('dw-firstname'))) el.textContent=first;
-  if((el=document.getElementById('dw-user-name'))) el.textContent=name;
-  if((el=document.getElementById('dw-user-sub'))) el.textContent=role==='marina'?'Marina Operator':'Verified Owner';
+
+  // ── Role label map ──────────────────────────────────────────────────────────
+  var roleLabels = {
+    owner: 'Homeowner / HOA',
+    marina: 'Marina Operator',
+    contractor: 'Marine Contractor',
+    supplier: 'Marine Supplier',
+    ddinc: 'Marine Supplier'
+  };
+  var roleLabel = roleLabels[role] || 'Member';
+
+  // ── Update all name/greeting spans ──────────────────────────────────────────
+  if ((el=document.getElementById('dw-greeting'))) el.textContent = greet;
+  if ((el=document.getElementById('dw-firstname'))) el.textContent = first;
+  if ((el=document.getElementById('dw-user-name'))) el.textContent = name;
+  if ((el=document.getElementById('dw-user-sub'))) el.textContent = company;
+  document.querySelectorAll('.dw-user-name').forEach(function(e){e.textContent=name;});
   document.querySelectorAll('.dw-ctc-name').forEach(function(e){e.textContent=company;});
-  document.querySelectorAll('.dw-marina-name').forEach(function(e){e.textContent=company;});
-  document.querySelectorAll('.dw-ctc-sub').forEach(function(e){e.textContent=company;});
   document.querySelectorAll('.dw-sup-name').forEach(function(e){e.textContent=company;});
+  document.querySelectorAll('.dw-marina-name').forEach(function(e){e.textContent=company;});
+
+  // ── Role label top-left ─────────────────────────────────────────────────────
+  document.querySelectorAll('.dw-role-label, .dw-role-badge').forEach(function(e){
+    e.textContent = roleLabel;
+  });
+  // Also update the sidebar badge text if it says Verified Owner etc
+  document.querySelectorAll('.badge.verified, .badge.gold, .badge.charter').forEach(function(e){
+    if(e.textContent.match(/Verified Owner|Gold Verified|Charter Member|Marine/)) {
+      e.textContent = roleLabel;
+    }
+  });
+
+  // ── Zero out all hardcoded stats (real data loaded async below) ─────────────
+  document.querySelectorAll('.dw-stat-matches, .dw-stat-active, .dw-stat-done, .dw-stat-rating, .dw-stat-projects, .dw-stat-bids, .dw-stat-awarded, .dw-stat-rfq').forEach(function(e){
+    e.textContent = '0';
+  });
+  document.querySelectorAll('.dw-stat-rating').forEach(function(e){ e.textContent = '-'; });
+
+  // ── Load real counts from Supabase async ────────────────────────────────────
+  if (_supabase) {
+    // Browse count — total open projects
+    _supabase.from('dw_projects').select('id', {count:'exact', head:true}).eq('status','open').then(function(r){
+      var count = (r && r.count) || 0;
+      document.querySelectorAll('.dw-browse-count').forEach(function(e){ e.textContent = count; });
+    });
+
+    if (role === 'contractor') {
+      // My active bids
+      if (_cu.id) {
+        _supabase.from('dw_bids').select('id', {count:'exact', head:true}).eq('bidder_id', _cu.id).then(function(r){
+          var count = (r && r.count) || 0;
+          document.querySelectorAll('.dw-stat-active').forEach(function(e){ e.textContent = count; });
+        });
+      }
+      // Open jobs available to bid on
+      _supabase.from('dw_projects').select('id', {count:'exact', head:true}).eq('status','open').then(function(r){
+        var count = (r && r.count) || 0;
+        document.querySelectorAll('.dw-stat-matches').forEach(function(e){ e.textContent = count; });
+      });
+    }
+
+    if (role === 'owner' || role === 'marina') {
+      if (_cu.id) {
+        _supabase.from('dw_projects').select('id', {count:'exact', head:true}).eq('owner_id', _cu.id).then(function(r){
+          var count = (r && r.count) || 0;
+          document.querySelectorAll('.dw-stat-projects').forEach(function(e){ e.textContent = count; });
+        });
+      }
+    }
+
+    if (role === 'supplier') {
+      _supabase.from('dw_projects').select('id', {count:'exact', head:true}).eq('type','sup-rfq').eq('status','open').then(function(r){
+        var count = (r && r.count) || 0;
+        document.querySelectorAll('.dw-stat-rfq').forEach(function(e){ e.textContent = count; });
+      });
+    }
+  }
 }
 function _updateNav() {
   var si  = document.getElementById('siLabel');
@@ -2353,10 +2424,10 @@ function closeCtcSupModal(){var ov=document.getElementById('ctcSupRecOverlay');i
 
 /* ── MEMBERSHIP RECOMMENDATION ENGINE ── */
 var _ctcData = [
-  {id:'contractor-profile',name:'<span class="dw-ctc-name"></span>',icon:'⚓',tier:'charter',cats:["Dock", "Pier", "Seawall", "Boat Lift", "Electric"],rating:'4.9',yrs:16,specs:'Dock & Pier · Seawall · Boat Lifts · Marine Electric',loc:'Tampa, FL',accepting:true,hasLogo:false},
+  {id:'contractor-profile',name:'<span class="dw-ctc-name"></span>',icon:'⚓',tier:'charter',cats:["Dock", "Pier", "Seawall", "Boat Lift", "Electric"],rating:'<span class="dw-stat-rating">-</span>',yrs:16,specs:'Dock & Pier · Seawall · Boat Lifts · Marine Electric',loc:'Tampa, FL',accepting:true,hasLogo:false},
   {id:'ctc-shoreline',name:'Shoreline Marine Construction',icon:'⚓',tier:'gold',cats:["Dock", "Pier", "Seawall", "Boat Lift", "Piling"],rating:'4.8',yrs:11,specs:'Dock & Pier · Seawall · Boat Lifts · Piling',loc:'Fort Lauderdale, FL',accepting:true,hasLogo:false},
-  {id:'ctc-premier',name:'Premier Waterfront Renovations',icon:'🚢',tier:'charter',cats:["Dock", "Pier", "Seawall", "Composite"],rating:'4.9',yrs:18,specs:'Composite Decking · Dock & Pier · Seawall',loc:'Palm Beach, FL',accepting:true,hasLogo:false},
-  {id:'ctc-tidewater',name:'Tidewater Marine Electric Inc.',icon:'⚡',tier:'gold',cats:["Electrical", "Electric", "Shore Power"],rating:'4.9',yrs:14,specs:'Marine Electrical · Shore Power · Pedestal Replacement',loc:'Sarasota, FL',accepting:false,hasLogo:false},
+  {id:'ctc-premier',name:'Premier Waterfront Renovations',icon:'🚢',tier:'charter',cats:["Dock", "Pier", "Seawall", "Composite"],rating:'<span class="dw-stat-rating">-</span>',yrs:18,specs:'Composite Decking · Dock & Pier · Seawall',loc:'Palm Beach, FL',accepting:true,hasLogo:false},
+  {id:'ctc-tidewater',name:'Tidewater Marine Electric Inc.',icon:'⚡',tier:'gold',cats:["Electrical", "Electric", "Shore Power"],rating:'<span class="dw-stat-rating">-</span>',yrs:14,specs:'Marine Electrical · Shore Power · Pedestal Replacement',loc:'Sarasota, FL',accepting:false,hasLogo:false},
   {id:'ctc-coastal-dive',name:'Coastal Dive & Salvage LLC',icon:'🌊',tier:'gold',cats:["Underwater", "Dredging", "Salvage"],rating:'4.8',yrs:15,specs:'Underwater Inspection · Salvage · Dredging',loc:'Miami, FL',accepting:true,hasLogo:false},
   {id:'ctc-bluewater',name:'Blue Water Marine Builders',icon:'🛳',tier:'verified',cats:["Dock", "Pier", "Seawall", "Boat Lift"],rating:'4.7',yrs:10,specs:'Dock & Pier · Seawall · Piling · Boat Lifts',loc:'Naples, FL',accepting:true,hasLogo:false},
   {id:'ctc-marsh-creek',name:'Marsh Creek Marine Construction',icon:'⚓',tier:'charter',cats:["Dock", "Pier", "Seawall", "Dredging"],rating:'4.8',yrs:21,specs:'Dock & Pier · Seawall · Dredging · Piling',loc:'Jacksonville, FL',accepting:true,hasLogo:false},
@@ -2366,9 +2437,9 @@ var _ctcData = [
 ];
 var _supData = [
   {id:'supplier-profile',name:'<span class="dw-sup-name"></span>',icon:'🔩',tier:'charter',cats:["Lumber", "Dock", "Hardware", "Seawall", "Electrical"],rating:'4.8',yrs:12,specs:'Lumber · Hardware · Dock Equipment · Electrical',loc:'Pensacola, FL',accepting:true,hasLogo:false},
-  {id:'dd-profile',name:'Verified Supplier',icon:'DD',tier:'charter',cats:["Lumber", "Composite", "Dock", "Hardware", "Seawall", "Piling"],rating:'4.9',yrs:40,specs:'Composite Decking · Lumber · Piling · Seawall · Hardware',loc:'Palm Beach, FL',accepting:true,hasLogo:true},
+  {id:'dd-profile',name:'Verified Supplier',icon:'DD',tier:'charter',cats:["Lumber", "Composite", "Dock", "Hardware", "Seawall", "Piling"],rating:'<span class="dw-stat-rating">-</span>',yrs:40,specs:'Composite Decking · Lumber · Piling · Seawall · Hardware',loc:'Palm Beach, FL',accepting:true,hasLogo:true},
   {id:'supplier-profile',name:'SeaFast Structural Supply',icon:'🏗',tier:'gold',cats:["Pile", "Structural", "Float", "Dock", "Hardware"],rating:'4.8',yrs:15,specs:'Piling · Floating Docks · Structural Hardware',loc:'Mobile, AL',accepting:true,hasLogo:false},
-  {id:'supplier-profile',name:'Coastal Power Systems',icon:'⚡',tier:'gold',cats:["Electrical", "Boat Lift", "Equipment", "Shore Power"],rating:'4.9',yrs:17,specs:'Shore Power · Marine Electrical · Pedestals',loc:'Fort Lauderdale, FL',accepting:true,hasLogo:false},
+  {id:'supplier-profile',name:'Coastal Power Systems',icon:'⚡',tier:'gold',cats:["Electrical", "Boat Lift", "Equipment", "Shore Power"],rating:'<span class="dw-stat-rating">-</span>',yrs:17,specs:'Shore Power · Marine Electrical · Pedestals',loc:'Fort Lauderdale, FL',accepting:true,hasLogo:false},
   {id:'supplier-profile',name:'Atlantic Marine Lumber',icon:'🪵',tier:'gold',cats:["Lumber", "Dock", "Seawall", "Composite", "Decking"],rating:'4.7',yrs:21,specs:'Lumber · Composite Decking · Seawall Materials',loc:'Charleston, SC',accepting:true,hasLogo:false},
   {id:'supplier-profile',name:'Harbor Electrical Supply',icon:'⚡',tier:'verified',cats:["Electrical", "Shore Power", "Hardware"],rating:'4.6',yrs:11,specs:'Marina Electrical · Shore Power Hardware',loc:'Tampa, FL',accepting:true,hasLogo:false},
   {id:'supplier-profile',name:'DockTech Composites',icon:'🎨',tier:'verified',cats:["Composite", "Decking", "Dock", "Coating"],rating:'4.5',yrs:8,specs:'Composite Decking · Dock Coating Systems',loc:'Sarasota, FL',accepting:true,hasLogo:false},
