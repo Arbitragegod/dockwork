@@ -2621,33 +2621,68 @@ function _memberCard(user, type) {
   var label = _roleLabels[user.role] || 'Member';
   var name = user.full_name || user.email.split('@')[0];
   var company = user.company_name || '';
-  var initials = name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().substring(0,2);
+  var displayName = company || name;
+  var initials = name.split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().substring(0,2);
+  var location = user.location ? '📍 ' + user.location : '📍 South Florida';
+  var since = new Date(user.created_at||Date.now()).getFullYear();
+  var uid = user.id;
 
-  if (type === 'contractor' || type === 'supplier') {
-    return '<div class="ctc-card" style="border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;background:#fff;">' +
-      '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">' +
-        '<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0d2b45,#1a3d5c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;flex-shrink:0;">' + initials + '</div>' +
-        '<div>' +
-          '<div style="font-weight:600;font-size:14px;color:#1e293b;">' + (company || name) + '</div>' +
+  // Cache member for profile modal
+  window._dwMemberCache = window._dwMemberCache || {};
+  window._dwMemberCache[uid] = user;
+
+  if (type === 'contractor') {
+    return '<div class="ctc-card" style="border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;background:#fff;cursor:pointer;transition:box-shadow .15s;" ' +
+      'onmouseenter="this.style.boxShadow=\'0 4px 20px rgba(0,0,0,.1)\'" onmouseleave="this.style.boxShadow=\'\'"> ' +
+      '<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">' +
+        '<div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#0d2b45,#1a3d5c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;flex-shrink:0;">' + initials + '</div>' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div style="font-weight:600;font-size:15px;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + displayName + '</div>' +
           '<div style="font-size:12px;color:#64748b;">' + label + '</div>' +
         '</div>' +
+        '<span style="background:#f0fdf4;color:#166534;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;border:1px solid #bbf7d0;">✓ Verified</span>' +
       '</div>' +
-      '<div style="font-size:12px;color:#94a3b8;">Member since ' + new Date(user.created_at||Date.now()).getFullYear() + '</div>' +
+      '<div style="font-size:12px;color:#64748b;margin-bottom:10px;">' + location + '</div>' +
+      '<div style="font-size:11px;color:#94a3b8;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #f1f5f9;">Marine Contractor · Member since ' + since + '</div>' +
+      '<div style="display:flex;gap:8px;">' +
+        '<button class="bsm g" style="flex:1;font-size:12px;" onclick="event.stopPropagation();openMemberProfile(window._dwMemberCache[\''+uid+'\'])">View Profile</button>' +
+        '<button class="bsm" style="flex:1;font-size:12px;" onclick="event.stopPropagation();inviteContractorToBid(window._dwMemberCache[\''+uid+'\'])">Invite to Bid</button>' +
+      '</div>' +
     '</div>';
   }
 
-  // marina / homeowner card
+  if (type === 'supplier') {
+    return '<div class="ctc-card" style="border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;background:#fff;cursor:pointer;transition:box-shadow .15s;" ' +
+      'onmouseenter="this.style.boxShadow=\'0 4px 20px rgba(0,0,0,.1)\'" onmouseleave="this.style.boxShadow=\'\'"> ' +
+      '<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">' +
+        '<div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#1a3d5c,#0891b2);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px;flex-shrink:0;">' + initials + '</div>' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div style="font-weight:600;font-size:15px;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + displayName + '</div>' +
+          '<div style="font-size:12px;color:#64748b;">' + label + '</div>' +
+        '</div>' +
+        '<span style="background:#eff6ff;color:#1d4ed8;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;border:1px solid #bfdbfe;">✓ Certified</span>' +
+      '</div>' +
+      '<div style="font-size:12px;color:#64748b;margin-bottom:10px;">' + location + '</div>' +
+      '<div style="font-size:11px;color:#94a3b8;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #f1f5f9;">Marine Supplier · Member since ' + since + '</div>' +
+      '<div style="display:flex;gap:8px;">' +
+        '<button class="bsm g" style="flex:1;font-size:12px;" onclick="event.stopPropagation();openMemberProfile(window._dwMemberCache[\''+uid+'\'])">View Profile</button>' +
+        '<button class="bsm" style="flex:1;font-size:12px;background:#0891b2;color:white;border-color:#0891b2;" onclick="event.stopPropagation();requestQuoteFromSupplier(window._dwMemberCache[\''+uid+'\'])">Request Quote</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  // marina / owner / default card
   return '<div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;background:#fff;">' +
     '<div style="display:flex;align-items:center;gap:12px;">' +
       '<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0d2b45,#1a3d5c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;flex-shrink:0;">' + initials + '</div>' +
       '<div>' +
-        '<div style="font-weight:600;font-size:14px;color:#1e293b;">' + (company || name) + '</div>' +
+        '<div style="font-weight:600;font-size:14px;color:#1e293b;">' + displayName + '</div>' +
         '<div style="font-size:12px;color:#64748b;">' + label + '</div>' +
-        '<div style="font-size:11px;color:#94a3b8;margin-top:2px;">Member since ' + new Date(user.created_at||Date.now()).getFullYear() + '</div>' +
+        '<div style="font-size:11px;color:#94a3b8;margin-top:2px;">' + location + '</div>' +
       '</div>' +
     '</div>' +
   '</div>';
-}
+}}
 
 function _emptyDirectoryState(icon, label) {
   return '<div style="text-align:center;padding:64px 24px;color:#94a3b8;grid-column:1/-1;">' +
@@ -3558,6 +3593,146 @@ async function submitRFQFromModal() {
     msg.style.display = 'block';
   }
   if (btn) { btn.textContent = '📤 Send RFQ to Suppliers'; btn.disabled = false; }
+}
+</script>
+
+
+<!-- ═══ MEMBER PROFILE MODAL ═══ -->
+<div id="memberProfileModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9100;overflow-y:auto;" onclick="if(event.target===this)closeMemberProfile()">
+  <div style="background:white;max-width:560px;width:92%;margin:60px auto 48px;border-radius:8px;overflow:hidden;box-shadow:0 32px 100px rgba(0,0,0,.3);">
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#0d2b45,#1a3d5c);padding:32px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div id="mp-avatar" style="width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:20px;flex-shrink:0;"></div>
+          <div>
+            <div id="mp-name" style="font-size:20px;font-weight:600;color:#fff;margin-bottom:4px;"></div>
+            <div id="mp-role-label" style="font-size:13px;color:rgba(255,255,255,.7);margin-bottom:6px;"></div>
+            <span id="mp-badge" style="background:rgba(255,255,255,.15);color:#fff;font-size:10px;padding:3px 10px;border-radius:20px;font-weight:600;"></span>
+          </div>
+        </div>
+        <button onclick="closeMemberProfile()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;line-height:30px;text-align:center;flex-shrink:0;">×</button>
+      </div>
+    </div>
+    <!-- Body -->
+    <div style="padding:28px 32px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+        <div style="background:#f8fafc;border-radius:6px;padding:14px;">
+          <div style="font-size:10px;letter-spacing:1.5px;color:#94a3b8;margin-bottom:4px;">COMPANY</div>
+          <div id="mp-company" style="font-size:14px;color:#1e293b;font-weight:500;"></div>
+        </div>
+        <div style="background:#f8fafc;border-radius:6px;padding:14px;">
+          <div style="font-size:10px;letter-spacing:1.5px;color:#94a3b8;margin-bottom:4px;">LOCATION</div>
+          <div id="mp-location" style="font-size:14px;color:#1e293b;font-weight:500;"></div>
+        </div>
+        <div style="background:#f8fafc;border-radius:6px;padding:14px;">
+          <div style="font-size:10px;letter-spacing:1.5px;color:#94a3b8;margin-bottom:4px;">MEMBER SINCE</div>
+          <div id="mp-since" style="font-size:14px;color:#1e293b;font-weight:500;"></div>
+        </div>
+        <div style="background:#f8fafc;border-radius:6px;padding:14px;">
+          <div style="font-size:10px;letter-spacing:1.5px;color:#94a3b8;margin-bottom:4px;">STATUS</div>
+          <div style="font-size:14px;color:#16a34a;font-weight:600;">✓ Active Member</div>
+        </div>
+      </div>
+      <!-- Actions -->
+      <div id="mp-actions" style="border-top:1px solid #f1f5f9;padding-top:20px;display:flex;gap:10px;flex-wrap:wrap;"></div>
+      <div id="mp-action-msg" style="display:none;margin-top:12px;font-size:13px;color:#0891b2;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Member Profile Modal ─────────────────────────────────────────
+var _mpMember = null;
+
+function openMemberProfile(m) {
+  if (!m) return;
+  _mpMember = m;
+  var name = m.full_name || m.email?.split('@')[0] || 'Member';
+  var company = m.company_name || name;
+  var initials = name.split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().substring(0,2);
+  var role = m.role || 'member';
+  var roleLabels = { owner:'Homeowner / HOA', marina:'Marina Operator', contractor:'Marine Contractor', supplier:'Marine Supplier' };
+  var roleLabel = roleLabels[role] || 'Member';
+  var badgeText = role === 'contractor' ? '✓ Verified Contractor' : role === 'supplier' ? '✓ Certified Supplier' : '✓ Verified Member';
+  document.getElementById('mp-avatar').textContent = initials;
+  document.getElementById('mp-name').textContent = name;
+  document.getElementById('mp-role-label').textContent = roleLabel;
+  document.getElementById('mp-badge').textContent = badgeText;
+  document.getElementById('mp-company').textContent = company;
+  document.getElementById('mp-location').textContent = m.location || 'South Florida';
+  document.getElementById('mp-since').textContent = new Date(m.created_at||Date.now()).getFullYear();
+  document.getElementById('mp-action-msg').style.display = 'none';
+  // Build action buttons based on role
+  var actions = document.getElementById('mp-actions');
+  if (role === 'contractor') {
+    actions.innerHTML =
+      '<button class="bsm g" onclick="inviteContractorToBid(_mpMember)" style="flex:1;">📋 Invite to Bid</button>' +
+      '<button class="bsm" onclick="closeMemberProfile();sp('messages')" style="flex:1;">💬 Message</button>' +
+      '<button class="bsm" onclick="closeMemberProfile()">Close</button>';
+  } else if (role === 'supplier') {
+    actions.innerHTML =
+      '<button class="bsm g" style="flex:1;background:#0891b2;border-color:#0891b2;" onclick="requestQuoteFromSupplier(_mpMember)">📦 Request Quote</button>' +
+      '<button class="bsm" onclick="closeMemberProfile();sp('messages')" style="flex:1;">💬 Message</button>' +
+      '<button class="bsm" onclick="closeMemberProfile()">Close</button>';
+  } else {
+    actions.innerHTML = '<button class="bsm" onclick="closeMemberProfile()">Close</button>';
+  }
+  document.getElementById('memberProfileModal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMemberProfile() {
+  document.getElementById('memberProfileModal').style.display = 'none';
+  document.body.style.overflow = '';
+  _mpMember = null;
+}
+
+async function inviteContractorToBid(m) {
+  var msg = document.getElementById('mp-action-msg');
+  // Get current user's open projects to pick from
+  var sessionData = await _supabase.auth.getSession();
+  var uid = sessionData?.data?.session?.user?.id;
+  if (!uid) { msg.textContent = 'Please sign in to invite contractors.'; msg.style.display='block'; return; }
+  var { data: projects } = await _supabase.from('dw_projects').select('id,title').eq('owner_id', uid).eq('status','open');
+  if (!projects || projects.length === 0) {
+    msg.textContent = 'You have no open projects to invite them to. Post a project first.';
+    msg.style.color = '#991b1b';
+    msg.style.display = 'block';
+    return;
+  }
+  // Use first open project (or could show a picker)
+  var proj = projects[0];
+  var result = await _supabase.from('dw_invites').insert([{
+    project_id: proj.id,
+    from_id: uid,
+    to_id: m.id,
+    type: 'bid_invite',
+    status: 'pending'
+  }]);
+  msg.textContent = result.error
+    ? '✗ ' + result.error.message
+    : '✓ Invitation sent to ' + (m.full_name||'contractor') + ' for "' + proj.title.substring(0,40) + '"';
+  msg.style.color = result.error ? '#991b1b' : '#0891b2';
+  msg.style.display = 'block';
+}
+
+async function requestQuoteFromSupplier(m) {
+  var msg = document.getElementById('mp-action-msg');
+  msg.textContent = 'Opening RFQ form…';
+  msg.style.color = '#0891b2';
+  msg.style.display = 'block';
+  setTimeout(function() {
+    closeMemberProfile();
+    // Navigate to contractor dash RFQ tab
+    var role = window._cu?.role;
+    if (role === 'contractor') {
+      goDash();
+      setTimeout(function(){ if(window.dt) dt('contractor','rfqs'); }, 300);
+    } else {
+      sp('browse');
+    }
+  }, 600);
 }
 </script>
 
