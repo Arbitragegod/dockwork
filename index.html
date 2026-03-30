@@ -523,18 +523,8 @@ async function confirmRoleSwitch() {
       <a class="see-all" onclick="sp('browse')">View all →</a>
     </div>
     <div class="g3">
-      <div class="card" style="cursor:pointer;border-left:3px solid var(--blue);" onclick="sp('browse')">
-        <div style="display:flex;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:6px;"><span class="badge open">RFP · Dock Repair</span><span style="font-size:13px;color:var(--mist);">2 days ago</span></div>
-        <div class="card-t">Full Dock Rebuild &amp; Boat Lift — Pensacola Beach, FL</div>
-        <div style="font-size:14px;color:var(--mist);margin-bottom:14px;display:flex;align-items:center;gap:6px;">🏡 <span class="dw-user-name"></span> <span class="badge gold" style="font-size:7px;"><span class="dw-role-label">Member</span></span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:12px;"><div style="font-family:'Cormorant Garamond',serif;font-size:20px;">$85K–$120K</div><div style="font-size:14px;color:var(--teal);">6 bids</div></div>
-      </div>
-      <div class="card" style="cursor:pointer;border-left:3px solid var(--teal);" onclick="sp('browse')">
-        <div style="display:flex;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:6px;"><span class="badge open">RFP · Seawall</span><span style="font-size:13px;color:var(--mist);">3 days ago</span></div>
-        <div class="card-t">Seawall Repair &amp; Bulkhead Replacement — 400 LF, Pensacola</div>
-        <div style="font-size:14px;color:var(--mist);margin-bottom:14px;display:flex;align-items:center;gap:6px;">⛵ Palafox Marina Group <span class="badge verified" style="font-size:7px;">Verified Marina</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:12px;"><div style="font-family:'Cormorant Garamond',serif;font-size:20px;">$240K–$320K</div><div style="font-size:14px;color:var(--teal);">3 bids</div></div>
-      </div>
+      
+      
       <div class="card" style="cursor:pointer;border-left:3px solid #6366f1;" onclick="sp('browse')">
         <div style="display:flex;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:6px;"><span class="badge open">RFP · Marine Electric</span><span style="font-size:13px;color:var(--mist);">4 days ago</span></div>
         <div class="card-t">Marina Shore Power Upgrade — 48 Slip Pedestals, Fort Walton</div>
@@ -645,79 +635,7 @@ async function confirmRoleSwitch() {
 
 <!-- ═══ BID COMPARISON ═══ -->
 
-<div id="page-bid-compare" class="page">
-  <div class="ph">
-    <div style="margin-bottom:7px;"><span class="badge open">RFP · Dock Repair</span></div>
-    <h1>Dock Rebuild &amp; <em>Boat Lift</em></h1>
-    <p>Verified Owner · Pensacola Beach, FL · Due Apr 2 · $85K–$120K budget</p>
-    <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;">
-      <button class="btn-sm" onclick="sp('browse')">← Back</button>
-      <button class="btn-sm gold" onclick="openModal()">+ Invite a Contractor</button>
-    </div>
-  </div>
-  <div style="padding:20px 18px;">
-    <div style="font-size:15px;color:var(--mist);margin-bottom:14px;"><strong style="color:var(--slate);"><span class="dw-stat-bids">0</span></strong> bids received · Bidder names visible to you only · Bidders cannot see each other</div>
-    <div class="fbar">
-      <div class="fc active" onclick="sortChip(this);toast('Sorted by Best Match','info',1500)">Best Match</div>
-      <div class="fc" onclick="sortChip(this);toast('Sorted by Price','info',1500)">Price</div>
-      <div class="fc" onclick="sortChip(this);toast('Sorted by Rating','info',1500)">Rating</div>
-      <div class="fc" onclick="sortChip(this);toast('Sorted by Badge Tier','info',1500)">Badge Tier</div>
-      <div class="fc" onclick="sortChip(this);toast('Sorted by Timeline','info',1500)">Timeline</div>
-    </div>
-    <div class="intel"><h4>Market Pricing Intel</h4><p>Regional dock rebuild averages — activates automatically as platform data accumulates</p></div>
-    <div class="bcg">
-      <div class="bcc top">
-        <div class="top-lbl">Top Match</div>
-        <div style="margin-bottom:10px;display:flex;flex-wrap:wrap;gap:5px;"><span class="badge gold">Gold Verified</span><span class="badge charter">Charter Member</span></div>
-        <div class="bc-name"><span class="dw-ctc-name"></span></div>
-        <div class="bc-stars">★★★★★ <span style="font-size:13px;color:var(--mist);"><span class="dw-stat-rating">-</span> · <span class="dw-stat-done">0</span> jobs</span></div>
-        <div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:3px;"><span style="color:var(--mist);">Specialty match</span><span style="font-weight:500;">98%</span></div><div class="match-bar"><div class="match-fill" style="width:98%;"></div></div></div>
-        <div class="bc-price">$94,500</div>
-        <div class="bc-time">⏱ 6 weeks · Start Apr 10</div>
-        <div class="bc-scope">"Full dock demolition and rebuild using marine-grade PT lumber. 20,000 lb boat lift with remote. 10-year structural warranty."</div>
-        <div class="bc-row"><span class="bc-lbl">Years in business</span><span class="bc-val">14 years</span></div>
-        <div class="bc-row"><span class="bc-lbl">FL License</span><span class="bc-val">CGC Active ✓</span></div>
-        <div class="bc-row"><span class="bc-lbl">Insurance</span><span class="bc-val">$2M GL ✓</span></div>
-        <div style="display:flex;flex-direction:column;gap:7px;margin-top:14px;">
-          <button class="btn-sm gold" onclick="sp('messages')">Ask a Question</button>
-          <button class="btn-sm teal" onclick="if(_cu){return;}joinPrompt('⚖️','Award a Job — Members Only','Award your project to a verified contractor for a $49 platform fee. Join free as an owner with instant approval.')">Award Job — $49 fee ✓</button>
-        </div>
-      </div>
-      <div class="bcc">
-        <div style="margin-bottom:10px;"><span class="badge verified">Verified</span></div>
-        <div class="bc-name">Verified Contractor</div>
-        <div class="bc-stars">★★★★☆ <span style="font-size:13px;color:var(--mist);">4.6 · 22 jobs</span></div>
-        <div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:3px;"><span style="color:var(--mist);">Specialty match</span><span style="font-weight:500;">87%</span></div><div class="match-bar"><div class="match-fill" style="width:87%;"></div></div></div>
-        <div class="bc-price">$88,200</div>
-        <div class="bc-time">⏱ 7 weeks · Start Apr 14</div>
-        <div class="bc-scope">"Full dock rebuild with composite decking option. Boat lift included. Licensed FL and AL."</div>
-        <div class="bc-row"><span class="bc-lbl">Years in business</span><span class="bc-val">8 years</span></div>
-        <div class="bc-row"><span class="bc-lbl">AL License</span><span class="bc-val">Active ✓</span></div>
-        <div class="bc-row"><span class="bc-lbl">Insurance</span><span class="bc-val">$1M GL ✓</span></div>
-        <div style="display:flex;flex-direction:column;gap:7px;margin-top:14px;">
-          <button class="btn-sm" onclick="sp('messages')">Ask a Question</button>
-          <button class="btn-sm" style="background:var(--slate);color:white;border-color:var(--slate);" onclick="if(_cu){return;}joinPrompt('⚖️','Award a Job — Members Only','Award your project to a verified contractor for a $49 platform fee. Join free as an owner with instant approval.')">Award Job — $49 fee</button>
-        </div>
-      </div>
-      <div class="bcc">
-        <div style="margin-bottom:10px;"><span class="badge verified">Verified</span></div>
-        <div class="bc-name">Keys Marine Works</div>
-        <div class="bc-stars">★★★★☆ <span style="font-size:13px;color:var(--mist);">4.4 · 9 jobs</span></div>
-        <div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:3px;"><span style="color:var(--mist);">Specialty match</span><span style="font-weight:500;">74%</span></div><div class="match-bar"><div class="match-fill" style="width:74%;"></div></div></div>
-        <div class="bc-price">$79,000</div>
-        <div class="bc-time">⏱ 9 weeks · Start Apr 21</div>
-        <div class="bc-scope">"Dock rebuild per specs. Boat lift subcontracted. Competitive on materials."</div>
-        <div class="bc-row"><span class="bc-lbl">Years in business</span><span class="bc-val">4 years</span></div>
-        <div class="bc-row"><span class="bc-lbl">AL License</span><span class="bc-val">Active ✓</span></div>
-        <div class="bc-row"><span class="bc-lbl">Insurance</span><span class="bc-val">$1M GL ✓</span></div>
-        <div style="display:flex;flex-direction:column;gap:7px;margin-top:14px;">
-          <button class="btn-sm" onclick="sp('messages')">Ask a Question</button>
-          <button class="btn-sm" onclick="if(_cu){return;}joinPrompt('⚖️','Award a Job — Members Only','Award your project to a verified contractor for a $49 platform fee. Join free as an owner with instant approval.')">Award Job — $49 fee</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<div id="page-bid-compare" class="page"><div style="text-align:center;padding:64px 24px;color:#94a3b8;"><div style="font-size:48px;margin-bottom:16px;">&#x1F4CB;</div><div style="font-size:20px;font-weight:500;color:#475569;margin-bottom:8px;">No bids to compare yet</div><div style="font-size:14px;line-height:1.7;">Post a project and receive bids to compare them here.</div></div></div>
 
 <!-- ═══ PRICING ═══ -->
 
@@ -993,7 +911,7 @@ async function confirmRoleSwitch() {
             <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--mist);margin-bottom:10px;">&#x1F527; RECOMMENDED SUPPLIERS</div>
             <div style="display:flex;flex-direction:column;gap:8px;">
               <div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('dd-profile')"><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;">&#x2B50; FEATURED SUPPLIER</div><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x1F527;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Verified Supplier</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Palm Beach, FL &middot; 40 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);"><span class="dw-stat-rating">-</span>&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Composite · Lumber · Piling · Seawall</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Supplier · All dock &amp; seawall materials</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteSupplierQuote()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Request Quote &#x2192;</button></div></div>
-              <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('supplier-profile')"><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x1F527;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;"><span class="dw-sup-name"></span></div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Pensacola, FL &middot; 12 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.8&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Lumber · Hardware · Dock Equipment</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Preferred Supplier · Marine supply house</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge verified" style="font-size:9px;">&#x2713; Preferred</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteSupplierQuote()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Request Quote &#x2192;</button></div></div>
+              <div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('supplier-profile')"><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;"><span class="dw-sup-name"></span></div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Pensacola, FL &middot; 12 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.8&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Lumber · Hardware · Dock Equipment</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Preferred Supplier · Marine supply house</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge verified" style="font-size:9px;">&#x2713; Preferred</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteSupplierQuote()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Request Quote &#x2192;</button></div></div>
             </div>
             <div style="text-align:center;margin-top:10px;"><button class="btn-ghost" onclick="openSupplierRecModal()" style="font-size:11px;">Browse recommended suppliers &#x2192;</button></div>
           </div>
@@ -1190,7 +1108,7 @@ async function confirmRoleSwitch() {
         <div class="dt">RFQ Inbox</div><div class="dss">Incoming quote requests from verified contractors only.</div>
         <div class="fbar"><div class="fc active" onclick="sortChip(this)">All</div><div class="fc" onclick="sortChip(this)">Open</div><div class="fc" onclick="sortChip(this)">Quoted</div><div class="fc" onclick="sortChip(this)">Awarded</div></div>
         
-        <div class="card" style="margin-bottom:7px;"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;"><div><span class="badge open">Open</span><div class="br-title">20,000 lb Boat Lift — 1 Unit</div><div style="font-size:14px;color:var(--mist);">Coastal Construction · Gold · Due Apr 1</div></div><button class="btn-sm gold" onclick="if(_cu){return;}joinPrompt('🔧','Submit Quotes — Members Only','Respond to RFQs and submit quotes to verified contractors. Apply as a Certified Supplier.')">Submit Quote →</button></div></div>
+        <div style="text-align:center;padding:40px 24px;color:#94a3b8;"><div style="font-size:36px;margin-bottom:12px;">&#x1F4E5;</div><div style="font-size:15px;font-weight:500;color:#475569;margin-bottom:8px;">No RFQs yet</div><div style="font-size:13px;line-height:1.7;">Quote requests from verified contractors will appear here.</div></div>
         <div class="card"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;"><div><span class="badge closed">Quoted</span><div class="br-title">Stainless Dock Hardware — Bulk Order</div><div style="font-size:14px;color:var(--mist);">Shoreline Marine · Quoted $4,200</div></div><button class="btn-sm" onclick="toast('Opening quote details.','info')">View Quote</button></div></div>
       </div>
       <div id="supplier-catalog" style="display:none;">
@@ -1285,26 +1203,7 @@ async function confirmRoleSwitch() {
 
 <!-- ═══ NOTIFICATIONS ═══ -->
 
-<div id="page-notifications" class="page">
-<div style="background:white;border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
-  <div style="display:flex;align-items:center;gap:12px;">
-    <button class="btn-sm" onclick="sp(prevPage||'owner-dash')">← Back</button>
-    <span style="font-size:15px;font-weight:500;color:var(--slate);">Notifications</span>
-    <span style="background:var(--blue);color:white;font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;">2 new</span>
-  </div>
-  <button class="btn-sm" onclick="document.querySelectorAll('.ni.unread').forEach(function(n){n.classList.remove('unread')});this.textContent='All read ✓';this.style.color='var(--green)';toast('All notifications marked as read','success');">Mark all read</button>
-</div>
-  <div class="ph"><h1><em>Notifications</em></h1><p>Your activity feed across all projects, bids, and messages.</p></div>
-  <div style="padding:16px 18px;max-width:680px;">
-    <div class="fbar"><div class="fc active" onclick="sortChip(this)">All</div><div class="fc" onclick="sortChip(this)">Bids</div><div class="fc" onclick="sortChip(this)">Messages</div><div class="fc" onclick="sortChip(this)">Projects</div><div class="fc" onclick="sortChip(this)">System</div></div>
-    <div class="ni unread"><div class="ni-icon g">💰</div><div style="flex:1;"><div class="ni-t">New bid received — Dock Rebuild, Pensacola Beach</div><div class="ni-s"><span class="dw-ctc-name"></span> bid $94,500 · 6 total bids now</div></div><div class="ni-time">2h ago</div></div>
-    <div class="ni unread"><div class="ni-icon t">💬</div><div style="flex:1;"><div class="ni-t">New message from <span class="dw-ctc-name"></span></div><div class="ni-s">Re: Dock Rebuild — question about boat lift spec</div></div><div class="ni-time">2h ago</div></div>
-    <div class="ni"><div class="ni-icon g">⭐</div><div style="flex:1;"><div class="ni-t">You were invited to bid — Shore Power Upgrade, Fort Walton</div><div class="ni-s">Harbour Point Marina invited you directly · $45K–$70K</div></div><div class="ni-time">Yesterday</div></div>
-    </div>
-    <div class="ni"><div class="ni-icon g">📋</div><div style="flex:1;"><div class="ni-t">RFI Response received — Seawall Assessment</div><div class="ni-s">Tidewater Marine responded to your scoping request</div></div><div class="ni-time">Mar 18</div></div>
-    <div class="ni"><div class="ni-icon s">⚜️</div><div style="flex:1;"><div class="ni-t">Verification renewed — <span class="dw-ctc-name"></span></div><div class="ni-s">Annual recertification complete · Gold Verified status maintained</div></div><div class="ni-time">Mar 15</div></div>
-    <div class="ni"><div class="ni-icon s">🔔</div><div style="flex:1;"><div class="ni-t">New matched project posted — Floating Dock, Sarasota</div><div class="ni-s">$110K–$160K · Matches your specialty and location</div></div><div class="ni-time">Mar 14</div></div>
-  </div>
+<div id="page-notifications" class="page"><div style="text-align:center;padding:64px 24px;color:#94a3b8;"><div style="font-size:48px;margin-bottom:16px;">&#x1F514;</div><div style="font-size:20px;font-weight:500;color:#475569;margin-bottom:8px;">No notifications yet</div><div style="font-size:14px;line-height:1.7;">Activity on your projects and bids will appear here.</div></div></div>
 </div>
 
 <!-- ═══ CONTRACTORS SHOWCASE ═══ -->
@@ -1343,54 +1242,7 @@ async function confirmRoleSwitch() {
 
 <!-- ═══ SUCCESS ═══ -->
 
-<div id="page-success" class="page">
-  <div style="max-width:620px;margin:0 auto;padding:60px 24px;text-align:center;">
-    <div style="width:96px;height:96px;background:linear-gradient(135deg,#059669,#34d399);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 28px;box-shadow:0 8px 32px rgba(5,150,105,.3);">✓</div>
-    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:14px;">Application Submitted</div>
-    <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,52px);font-weight:300;color:var(--slate);margin-bottom:14px;line-height:1;">You are on your way <em style="color:var(--green);">in.</em></div>
-    <p style="font-size:16px;color:var(--mist);line-height:1.85;margin-bottom:36px;" id="success-msg">Your application has been received. Owners are approved instantly — check your email for confirmation.</p>
-    <div style="background:#f0fdf9;border:1px solid #a7f3d0;border-radius:12px;padding:28px;margin-bottom:28px;text-align:left;">
-      <div style="font-size:16px;font-weight:600;color:var(--slate);margin-bottom:18px;display:flex;align-items:center;gap:8px;">📋 What happens next</div>
-      <div style="display:flex;flex-direction:column;gap:14px;">
-        <div style="display:flex;gap:14px;align-items:flex-start;"><div style="width:28px;height:28px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:700;flex-shrink:0;">1</div><div style="font-size:15px;color:var(--slate-light);line-height:1.65;padding-top:3px;">Check your inbox — a confirmation email is on its way within minutes.</div></div>
-        <div style="display:flex;gap:14px;align-items:flex-start;"><div style="width:28px;height:28px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:700;flex-shrink:0;">2</div><div style="font-size:15px;color:var(--slate-light);line-height:1.65;padding-top:3px;">Our team verifies your license, insurance, and references — within 24 hours for contractors and suppliers.</div></div>
-        <div style="display:flex;gap:14px;align-items:flex-start;"><div style="width:28px;height:28px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:700;flex-shrink:0;">3</div><div style="font-size:15px;color:var(--slate-light);line-height:1.65;padding-top:3px;">Once approved you get full platform access, your verified badge, and your permanent Charter Member badge.</div></div>
-      </div>
-    </div>
-    <div style="background:var(--gold-pale);border:1px solid var(--border-gold);border-radius:10px;padding:18px 22px;margin-bottom:28px;display:flex;align-items:center;gap:14px;text-align:left;">
-      <div style="font-size:32px;flex-shrink:0;">⭐</div>
-      <div><div style="font-size:14px;font-weight:600;color:var(--slate);margin-bottom:4px;">Founding Member Offer still active</div><div style="font-size:13px;color:var(--mist);line-height:1.65;">First month free · then 50% off for your first year · Gold Charter badge for life. Offer ends March 31.</div></div>
-    </div>
-    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;">
-      <button class="btn-lg" style="background:var(--slate);color:white;font-size:13px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:13px 28px;cursor:pointer;border:none;border-radius:6px;" onclick="sp('home');setTimeout(animateStats,300)">Back to Home</button>
-      <button class="btn-gold" onclick="openPostJob()" style="font-size:13px;">Go to Dashboard &#x2192;</button>
-    </div>
-
-    <div style="text-align:left;border-top:1px solid var(--border);padding-top:32px;">
-      <div style="text-align:center;margin-bottom:20px;">
-        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--mist);margin-bottom:8px;">NEXT STEP</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--ink);">Invite contractors to bid on your <em>project.</em></div>
-        <div style="font-size:13px;color:var(--mist);margin-top:6px;">Ranked by tier, rating &amp; match quality. Premium &amp; Charter members appear first.</div>
-      </div>
-
-      <div style="background:rgba(184,147,74,0.06);border:1px solid var(--border-gold);border-radius:10px;padding:14px;margin-bottom:12px;">
-        <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;">&#x2B50; PREMIUM &amp; CHARTER MEMBERS</div>
-        <div style="display:flex;flex-direction:column;gap:10px;"><div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('contractor-profile')"><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;">&#x2B50; TOP MATCH</div><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;"><span class="dw-ctc-name"></span></div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Tampa, FL &middot; 16 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);"><span class="dw-stat-rating">-</span>&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Dock &amp; Pier · Seawall · Boat Lifts · Marine Electric</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Member · Matches dock &amp; seawall · South FL</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div><div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('ctc-premier')"><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Verified Contractor</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Palm Beach, FL &middot; 18 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);"><span class="dw-stat-rating">-</span>&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Composite · Dock &amp; Pier · Seawall</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Member · Premium waterfront specialist</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div><div style="background:white;border:1.5px solid var(--border-gold);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('ctc-marsh-creek')"><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Marsh Creek Marine Construction</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Jacksonville, FL &middot; 21 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.8&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Dock &amp; Pier · Seawall · Dredging</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Charter Member · 21 yrs experience</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge gold" style="font-size:9px;">&#x2B50; Premium</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div></div>
-      </div>
-
-      <div style="margin-bottom:20px;">
-        <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--mist);margin-bottom:12px;">PREFERRED MEMBERS</div>
-        <div style="display:flex;flex-direction:column;gap:10px;"><div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('ctc-shoreline')"><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Verified Contractor</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Fort Lauderdale, FL &middot; 11 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.8&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Dock &amp; Pier · Seawall · Piling</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Gold Verified · South FL specialist</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge verified" style="font-size:9px;">&#x2713; Preferred</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div><div style="background:white;border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;" onclick="sp('ctc-atlantic-shore')"><div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;"><div style="width:40px;height:40px;border-radius:50%;background:var(--slate);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">&#x2693;</div><div style="flex:1;"><div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:1px;">Atlantic Shore Builders</div><div style="font-size:11px;color:var(--mist);">&#x1F4CD; Daytona Beach, FL &middot; 25 yrs in business</div></div><div style="font-size:13px;font-weight:600;color:var(--slate);">4.8&#x2605;</div></div><div style="font-size:12px;color:var(--mist);margin-bottom:8px;">Dock &amp; Pier · Seawall · Structural</div><div style="background:rgba(5,150,105,0.07);border:1px solid rgba(5,150,105,0.2);border-radius:4px;padding:5px 10px;font-size:11px;color:#059669;margin-bottom:10px;">&#x2713; Gold Verified · 25 yrs experience</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><span class="badge verified" style="font-size:9px;">&#x2713; Preferred</span><span style="font-size:10px;color:var(--teal);">&#x25CF; Accepting Bids</span><button class="btn-sm gold" onclick="event.stopPropagation();handleInviteToBid()" style="font-size:10px;padding:5px 12px;margin-left:auto;">Invite to Bid &#x2192;</button></div></div></div>
-      </div>
-
-      <div style="background:var(--parchment);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center;margin-bottom:8px;">
-        <div style="font-size:13px;color:var(--mist);margin-bottom:8px;">Need materials for this project?</div>
-        <button class="btn-ghost" onclick="openSupplierRecModal()" style="font-size:12px;">&#x1F527; View Recommended Suppliers &#x2192;</button>
-      </div>
-      <div style="text-align:center;"><button class="btn-ghost" onclick="sp('contractors')" style="font-size:12px;color:var(--mist);">Browse all verified contractors &#x2192;</button></div>
-    </div>
-  </div>
-</div>
+<div id="page-success" class="page"><div style="text-align:center;padding:64px 24px;color:#94a3b8;"><div style="font-size:48px;margin-bottom:16px;">&#x2705;</div><div style="font-size:20px;font-weight:500;color:#475569;margin-bottom:8px;">No completed projects yet</div><div style="font-size:14px;line-height:1.7;">Awarded and completed projects will appear here.</div></div></div>
 
 <div class="overlay" id="inviteModal">
   <div class="modal">
