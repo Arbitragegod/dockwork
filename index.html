@@ -3633,9 +3633,9 @@ function joinPrompt(icon, title, sub) {
   if (_cu) return;
   var el = document.getElementById('joinPrompt');
   if (!el) return;
-  if(el.querySelector('.jp-icon')) el.querySelector('.jp-icon').textContent = icon;
-  if(el.querySelector('.jp-title')) el.querySelector('.jp-title').textContent = title;
-  if(el.querySelector('.jp-sub')) el.querySelector('.jp-sub').textContent = sub;
+  if (el.querySelector('.jp-icon')) el.querySelector('.jp-icon').textContent = icon;
+  if (el.querySelector('.jp-title')) el.querySelector('.jp-title').textContent = title;
+  if (el.querySelector('.jp-sub')) el.querySelector('.jp-sub').textContent = sub;
   el.classList.add('open');
 }
 function closeJoinPrompt() {
@@ -4302,43 +4302,27 @@ function closeCtcSupModal() { var ov=document.getElementById('ctcSupRecOverlay')
 
 /* -- POST A JOB FLOW -- */
 function openPostJob() {
-  if(!_cu) { joinPrompt('&#x1F4CB;','Post a Job','Sign in to post jobs, RFQs, and project listings on DockWork.'); return; }
+  if (!_cu) { joinPrompt('&#x1F4CB;','Post a Job','Sign in to post jobs, RFQs, and project listings on DockWork.'); return; }
   var opts = document.getElementById('postJobOptions');
-  if(!opts) return;
-
-  var isOwner = _cu.role === 'owner' || _cu.role === 'marina' || _cu.role === 'dolphin';
-  var isContractor = _cu.role === 'contractor';
-  var isSupplier = _isSupplier ? _isSupplier() : (_cu.role === 'supplier' || _cu.role === 'ddinc');
-
+  if (!opts) return;
+  var isOwner = _cu.role==='owner'||_cu.role==='marina'||_cu.role==='dolphin';
+  var isContractor = _cu.role==='contractor';
+  var isSupplier = typeof _isSupplier==='function' && _isSupplier();
+  if (isSupplier) {
+    opts.innerHTML = '<div style="text-align:center;padding:30px;color:var(--mist)"><div style="font-size:40px;margin-bottom:12px;">&#x1F527;</div><div style="font-size:16px;color:var(--slate);font-weight:500;margin-bottom:8px;">Suppliers respond to RFQs</div><div style="font-size:13px;line-height:1.7;">Browse the RFQ filter on Active Projects to find material requests to quote on.</div><button class="btn-ghost" onclick="closePostJob()" style="margin-top:16px;font-size:12px;">Browse RFQs &#x2192;</button></div>';
+    document.getElementById('postJobOverlay').style.display='flex'; return;
+  }
   var cards = [];
-
-  if(isOwner || isContractor || isSupplier) {
-    // Everyone can see what's relevant to them
+  if (isOwner) {
+    cards.push(makePostOption('&#x1F4CB;','RFP','Request for Proposal','Invite qualified contractors to submit formal competitive bids.','#eff6ff','#bfdbfe','#1d4ed8','rfp'));
+    cards.push(makePostOption('&#x1F3F7;','RFB','Request for Bid','Open competitive bidding on a clearly defined project scope.','#fff7ed','#fed7aa','#c2410c','rfb'));
+    cards.push(makePostOption('&#x1F50D;','RFI','Request for Information','Get expert input and scoping advice before committing.','#f5f3ff','#ddd6fe','#6d28d9','rfi'));
+    cards.push(makePostOption('&#x1F527;','Supplier RFQ','Request Supplier Quotes','Get pricing directly from certified suppliers for materials.','#f0fdfa','#99f6e4','#0f766e','sup-rfq'));
   }
-
-  if(isOwner) {
-    cards.push(makePostOption('&#x1F4CB;','RFP','Request for Proposal','Invite qualified contractors to submit formal competitive bids with full project specs.','#eff6ff','#bfdbfe','#1d4ed8','rfp'));
-    cards.push(makePostOption('&#x1F3F7;','RFB','Request for Bid','Open competitive bidding on a clearly defined project scope. Best for straightforward jobs.','#fff7ed','#fed7aa','#c2410c','rfb'));
-    cards.push(makePostOption('&#x1F50D;','RFI','Request for Information','Get expert input and scoping advice before committing to a full project posting.','#f5f3ff','#ddd6fe','#6d28d9','rfi'));
-    cards.push(makePostOption('&#x1F527;','Supplier RFQ','Request Supplier Quotes','Get pricing directly from certified suppliers for materials, equipment, or hardware.','#f0fdfa','#99f6e4','#0f766e','sup-rfq'));
+  if (isContractor) {
+    cards.push(makePostOption('&#x1F527;','Supplier RFQ','Request Material Quotes','Get competitive pricing from verified suppliers for your project.','#f0fdfa','#99f6e4','#0f766e','sup-rfq'));
+    cards.push(makePostOption('&#x1F4CB;','RFP','Post an RFP as GC','Post a formal proposal request acting as general contractor.','#eff6ff','#bfdbfe','#1d4ed8','rfp'));
   }
-
-  if(isContractor) {
-    cards.push(makePostOption('&#x1F527;','Supplier RFQ','Request Material Quotes','Get competitive pricing from verified suppliers for your current project materials.','#f0fdfa','#99f6e4','#0f766e','sup-rfq'));
-    cards.push(makePostOption('&#x1F4CB;','RFP','Post an RFP','Post a formal proposal request if you are acting as a general contractor on a project.','#eff6ff','#bfdbfe','#1d4ed8','rfp'));
-  }
-
-  if(isSupplier) {
-    opts.innerHTML = '<div style="text-align:center;padding:30px;color:var(--mist);">'
-      + '<div style="font-size:40px;margin-bottom:12px;">&#x1F527;</div>'
-      + '<div style="font-size:16px;color:var(--slate);font-weight:500;margin-bottom:8px;">Suppliers respond to RFQs</div>'
-      + '<div style="font-size:13px;line-height:1.7;">As a supplier, you respond to RFQ postings from owners and contractors — you do not post jobs. Browse the <strong>RFQ</strong> filter on the Active Projects page to find material requests to quote on.</div>'
-      + '<button class="btn-ghost" onclick="closePostJob();filterByType(\'RFQ\',document.querySelector(\'.fc\'))" style="margin-top:16px;font-size:12px;">Browse RFQs &#x2192;</button>'
-      + '</div>';
-    document.getElementById('postJobOverlay').style.display='flex';
-    return;
-  }
-
   opts.innerHTML = cards.join('');
   document.getElementById('postJobOverlay').style.display='flex';
 }
