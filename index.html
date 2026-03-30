@@ -3288,17 +3288,19 @@ async function openProjectDetail(p) {
   document.getElementById('pdm-bid-msg').style.display = 'none';
   document.getElementById('pdm-quote-msg').style.display = 'none';
 
-  // Determine role — get live session for reliable user ID
-  var role = window._cu ? window._cu.role : 'guest';
-  var isOwnerRole = (role === 'owner' || role === 'marina');
-
-  // Get user ID from live session (most reliable) or _cu
+  // Always get role + ID from live Supabase session — never trust stale _cu
   var sessionData = await _supabase.auth.getSession();
-  var liveUid = sessionData?.data?.session?.user?.id || window._cu?.id || null;
+  var liveUid = sessionData?.data?.session?.user?.id || null;
 
-  // Also update _cu.id if missing
-  if (liveUid && window._cu && !window._cu.id) window._cu.id = liveUid;
-
+  // Get fresh role from dw_users
+  var role = 'guest';
+  if (liveUid) {
+    var profileRes = await _supabase.from('dw_users').select('role').eq('id', liveUid).single();
+    role = profileRes?.data?.role || window._cu?.role || 'guest';
+    // Keep _cu in sync
+    if (window._cu) { window._cu.id = liveUid; window._cu.role = role; }
+  }
+  var isOwnerRole = (role === 'owner' || role === 'marina');
   var isMyProject = liveUid && p.owner_id === liveUid;
 
   if (isOwnerRole && isMyProject) {
