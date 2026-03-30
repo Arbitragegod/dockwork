@@ -3184,16 +3184,49 @@ async function submitForgotPassword(){
     window._loadOwnerProjects._statsWrapped = true;
   }
 
-  // Run on load
-  window.addEventListener('load', function() {
-    setTimeout(function() {
-      // If already on owner-dash, load data
-      var ownerDash = document.getElementById('owner-dash');
-      if (ownerDash && ownerDash.style.display !== 'none' && ownerDash.style.display !== '') {
-        if (window._loadOwnerProjects) window._loadOwnerProjects();
-      }
-    }, 400);
-  });
+  // Apply wraps immediately (not waiting for load — load may have already fired)
+  function _applyMatrixWraps() {
+    var _dt = window.dt;
+    if (_dt && !_dt._matrixWrapped) {
+      window.dt = function(dash, tab) {
+        if (tab === 'matrix') {
+          ['overview','projects','post','photos','feed','bids','rfqs','catalog','matrix'].forEach(function(t) {
+            var el = document.getElementById(dash + '-' + t); if (el) el.style.display = 'none';
+          });
+          var mp = document.getElementById(dash + '-matrix');
+          if (mp) mp.style.display = 'block';
+          document.querySelectorAll('.dn').forEach(function(n) { n.classList.remove('active'); });
+        } else {
+          _dt(dash, tab);
+        }
+        if (dash === 'owner'      && (tab === 'projects' || tab === 'overview')) setTimeout(function(){ window._loadOwnerProjects && window._loadOwnerProjects(); }, 80);
+        if (dash === 'contractor' && (tab === 'overview'  || tab === 'feed'))    setTimeout(function(){ window._loadContractorJobs && window._loadContractorJobs(); }, 80);
+      };
+      window.dt._matrixWrapped = true;
+    }
+    var _sp = window.sp;
+    if (_sp && !_sp._matrixWrapped) {
+      window.sp = function(page) {
+        _sp(page);
+        if (page === 'owner-dash')      setTimeout(function(){ window._loadOwnerProjects && window._loadOwnerProjects(); }, 200);
+        if (page === 'contractor-dash') setTimeout(function(){ window._loadContractorJobs && window._loadContractorJobs(); }, 200);
+        if (page === 'browse')          setTimeout(function(){ window._loadBrowseJobs && window._loadBrowseJobs(); }, 200);
+      };
+      window.sp._matrixWrapped = true;
+    }
+    var _sub = window.submitPostProject;
+    if (typeof _sub === 'function' && !_sub._refreshWrapped) {
+      window.submitPostProject = function() {
+        var r = _sub.apply(this, arguments);
+        setTimeout(function(){ if(window._loadOwnerProjects) window._loadOwnerProjects(); if(window._loadBrowseJobs) window._loadBrowseJobs(); }, 1800);
+        return r;
+      };
+      window.submitPostProject._refreshWrapped = true;
+    }
+  }
+  // Try immediately, then again at load in case sp/dt not defined yet
+  _applyMatrixWraps();
+  window.addEventListener('load', function() { _applyMatrixWraps(); setTimeout(function(){ _applyMatrixWraps(); window._loadOwnerProjects && window._loadOwnerProjects(); }, 300); });
 
 })();
 // ── End Action Center wiring ───────────────────────────────────
