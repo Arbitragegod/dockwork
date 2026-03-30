@@ -4199,15 +4199,9 @@ function _showInfoToast(msg) {
   setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 3500);
 }
 
-function handleInviteToBid() {
-  if (!_cu) { joinPrompt('&#x2693;','Invite to Bid','Sign in to invite a contractor.'); return; }
-  if (_cu.role === 'contractor') { _showInfoToast('Contractors cannot invite other contractors to bid.'); return; }
-  _showInfoToast('✓ Invitation sent! The contractor will be notified.');
-}
 
-function handleInviteSupplierQuote() {
-  if (!_cu) { joinPrompt('&#x1F527;','Request a Quote','Sign in to send an RFQ.'); return; }
-  if (typeof _isSupplier === 'function' && _isSupplier()) { _showInfoToast('Suppliers cannot send RFQs to other suppliers.'); return; }
+
+function' && _isSupplier()) { _showInfoToast('Suppliers cannot send RFQs to other suppliers.'); return; }
   _showInfoToast('✓ RFQ sent! The supplier will receive your quote request.');
 }
 
@@ -4268,16 +4262,16 @@ function _isSupplier() {
 
 /* Invite a CONTRACTOR to bid: Owners, Marinas, AND Suppliers allowed. Contractors blocked. */
 function handleInviteToBid() {
-  if (!_cu) { joinPrompt('&#x2693;','Invite to Bid','Sign in to invite a contractor to bid on your project.'); return; }
-  if (_cu.role === 'contractor') { _showInfoToast('Contractors cannot invite other contractors to bid. Only Owners, Marina Operators, and Suppliers can send bid invitations.'); return; }
-  joinPrompt('&#x2693;','Invite Contractor to Bid','Choose a project to attach this invitation to. The contractor will receive a direct bid request.');
+  if (!_cu) { joinPrompt('&#x2693;','Invite to Bid','Sign in to invite a contractor to bid.'); return; }
+  if (_cu.role === 'contractor') { _showInfoToast('Contractors cannot invite other contractors to bid.'); return; }
+  _showInfoToast('✓ Invitation sent! The contractor will be notified of your bid request.');
 }
 
 /* Request a quote FROM a supplier: Owners, Marinas, Contractors allowed. Suppliers blocked. */
 function handleInviteSupplierQuote() {
-  if (!_cu) { joinPrompt('&#x1F527;','Request a Supplier Quote','Sign in to send an RFQ directly to this supplier.'); return; }
-  if (_isSupplier()) { _showInfoToast('Suppliers cannot send RFQs to other suppliers. Owners, Marina Operators, and Contractors can request supplier quotes.'); return; }
-  joinPrompt('&#x1F527;','Request Quote from Supplier','Send a direct RFQ to this supplier for pricing and material availability on your project.');
+  if (!_cu) { joinPrompt('&#x1F527;','Request a Supplier Quote','Sign in to send an RFQ.'); return; }
+  if (typeof _isSupplier === 'function' && _isSupplier()) { _showInfoToast('Suppliers cannot send RFQs to other suppliers.'); return; }
+  _showInfoToast('✓ RFQ sent! The supplier will receive your quote request.');
 }
 
 /* Submit a quote ON a posting:
