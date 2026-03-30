@@ -2964,7 +2964,7 @@ async function submitForgotPassword(){
   function ownerRow(p) {
     const status = p.status || 'open';
     const badgeClass = status === 'open' ? 'op' : 'g';
-    return '<div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;">' +
+    return '<div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;" onclick="openProjectDetail(' + JSON.stringify(p).replace(/'/g,`&#39;`) + ')">' +
       '<div style="flex:1;min-width:0;">' +
         '<div style="font-family:\'Cormorant Garamond\',serif;font-size:17px;color:var(--ink);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + (p.title || 'Untitled') + '</div>' +
         '<div style="font-size:12px;color:var(--mist);">' + (p.project_type || '') + ' · ' + (p.location || '') + ' · Due ' + fmtDeadline(p.deadline) + ' · ' + fmtBudget(p.budget_range) + '</div>' +
@@ -2974,7 +2974,7 @@ async function submitForgotPassword(){
   }
 
   function contractorRow(p) {
-    return '<div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;">' +
+    return '<div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;" onclick="openProjectDetail(' + JSON.stringify(p).replace(/'/g,`&#39;`) + ')">' +
       '<div style="flex:1;min-width:0;">' +
         '<div style="font-family:\'Cormorant Garamond\',serif;font-size:17px;color:var(--ink);margin-bottom:3px;">' + (p.title || 'Untitled') + '</div>' +
         '<div style="font-size:12px;color:var(--mist);">' + (p.project_type || '') + ' · ' + (p.location || '') + ' · Due ' + fmtDeadline(p.deadline) + '</div>' +
@@ -3119,5 +3119,71 @@ async function submitForgotPassword(){
 })();
 </script>
 <script></script>
+
+<!-- Project Detail Modal -->
+<div id="projectDetailModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000;overflow-y:auto;" onclick="if(event.target===this)closeProjectDetail()">
+  <div style="background:white;max-width:640px;width:90%;margin:60px auto 40px;border-radius:6px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.3);">
+    <div style="background:linear-gradient(135deg,#0d2b45,#1a3d5c);padding:28px 32px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
+        <div>
+          <div id="pdm-badge" style="font-size:10px;letter-spacing:2px;color:rgba(100,180,255,.8);margin-bottom:8px;"></div>
+          <div id="pdm-title" style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:white;line-height:1.3;"></div>
+          <div id="pdm-location" style="font-size:13px;color:rgba(255,255,255,.6);margin-top:6px;"></div>
+        </div>
+        <button onclick="closeProjectDetail()" style="background:rgba(255,255,255,.12);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;flex-shrink:0;line-height:32px;text-align:center;">×</button>
+      </div>
+    </div>
+    <div style="padding:28px 32px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;">
+        <div style="background:#f8fafc;border-radius:4px;padding:14px;">
+          <div style="font-size:10px;letter-spacing:1.5px;color:var(--mist);margin-bottom:4px;">BUDGET</div>
+          <div id="pdm-budget" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ink);"></div>
+        </div>
+        <div style="background:#f8fafc;border-radius:4px;padding:14px;">
+          <div style="font-size:10px;letter-spacing:1.5px;color:var(--mist);margin-bottom:4px;">DEADLINE</div>
+          <div id="pdm-deadline" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ink);"></div>
+        </div>
+        <div style="background:#f8fafc;border-radius:4px;padding:14px;">
+          <div style="font-size:10px;letter-spacing:1.5px;color:var(--mist);margin-bottom:4px;">STATUS</div>
+          <div id="pdm-status" style="font-size:13px;font-weight:500;"></div>
+        </div>
+      </div>
+      <div style="margin-bottom:20px;">
+        <div style="font-size:11px;letter-spacing:1.5px;color:var(--mist);margin-bottom:8px;">PROJECT DESCRIPTION</div>
+        <div id="pdm-desc" style="font-size:14px;color:var(--slate);line-height:1.8;"></div>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="bsm g" onclick="closeProjectDetail();sp('browse')">View on Browse →</button>
+        <button class="bsm" onclick="closeProjectDetail();sp('messages')">💬 Message</button>
+        <button class="bsm" onclick="closeProjectDetail()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openProjectDetail(p) {
+  var m = document.getElementById('projectDetailModal');
+  if (!m) return;
+  var typeLabel = (p.type || 'RFP').toUpperCase();
+  var catLabel  = p.project_type || 'Marine Construction';
+  document.getElementById('pdm-badge').textContent = typeLabel + ' · ' + catLabel;
+  document.getElementById('pdm-title').textContent = p.title || 'Untitled Project';
+  document.getElementById('pdm-location').textContent = '📍 ' + (p.location || '');
+  document.getElementById('pdm-budget').textContent = p.budget_range || 'TBD';
+  document.getElementById('pdm-deadline').textContent = p.deadline ? new Date(p.deadline).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'Open';
+  var statusEl = document.getElementById('pdm-status');
+  statusEl.textContent = (p.status || 'open').toUpperCase();
+  statusEl.style.color = p.status === 'open' ? 'var(--teal)' : 'var(--mist)';
+  document.getElementById('pdm-desc').textContent = p.description || 'No description provided.';
+  m.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+function closeProjectDetail() {
+  var m = document.getElementById('projectDetailModal');
+  if (m) m.style.display = 'none';
+  document.body.style.overflow = '';
+}
+</script>
 </body>
 </html>
