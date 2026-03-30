@@ -2950,7 +2950,9 @@ async function submitForgotPassword(){
   function browseCard(p) {
     const typeLabel = (p.type || 'RFP').toUpperCase();
     const catLabel  = p.project_type || 'Marine Construction';
-    return '<div class="card" style="padding:28px 24px;cursor:pointer;border-radius:4px;">' +
+    window._dwProjCache = window._dwProjCache || {};
+    window._dwProjCache[p.id] = p;
+    return '<div class="card" style="padding:28px 24px;cursor:pointer;border-radius:4px;" onclick="openProjectDetail(window._dwProjCache[\''+p.id+'\'])">' +
       '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">' +
         '<span class="bdg op" style="font-size:11px;">' + typeLabel + ' · ' + catLabel + '</span>' +
         '<span style="font-size:12px;color:var(--mist);">' + timeAgo(p.created_at) + '</span>' +
