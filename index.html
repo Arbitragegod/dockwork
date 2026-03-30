@@ -196,6 +196,7 @@ async function confirmRoleSwitch() {
     <li><a onclick="sp('contractors')" class="">Contractors</a></li>
     <li><a onclick="sp('suppliers')" class="active">Suppliers</a></li>
     <li><a onclick="sp('marina-owners')">Marina Owners</a></li>
+    <li><a onclick="sp('homeowners')">Homeowners</a></li>
     <li><a onclick="sp('pricing')">Membership</a></li>
     <li><a onclick="sp('about')">About</a></li>
     <li><a onclick="openRealSignUp()">Join Now</a></li>
@@ -2730,6 +2731,42 @@ async function realSignOut(){
         <button onclick="closeRoleSwitcher()" style="flex:1;padding:11px;border:1.5px solid #e2e8f0;border-radius:8px;background:#fff;font-size:14px;cursor:pointer;color:#64748b;">Cancel</button>
         <button id="roleSwitchConfirmBtn" onclick="confirmRoleSwitch()" disabled style="flex:2;padding:11px;border:none;border-radius:8px;background:#0d2b45;color:#fff;font-size:14px;font-weight:600;cursor:pointer;opacity:.5;">Save Changes</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-homeowners" class="page">
+  <div class="page-hero" style="background:linear-gradient(135deg,#1c3a2e,#0f4a3e);padding:60px 24px;text-align:center;">
+    <div style="font-size:11px;letter-spacing:3px;color:rgba(100,220,180,.7);margin-bottom:12px;font-family:'DM Mono',monospace;">WATERFRONT HOMEOWNERS</div>
+    <h1 style="font-size:36px;font-weight:700;color:#fff;margin:0 0 16px;">For waterfront homeowners.</h1>
+    <p style="color:rgba(255,255,255,.7);max-width:540px;margin:0 auto;font-size:15px;line-height:1.7;">DockWork connects waterfront homeowners and HOAs with licensed, vetted marine contractors for dock builds, seawall repairs, boat lifts, and more.</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap;">
+      <button class="btn-gold" onclick="openRealSignUp()" style="padding:12px 28px;font-size:14px;">Post a Project &rarr;</button>
+      <button class="btn-ghost" onclick="sp('browse')" style="padding:12px 28px;font-size:14px;color:#fff;border-color:rgba(255,255,255,.3);">Browse Active Projects</button>
+    </div>
+  </div>
+  <div style="max-width:900px;margin:60px auto;padding:0 24px;">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:60px;">
+      <div style="text-align:center;padding:28px 20px;border:1px solid #e2e8f0;border-radius:12px;">
+        <div style="font-size:36px;margin-bottom:12px;">&#x1F4CB;</div>
+        <div style="font-size:15px;font-weight:600;color:#1e293b;margin-bottom:8px;">Post a Project</div>
+        <div style="font-size:13px;color:#64748b;line-height:1.6;">Describe your project and receive competitive bids from verified contractors.</div>
+      </div>
+      <div style="text-align:center;padding:28px 20px;border:1px solid #e2e8f0;border-radius:12px;">
+        <div style="font-size:36px;margin-bottom:12px;">&#x2705;</div>
+        <div style="font-size:15px;font-weight:600;color:#1e293b;margin-bottom:8px;">Vetted Contractors</div>
+        <div style="font-size:13px;color:#64748b;line-height:1.6;">Every contractor is licensed, insured, and verified before they can bid on your project.</div>
+      </div>
+      <div style="text-align:center;padding:28px 20px;border:1px solid #e2e8f0;border-radius:12px;">
+        <div style="font-size:36px;margin-bottom:12px;">&#x1F4B0;</div>
+        <div style="font-size:15px;font-weight:600;color:#1e293b;margin-bottom:8px;">Compare Bids</div>
+        <div style="font-size:13px;color:#64748b;line-height:1.6;">Review bids side-by-side, check credentials, and award to the best fit for your project.</div>
+      </div>
+    </div>
+    <div style="background:#f8fafc;border-radius:16px;padding:40px;text-align:center;">
+      <div style="font-size:22px;font-weight:600;color:#1e293b;margin-bottom:12px;">Ready to get started?</div>
+      <div style="font-size:15px;color:#64748b;margin-bottom:24px;max-width:400px;margin-left:auto;margin-right:auto;">Create a free homeowner account and post your first project in minutes.</div>
+      <button class="btn-gold" onclick="openRealSignUp()" style="padding:12px 32px;font-size:14px;">Create Free Account &rarr;</button>
     </div>
   </div>
 </div>
