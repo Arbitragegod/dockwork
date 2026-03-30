@@ -3057,59 +3057,41 @@ async function submitForgotPassword(){
   window._loadOwnerProjects = loadOwnerProjects;
   window._loadContractorJobs = loadContractorJobs;
 
-  // Wrap sp() to auto-load on page navigation
-  document.addEventListener('DOMContentLoaded', function() {
+  // Auto-wire sp(), dt(), filterByType() — runs immediately after page scripts load
+  window.addEventListener('load', function() {
+    // Wrap sp()
     var _sp = window.sp;
-    if (typeof _sp === 'function') {
+    if (typeof _sp === 'function' && !_sp._dwWrapped) {
       window.sp = function(page) {
         _sp(page);
-        if (page === 'browse')          setTimeout(loadBrowseJobs, 60);
-        if (page === 'owner-dash')      setTimeout(loadOwnerProjects, 60);
-        if (page === 'contractor-dash') setTimeout(loadContractorJobs, 60);
+        if (page === 'browse')          setTimeout(loadBrowseJobs, 80);
+        if (page === 'owner-dash')      setTimeout(loadOwnerProjects, 80);
+        if (page === 'contractor-dash') setTimeout(loadContractorJobs, 80);
       };
+      window.sp._dwWrapped = true;
     }
+    // Wrap dt()
     var _dt = window.dt;
-    if (typeof _dt === 'function') {
+    if (typeof _dt === 'function' && !_dt._dwWrapped) {
       window.dt = function(dash, tab) {
         _dt(dash, tab);
-        if (dash === 'owner'      && tab === 'projects')  setTimeout(loadOwnerProjects, 60);
-        if (dash === 'contractor' && (tab === 'overview' || tab === 'feed')) setTimeout(loadContractorJobs, 60);
+        if (dash === 'owner'      && tab === 'projects')              setTimeout(loadOwnerProjects, 80);
+        if (dash === 'contractor' && (tab === 'overview' || tab === 'feed')) setTimeout(loadContractorJobs, 80);
       };
+      window.dt._dwWrapped = true;
     }
-  });
-
-  // Wire filterByType to pass type to browse loader
-  var _filterByType = window.filterByType;
-  if (typeof _filterByType === 'function') {
-    window.filterByType = function(type, el) {
-      _filterByType(type, el);
-      loadBrowseJobs(type);
-    };
-  }
-
-  // Auto-run for whichever section is currently visible
-  window.addEventListener('load', function() {
+    // Wrap filterByType()
+    var _fbt = window.filterByType;
+    if (typeof _fbt === 'function' && !_fbt._dwWrapped) {
+      window.filterByType = function(type, el) { _fbt(type, el); loadBrowseJobs(type); };
+      window.filterByType._dwWrapped = true;
+    }
+    // Auto-load whichever section is active on first paint
     setTimeout(function() {
       if (document.getElementById('browse-jobs-list'))     loadBrowseJobs();
       if (document.getElementById('owner-projects-list'))  loadOwnerProjects();
       if (document.getElementById('contractor-jobs-list')) loadContractorJobs();
-      // Re-wrap sp/dt after full load (they're now definitely defined)
-      var _sp2 = window.sp;
-      if (_sp2 && !_sp2._dwWrapped) {
-        window.sp = function(page) { _sp2(page); if(page==='browse') setTimeout(loadBrowseJobs,60); if(page==='owner-dash') setTimeout(loadOwnerProjects,60); if(page==='contractor-dash') setTimeout(loadContractorJobs,60); };
-        window.sp._dwWrapped = true;
-      }
-      var _dt2 = window.dt;
-      if (_dt2 && !_dt2._dwWrapped) {
-        window.dt = function(dash,tab) { _dt2(dash,tab); if(dash==='owner'&&tab==='projects') setTimeout(loadOwnerProjects,60); if(dash==='contractor'&&(tab==='overview'||tab==='feed')) setTimeout(loadContractorJobs,60); };
-        window.dt._dwWrapped = true;
-      }
-      var _fbt = window.filterByType;
-      if (_fbt && !_fbt._dwWrapped) {
-        window.filterByType = function(type,el){ _fbt(type,el); loadBrowseJobs(type); };
-        window.filterByType._dwWrapped = true;
-      }
-    }, 300);
+    }, 150);
   });
 
 })();
