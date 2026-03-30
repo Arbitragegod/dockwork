@@ -182,6 +182,112 @@ async function confirmRoleSwitch() {
   }
 }
 
+
+// ── MEMBER DIRECTORY LOADERS ──────────────────────────────────────────────────
+
+var _roleIcons = {owner:'🏡', marina:'⚓', contractor:'🔨', supplier:'🛒'};
+var _roleLabels = {owner:'Homeowner / HOA', marina:'Marina Operator', contractor:'Marine Contractor', supplier:'Marine Supplier'};
+
+function _memberCard(user, type) {
+  var icon = _roleIcons[user.role] || '👤';
+  var label = _roleLabels[user.role] || 'Member';
+  var name = user.full_name || user.email.split('@')[0];
+  var company = user.company_name || '';
+  var initials = name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().substring(0,2);
+
+  if (type === 'contractor' || type === 'supplier') {
+    return '<div class="ctc-card" style="border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;background:#fff;">' +
+      '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">' +
+        '<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0d2b45,#1a3d5c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;flex-shrink:0;">' + initials + '</div>' +
+        '<div>' +
+          '<div style="font-weight:600;font-size:14px;color:#1e293b;">' + (company || name) + '</div>' +
+          '<div style="font-size:12px;color:#64748b;">' + label + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="font-size:12px;color:#94a3b8;">Member since ' + new Date(user.created_at||Date.now()).getFullYear() + '</div>' +
+    '</div>';
+  }
+
+  // marina / homeowner card
+  return '<div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;background:#fff;">' +
+    '<div style="display:flex;align-items:center;gap:12px;">' +
+      '<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0d2b45,#1a3d5c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;flex-shrink:0;">' + initials + '</div>' +
+      '<div>' +
+        '<div style="font-weight:600;font-size:14px;color:#1e293b;">' + (company || name) + '</div>' +
+        '<div style="font-size:12px;color:#64748b;">' + label + '</div>' +
+        '<div style="font-size:11px;color:#94a3b8;margin-top:2px;">Member since ' + new Date(user.created_at||Date.now()).getFullYear() + '</div>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function _emptyDirectoryState(icon, label) {
+  return '<div style="text-align:center;padding:64px 24px;color:#94a3b8;grid-column:1/-1;">' +
+    '<div style="font-size:48px;margin-bottom:16px;">' + icon + '</div>' +
+    '<div style="font-size:18px;font-weight:500;color:#475569;margin-bottom:8px;">No ' + label + ' yet</div>' +
+    '<div style="font-size:14px;line-height:1.7;max-width:400px;margin:0 auto;">Verified ' + label.toLowerCase() + ' will appear here once they join DockWork.</div>' +
+  '</div>';
+}
+
+async function _loadDirectoryPage(pageId, role, gridClass, icon, label) {
+  var page = document.getElementById(pageId);
+  if (!page) return;
+
+  // Find or create the members grid
+  var grid = page.querySelector('.' + gridClass);
+  if (!grid) {
+    // Find the content area after the hero
+    var hero = page.querySelector('.page-hero, [style*="gradient"]');
+    if (!hero) return;
+    var container = document.createElement('div');
+    container.style.cssText = 'max-width:1100px;margin:40px auto;padding:0 24px;';
+    var newGrid = document.createElement('div');
+    newGrid.className = gridClass;
+    newGrid.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:16px;';
+    container.appendChild(newGrid);
+    hero.parentNode.insertBefore(container, hero.nextSibling);
+    grid = newGrid;
+  }
+
+  grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:#94a3b8;font-size:13px;">Loading members...</div>';
+
+  try {
+    var res = await _supabase.from('dw_users').select('*').eq('role', role).order('created_at', {ascending:false});
+    var members = (res.data || []);
+
+    if (members.length === 0) {
+      grid.innerHTML = _emptyDirectoryState(icon, label);
+      return;
+    }
+
+    grid.innerHTML = members.map(function(m){ return _memberCard(m, role); }).join('');
+  } catch(e) {
+    grid.innerHTML = _emptyDirectoryState(icon, label);
+    console.warn('Directory load error:', e);
+  }
+}
+
+// ── Hook into sp() navigation to load directories on visit ───────────────────
+var _origSp = typeof sp === 'function' ? sp : null;
+function _hookDirectories() {
+  var _baseSp = window.sp;
+  window.sp = function(page) {
+    _baseSp(page);
+    if (page === 'contractors') _loadDirectoryPage('page-contractors','contractor','ctc-grid','🔨','Contractors');
+    if (page === 'suppliers') _loadDirectoryPage('page-suppliers','supplier','ctc-grid','🛒','Suppliers');
+    if (page === 'marina-owners') _loadDirectoryPage('page-marina-owners','marina','marina-grid','⚓','Marina Operators');
+    if (page === 'homeowners') _loadDirectoryPage('page-homeowners','owner','homeowner-grid','🏡','Homeowners');
+  };
+}
+
+// Hook after DOM ready
+if (document.readyState === 'complete') {
+  _hookDirectories();
+} else {
+  window.addEventListener('load', _hookDirectories);
+}
+
+
 </script>
 <script>var _supabase=window.supabase.createClient("https://etdkvsgvspefjzauhtbb.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV0ZGt2c2d2c3BlZmp6YXVodGJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MDQwODMsImV4cCI6MjA4OTA4MDA4M30.K6Dbnx0IWJJTx644szuQnu_N0Ccc-2-M89Ad2e_IaU0");</script>
 </head>
@@ -2750,6 +2856,7 @@ async function realSignOut(){
       <div style="text-align:center;padding:28px 20px;border:1px solid #e2e8f0;border-radius:12px;">
         <div style="font-size:36px;margin-bottom:12px;">&#x1F4CB;</div>
         <div style="font-size:15px;font-weight:600;color:#1e293b;margin-bottom:8px;">Post a Project</div>
+<div style="max-width:1100px;margin:40px auto;padding:0 24px;"><div class="homeowner-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;"></div></div>
         <div style="font-size:13px;color:#64748b;line-height:1.6;">Describe your project and receive competitive bids from verified contractors.</div>
       </div>
       <div style="text-align:center;padding:28px 20px;border:1px solid #e2e8f0;border-radius:12px;">
