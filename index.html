@@ -4416,19 +4416,65 @@ async function doRealSignIn(){
   var p=await _supabase.from("dw_users").select("*").eq("id",r.data.user.id).single();
   if(p.data){_cu={role:p.data.role,name:p.data.full_name||email,dash:_dashForRole(p.data.role),tier:p.data.tier,ownPage:null};closeRealAuth();_updateNav();sp(_cu.dash);_showInfoToast("✓ Welcome back, "+_cu.name+"!");}
 }
-async function doRealSignUp(){
-  var name=document.getElementById("signupName").value.trim();
-  var company=document.getElementById("signupCompany").value.trim();
-  var role=document.getElementById("signupRole").value;
-  var email=document.getElementById("signupEmail").value.trim();
-  var password=document.getElementById("signupPassword").value;
-  if(!name||!email||!password){showAuthError("Please fill in all required fields.");return;}
-  if(password.length<6){showAuthError("Password must be at least 6 characters.");return;}
-  var r=await _supabase.auth.signUp({email,password});
-  if(r.error){showAuthError(r.error.message);return;}
-  await _supabase.from("dw_users").insert({id:r.data.user.id,email:email,full_name:name,company_name:company||null,role:role,tier:"standard"});
-  _cu={role,name,dash:_dashForRole(role),tier:"standard",ownPage:null};
-  closeRealAuth();_updateNav();sp(_cu.dash);_showInfoToast("✓ Welcome to DockWork, "+name+"!");
+async function doRealSignUp() {
+  var nameEl = document.getElementById('signupName');
+  var emailEl = document.getElementById('signupEmail');
+  var passEl = document.getElementById('signupPassword');
+  var roleEl = document.getElementById('signupRole');
+  var errEl = document.getElementById('authError');
+
+  var name = nameEl ? nameEl.value.trim() : '';
+  var email = emailEl ? emailEl.value.trim() : '';
+  var password = passEl ? passEl.value : '';
+  var role = roleEl ? roleEl.value : 'owner';
+
+  // Clear any previous error
+  if (errEl) { errEl.textContent = ''; errEl.style.display = 'none'; }
+
+  // Validate
+  if (!name) { if(errEl){errEl.textContent='Please enter your full name.';errEl.style.display='block';} return; }
+  if (!email || !email.includes('@')) { if(errEl){errEl.textContent='Please enter a valid email address.';errEl.style.display='block';} return; }
+  if (!password || password.length < 6) { if(errEl){errEl.textContent='Password must be at least 6 characters.';errEl.style.display='block';} return; }
+  if (!role) role = 'owner';
+
+  // Button loading state
+  var btn = document.getElementById('signupSubmitBtn') || document.querySelector('#authFormSignUp .btn-gold');
+  if (btn) { btn.textContent = 'Creating account…'; btn.disabled = true; }
+
+  try {
+    var result = await _supabase.auth.signUp({ email: email, password: password });
+
+    if (result.error) {
+      if (errEl) { errEl.textContent = result.error.message; errEl.style.display = 'block'; }
+      if (btn) { btn.textContent = 'Create Account →'; btn.disabled = false; }
+      return;
+    }
+
+    var user = result.data && result.data.user;
+    if (!user) {
+      if (errEl) { errEl.textContent = 'Unexpected error. Please try again.'; errEl.style.display = 'block'; }
+      if (btn) { btn.textContent = 'Create Account →'; btn.disabled = false; }
+      return;
+    }
+
+    // Insert profile
+    var company = document.getElementById('signupCompany') ? document.getElementById('signupCompany').value.trim() : '';
+    await _supabase.from('dw_users').insert({
+      id: user.id, email: email, full_name: name,
+      company_name: company || null, role: role, tier: 'standard'
+    });
+
+    // Sign them in immediately
+    _cu = { role: role, name: name, dash: _dashForRole(role), tier: 'standard', ownPage: null };
+    closeRealAuth();
+    _updateNav();
+    sp(_cu.dash);
+    _showInfoToast('✓ Welcome to DockWork, ' + name + '!');
+
+  } catch(e) {
+    if (errEl) { errEl.textContent = 'Something went wrong. Please try again.'; errEl.style.display = 'block'; }
+    if (btn) { btn.textContent = 'Create Account →'; btn.disabled = false; }
+  }
 }
 async function realSignOut(){
   await _supabase.auth.signOut();
@@ -4445,7 +4491,7 @@ async function realSignOut(){
 
 </script>
 
-<div id="thunderbit-crx-side-bar" style="display:block;opacity:1;pointer-events:all;top:0;right:0;z-index:9007199254740991;position:fixed;pointer-events:none;user-select:none;"></div><button id="open-side-panel" style="width:0;height:0;opacity:0;user-select:none;pointer-events:all;position:absolute;bottom:0;right:0;padding:0;border:0;outline:none;"></button><div id="give-freely-root-ejkiikneibegknkgimmihdpcbcedgmpo" class="give-freely-root" data-extension-id="ejkiikneibegknkgimmihdpcbcedgmpo" data-extension-name="Volume Booster" style="display: block;"></div><div id="realAuthModal" style="display:none;position:fixed;inset:0;background:rgba(15,26,32,.8);z-index:900;align-items:center;justify-content:center;padding:16px;" onclick="if(event.target===this)closeRealAuth()"><div style="background:white;width:100%;max-width:420px;border-radius:12px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.3);"><div style="background:var(--slate);padding:22px 24px;display:flex;align-items:center;justify-content:space-between;"><div><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.4);margin-bottom:4px;" id="authModalLabel">SIGN IN</div><div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:white;" id="authModalTitle">Welcome back</div></div><button onclick="closeRealAuth()" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:22px;cursor:pointer;">&#x2715;</button></div><div style="padding:24px;"><div id="authError" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:10px 14px;border-radius:6px;font-size:13px;margin-bottom:16px;"></div><div id="authFormSignIn"><div style="margin-bottom:14px;"><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Email</label><input id="authEmail" type="email" placeholder="you@example.com" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px;box-sizing:border-box;"/></div><div style="margin-bottom:20px;"><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Password</label><input id="authPassword" type="password" placeholder="••••••••" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px;box-sizing:border-box;"/></div><button onclick="doRealSignIn()" class="btn-gold" style="width:100%;padding:12px;font-size:14px;">Sign In &#x2192;</button><div style="text-align:center;margin-top:16px;font-size:13px;color:var(--mist);">Don't have an account? <a href="#" onclick="showSignUp()" style="color:var(--blue);text-decoration:none;font-weight:500;">Join DockWork</a></div></div><div id="authFormSignUp" style="display:none;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;"><div><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Full Name</label><input id="signupName" type="text" placeholder="John Smith" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;box-sizing:border-box;"/></div><div><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Company (optional)</label><input id="signupCompany" type="text" placeholder="Acme Marine" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;box-sizing:border-box;"/></div></div><div style="margin-bottom:14px;"><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">I am a...</label><select id="signupRole" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px;box-sizing:border-box;background:white;"><option value="owner">Property Owner / HOA</option><option value="marina">Marina Operator</option><option value="contractor">Marine Contractor</option><option value="supplier">Marine Supplier</option></select></div><div style="margin-bottom:14px;"><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Email</label><input id="signupEmail" type="email" placeholder="you@example.com" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px;box-sizing:border-box;"/></div><div style="margin-bottom:20px;"><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Password</label><input id="signupPassword" type="password" placeholder="Min. 6 characters" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;box-sizing:border-box;"/></div><button onclick="doRealSignUp()" class="btn-gold" style="width:100%;padding:12px;font-size:14px;">Create Account &#x2192;</button><div style="text-align:center;margin-top:16px;font-size:13px;color:var(--mist);">Already a member? <a href="#" onclick="showSignIn()" style="color:var(--blue);text-decoration:none;font-weight:500;">Sign In</a></div></div></div></div></div>
+<div id="thunderbit-crx-side-bar" style="display:block;opacity:1;pointer-events:all;top:0;right:0;z-index:9007199254740991;position:fixed;pointer-events:none;user-select:none;"></div><button id="open-side-panel" style="width:0;height:0;opacity:0;user-select:none;pointer-events:all;position:absolute;bottom:0;right:0;padding:0;border:0;outline:none;"></button><div id="give-freely-root-ejkiikneibegknkgimmihdpcbcedgmpo" class="give-freely-root" data-extension-id="ejkiikneibegknkgimmihdpcbcedgmpo" data-extension-name="Volume Booster" style="display: block;"></div><div id="realAuthModal" style="display:none;position:fixed;inset:0;background:rgba(15,26,32,.8);z-index:900;align-items:center;justify-content:center;padding:16px;" onclick="if(event.target===this)closeRealAuth()"><div style="background:white;width:100%;max-width:420px;border-radius:12px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.3);"><div style="background:var(--slate);padding:22px 24px;display:flex;align-items:center;justify-content:space-between;"><div><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.4);margin-bottom:4px;" id="authModalLabel">SIGN IN</div><div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:white;" id="authModalTitle">Welcome back</div></div><button onclick="closeRealAuth()" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:22px;cursor:pointer;">&#x2715;</button></div><div style="padding:24px;"><div id="authError" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:10px 14px;border-radius:6px;font-size:13px;margin-bottom:16px;"></div><div id="authFormSignIn"><div style="margin-bottom:14px;"><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Email</label><input id="authEmail" type="email" placeholder="you@example.com" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px;box-sizing:border-box;"/></div><div style="margin-bottom:20px;"><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Password</label><input id="authPassword" type="password" placeholder="••••••••" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px;box-sizing:border-box;"/></div><button onclick="doRealSignIn()" class="btn-gold" style="width:100%;padding:12px;font-size:14px;">Sign In &#x2192;</button><div style="text-align:center;margin-top:16px;font-size:13px;color:var(--mist);">Don't have an account? <a href="#" onclick="showSignUp()" style="color:var(--blue);text-decoration:none;font-weight:500;">Join DockWork</a></div></div><div id="authFormSignUp" style="display:none;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;"><div><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Full Name</label><input id="signupName" type="text" placeholder="John Smith" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;box-sizing:border-box;"/></div><div><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Company (optional)</label><input id="signupCompany" type="text" placeholder="Acme Marine" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;box-sizing:border-box;"/></div></div><div style="margin-bottom:14px;"><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">I am a...</label><select id="signupRole" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;outline:none;box-sizing:border-box;background:#fff;"><option value="owner" selected>Homeowner / HOA</option><option value="marina">Marina Operator</option><option value="contractor">Marine Contractor</option><option value="supplier">Marine Supplier</option></select></div><div style="margin-bottom:14px;"><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Email</label><input id="signupEmail" type="email" placeholder="you@example.com" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px;box-sizing:border-box;"/></div><div style="margin-bottom:20px;"><label style="font-size:12px;color:var(--mist);display:block;margin-bottom:5px;">Password</label><input id="signupPassword" type="password" placeholder="Min. 6 characters" style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;box-sizing:border-box;"/></div><button onclick="doRealSignUp()" class="btn-gold" style="width:100%;padding:12px;font-size:14px;">Create Account &#x2192;</button><div style="text-align:center;margin-top:16px;font-size:13px;color:var(--mist);">Already a member? <a href="#" onclick="showSignIn()" style="color:var(--blue);text-decoration:none;font-weight:500;">Sign In</a></div></div></div></div></div>
 
 <div id="postProjectOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;align-items:center;justify-content:center;" onclick="if(event.target===this)closePostProject()">
   <div style="background:#fff;border-radius:16px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.25);">
