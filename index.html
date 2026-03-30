@@ -4220,15 +4220,30 @@ function handleInviteToBid() {
   _showInfoToast('✓ Bid invitation sent! The contractor will be notified.');
 }
 function handleInviteSupplierQuote() {
-  if (!_cu) { joinPrompt('&#x1F527;','Request a Quote','Sign in to send an RFQ.'); return; }
+  if (!_cu) { joinPrompt('&#x1F527;','Request a Quote','Sign in to send a supplier RFQ.'); return; }
+  if (_cu.role==='supplier'||_cu.role==='ddinc') {
+    _showInfoToast('Suppliers cannot send RFQs to other suppliers.');
+    return;
+  }
   _showInfoToast('✓ RFQ sent! The supplier will receive your quote request.');
 }
 function handleSubmitQuote(jobType) {
-  if (!_cu) { joinPrompt('&#x1F4CB;','Submit a Quote','Sign in to respond.'); return; }
-  if (_cu.role==='owner'||_cu.role==='marina'||_cu.role==='dolphin') { _showInfoToast('Owners and Marina Operators post jobs — they do not submit bids.'); return; }
-    if (jobType && jobType.indexOf('RFQ')===-1) { _showInfoToast('Suppliers can only quote on RFQ postings.'); return; }
-    _showInfoToast('✓ Quote submitted! The posting party will be notified.'); return;
+  if (!_cu) { joinPrompt('&#x1F4CB;','Submit a Quote','Sign in to respond to this posting.'); return; }
+  if (_cu.role==='owner'||_cu.role==='marina'||_cu.role==='dolphin') {
+    _showInfoToast('Owners and Marina Operators post jobs — they do not submit bids.');
+    return;
   }
+  if (_cu.role==='supplier'||_cu.role==='ddinc') {
+    if (!jobType || jobType.indexOf('RFQ')===-1) {
+      _showInfoToast('Suppliers can only provide quotes on RFQ postings.');
+      return;
+    }
+    _showInfoToast('✓ Quote submitted! The posting party will be notified.');
+    return;
+  }
+  // Contractor or other — can bid on anything
+  _showInfoToast('✓ Bid submitted! The project owner has been notified.');
+}
   _showInfoToast('✓ Bid submitted! The project owner will be notified.');
 
 function openSupplierRecModal(){var ov=document.getElementById('supRecOverlay');if(ov)ov.style.display='flex';}
@@ -4302,12 +4317,13 @@ function _isSupplier() {
 
 /* -- POST A JOB FLOW -- */
 function openPostJob() {
-  if (!_cu) { joinPrompt('&#x1F4CB;','Post a Job','Sign in to post jobs, RFQs, and project listings on DockWork.'); return; }
+  if (!_cu) { joinPrompt('&#x1F4CB;','Post a Job','Sign in to post jobs and project listings on DockWork.'); return; }
   var opts = document.getElementById('postJobOptions');
   if (!opts) return;
   var isOwner = _cu.role==='owner'||_cu.role==='marina'||_cu.role==='dolphin';
   var isContractor = _cu.role==='contractor';
-  if (isSupplier) {
+  var isSupp = typeof _isSupplier==='function' && _isSupplier();
+  if (isSupp) {
     opts.innerHTML = '<div style="text-align:center;padding:30px;color:var(--mist)"><div style="font-size:40px;margin-bottom:12px;">&#x1F527;</div><div style="font-size:16px;color:var(--slate);font-weight:500;margin-bottom:8px;">Suppliers respond to RFQs</div><div style="font-size:13px;line-height:1.7;">Browse the RFQ filter on Active Projects to find material requests to quote on.</div><button class="btn-ghost" onclick="closePostJob()" style="margin-top:16px;font-size:12px;">Browse RFQs &#x2192;</button></div>';
     document.getElementById('postJobOverlay').style.display='flex'; return;
   }
@@ -4332,8 +4348,11 @@ function makePostOption(icon, type, title, desc, bg, border, color, key) {
 
 function selectPostType(key, type, title) {
   closePostJob();
+  if (!_cu) { joinPrompt('&#x1F4CB;','Post a Job','Sign in to post a job.'); return; }
+  var labels = {rfp:'Request for Proposal (RFP)',rfb:'Request for Bid (RFB)',rfi:'Request for Information (RFI)','sup-rfq':'Supplier RFQ'};
+  var label = labels[key] || type;
+  _showInfoToast('✓ ' + label + ' posting initiated — fill in your project details below.');
   sp('apply');
-  if(typeof selType === 'function') selType(null, key);
 }
 
 function closePostJob() {
