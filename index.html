@@ -3124,69 +3124,312 @@ async function submitForgotPassword(){
 </script>
 <script></script>
 
-<!-- Project Detail Modal -->
-<div id="projectDetailModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000;overflow-y:auto;" onclick="if(event.target===this)closeProjectDetail()">
-  <div style="background:white;max-width:640px;width:90%;margin:60px auto 40px;border-radius:6px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.3);">
-    <div style="background:linear-gradient(135deg,#0d2b45,#1a3d5c);padding:28px 32px;">
+
+
+<!-- ═══ PROJECT MANAGEMENT MODAL ═══ -->
+<div id="projectDetailModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;overflow-y:auto;" onclick="if(event.target===this)closeProjectDetail()">
+  <div style="background:white;max-width:680px;width:92%;margin:48px auto 48px;border-radius:6px;overflow:hidden;box-shadow:0 32px 100px rgba(0,0,0,.35);">
+
+    <!-- Header -->
+    <div id="pdm-header" style="background:linear-gradient(135deg,#0d2b45,#1a3d5c);padding:28px 32px;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;">
-        <div>
+        <div style="flex:1;">
           <div id="pdm-badge" style="font-size:10px;letter-spacing:2px;color:rgba(100,180,255,.8);margin-bottom:8px;"></div>
-          <div id="pdm-title" style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:white;line-height:1.3;"></div>
-          <div id="pdm-location" style="font-size:13px;color:rgba(255,255,255,.6);margin-top:6px;"></div>
+          <div id="pdm-title-display" style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:white;line-height:1.3;margin-bottom:6px;"></div>
+          <div id="pdm-location-display" style="font-size:13px;color:rgba(255,255,255,.6);"></div>
         </div>
-        <button onclick="closeProjectDetail()" style="background:rgba(255,255,255,.12);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;flex-shrink:0;line-height:32px;text-align:center;">×</button>
+        <button onclick="closeProjectDetail()" style="background:rgba(255,255,255,.12);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:20px;flex-shrink:0;line-height:30px;text-align:center;">×</button>
       </div>
     </div>
-    <div style="padding:28px 32px;">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;">
-        <div style="background:#f8fafc;border-radius:4px;padding:14px;">
-          <div style="font-size:10px;letter-spacing:1.5px;color:var(--mist);margin-bottom:4px;">BUDGET</div>
-          <div id="pdm-budget" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ink);"></div>
-        </div>
-        <div style="background:#f8fafc;border-radius:4px;padding:14px;">
-          <div style="font-size:10px;letter-spacing:1.5px;color:var(--mist);margin-bottom:4px;">DEADLINE</div>
-          <div id="pdm-deadline" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ink);"></div>
-        </div>
-        <div style="background:#f8fafc;border-radius:4px;padding:14px;">
-          <div style="font-size:10px;letter-spacing:1.5px;color:var(--mist);margin-bottom:4px;">STATUS</div>
-          <div id="pdm-status" style="font-size:13px;font-weight:500;"></div>
-        </div>
+
+    <!-- Stats strip -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border);">
+      <div style="padding:16px 20px;border-right:1px solid var(--border);">
+        <div style="font-size:10px;letter-spacing:1.5px;color:var(--mist);margin-bottom:4px;">BUDGET</div>
+        <div id="pdm-budget" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ink);"></div>
       </div>
-      <div style="margin-bottom:20px;">
-        <div style="font-size:11px;letter-spacing:1.5px;color:var(--mist);margin-bottom:8px;">PROJECT DESCRIPTION</div>
+      <div style="padding:16px 20px;border-right:1px solid var(--border);">
+        <div style="font-size:10px;letter-spacing:1.5px;color:var(--mist);margin-bottom:4px;">DEADLINE</div>
+        <div id="pdm-deadline" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ink);"></div>
+      </div>
+      <div style="padding:16px 20px;">
+        <div style="font-size:10px;letter-spacing:1.5px;color:var(--mist);margin-bottom:4px;">STATUS</div>
+        <div id="pdm-status-display" style="font-size:13px;font-weight:600;"></div>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div style="padding:28px 32px;">
+
+      <!-- Description (always shown) -->
+      <div style="margin-bottom:24px;">
+        <div style="font-size:10px;letter-spacing:1.5px;color:var(--mist);margin-bottom:8px;">PROJECT DESCRIPTION</div>
         <div id="pdm-desc" style="font-size:14px;color:var(--slate);line-height:1.8;"></div>
       </div>
-      <div style="border-top:1px solid var(--border);padding-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
-        <button class="bsm g" onclick="closeProjectDetail();sp('browse')">View on Browse →</button>
-        <button class="bsm" onclick="closeProjectDetail();sp('messages')">💬 Message</button>
-        <button class="bsm" onclick="closeProjectDetail()">Close</button>
+
+      <!-- OWNER/MARINA: Edit form -->
+      <div id="pdm-owner-section" style="display:none;">
+        <div style="border-top:1px solid var(--border);padding-top:24px;margin-bottom:20px;">
+          <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:16px;">✏️ Edit Posting</div>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div>
+              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">TITLE</label>
+              <input id="pdm-edit-title" class="fi" style="width:100%;" type="text">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div>
+                <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">BUDGET RANGE</label>
+                <input id="pdm-edit-budget" class="fi" type="text" placeholder="e.g. $45,000 – $75,000">
+              </div>
+              <div>
+                <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">DEADLINE</label>
+                <input id="pdm-edit-deadline" class="fi" type="date">
+              </div>
+            </div>
+            <div>
+              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">DESCRIPTION</label>
+              <textarea id="pdm-edit-desc" class="ft" style="height:120px;"></textarea>
+            </div>
+            <div>
+              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">STATUS</label>
+              <select id="pdm-edit-status" class="fs" style="width:auto;">
+                <option value="open">Open — Accepting bids</option>
+                <option value="awarded">Awarded</option>
+                <option value="closed">Closed</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="bsm g" onclick="saveProjectEdit()" id="pdm-save-btn">💾 Save Changes</button>
+          <button class="bsm" style="background:#fef2f2;border-color:#fecaca;color:#991b1b;" onclick="confirmCloseProject()">🗑 Close Project</button>
+          <button class="bsm" onclick="closeProjectDetail()">Cancel</button>
+        </div>
+        <div id="pdm-save-msg" style="display:none;margin-top:12px;font-size:13px;color:var(--teal);"></div>
       </div>
+
+      <!-- CONTRACTOR: Job detail + bid action -->
+      <div id="pdm-contractor-section" style="display:none;">
+        <div style="border-top:1px solid var(--border);padding-top:20px;">
+          <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:14px;">🔨 Submit a Bid</div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
+            <div>
+              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">YOUR BID AMOUNT</label>
+              <input id="pdm-bid-amount" class="fi" type="text" placeholder="e.g. $62,000">
+            </div>
+            <div>
+              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">COVER NOTE (optional)</label>
+              <textarea id="pdm-bid-note" class="ft" style="height:90px;" placeholder="Brief intro — experience, availability, why you're the right fit…"></textarea>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="bsm g" onclick="submitBidFromModal()">📤 Submit Bid</button>
+            <button class="bsm" onclick="closeProjectDetail();sp('messages')">💬 Message Owner</button>
+            <button class="bsm" onclick="closeProjectDetail()">Close</button>
+          </div>
+          <div id="pdm-bid-msg" style="display:none;margin-top:12px;font-size:13px;color:var(--teal);"></div>
+        </div>
+      </div>
+
+      <!-- SUPPLIER: RFQ detail + quote action -->
+      <div id="pdm-supplier-section" style="display:none;">
+        <div style="border-top:1px solid var(--border);padding-top:20px;">
+          <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:14px;">📦 Submit a Quote</div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
+            <div>
+              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">QUOTE AMOUNT</label>
+              <input id="pdm-quote-amount" class="fi" type="text" placeholder="e.g. $21,500">
+            </div>
+            <div>
+              <label style="font-size:11px;letter-spacing:1px;color:var(--mist);display:block;margin-bottom:6px;">QUOTE DETAILS</label>
+              <textarea id="pdm-quote-note" class="ft" style="height:90px;" placeholder="Describe what's included, lead time, delivery terms…"></textarea>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="bsm g" onclick="submitQuoteFromModal()">📤 Submit Quote</button>
+            <button class="bsm" onclick="closeProjectDetail();sp('messages')">💬 Message Poster</button>
+            <button class="bsm" onclick="closeProjectDetail()">Close</button>
+          </div>
+          <div id="pdm-quote-msg" style="display:none;margin-top:12px;font-size:13px;color:var(--teal);"></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
 <script>
+// ── Project Detail Modal ───────────────────────────────────────────────────
+var _pdmProject = null;
+
 function openProjectDetail(p) {
-  var m = document.getElementById('projectDetailModal');
-  if (!m) return;
+  if (!p) return;
+  _pdmProject = p;
+
   var typeLabel = (p.type || 'RFP').toUpperCase();
   var catLabel  = p.project_type || 'Marine Construction';
   document.getElementById('pdm-badge').textContent = typeLabel + ' · ' + catLabel;
-  document.getElementById('pdm-title').textContent = p.title || 'Untitled Project';
-  document.getElementById('pdm-location').textContent = '📍 ' + (p.location || '');
+  document.getElementById('pdm-title-display').textContent = p.title || 'Untitled';
+  document.getElementById('pdm-location-display').textContent = p.location ? '📍 ' + p.location : '';
   document.getElementById('pdm-budget').textContent = p.budget_range || 'TBD';
-  document.getElementById('pdm-deadline').textContent = p.deadline ? new Date(p.deadline).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'Open';
-  var statusEl = document.getElementById('pdm-status');
+  document.getElementById('pdm-deadline').textContent = p.deadline
+    ? new Date(p.deadline).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})
+    : 'Open';
+  var statusEl = document.getElementById('pdm-status-display');
   statusEl.textContent = (p.status || 'open').toUpperCase();
   statusEl.style.color = p.status === 'open' ? 'var(--teal)' : 'var(--mist)';
   document.getElementById('pdm-desc').textContent = p.description || 'No description provided.';
-  m.style.display = 'block';
+
+  // Hide all role sections
+  document.getElementById('pdm-owner-section').style.display = 'none';
+  document.getElementById('pdm-contractor-section').style.display = 'none';
+  document.getElementById('pdm-supplier-section').style.display = 'none';
+  document.getElementById('pdm-save-msg').style.display = 'none';
+  document.getElementById('pdm-bid-msg').style.display = 'none';
+  document.getElementById('pdm-quote-msg').style.display = 'none';
+
+  // Determine role
+  var role = window._cu ? window._cu.role : 'guest';
+  var isOwner = (role === 'owner' || role === 'marina');
+  var myId = window._cu ? window._cu.id : null;
+  var isMyProject = myId && p.owner_id === myId;
+
+  if (isOwner && isMyProject) {
+    // Owner/marina viewing their own project — show edit form
+    document.getElementById('pdm-edit-title').value = p.title || '';
+    document.getElementById('pdm-edit-budget').value = p.budget_range || '';
+    document.getElementById('pdm-edit-deadline').value = p.deadline ? p.deadline.substring(0,10) : '';
+    document.getElementById('pdm-edit-desc').value = p.description || '';
+    document.getElementById('pdm-edit-status').value = p.status || 'open';
+    document.getElementById('pdm-owner-section').style.display = 'block';
+  } else if (role === 'contractor') {
+    document.getElementById('pdm-bid-amount').value = '';
+    document.getElementById('pdm-bid-note').value = '';
+    document.getElementById('pdm-contractor-section').style.display = 'block';
+  } else if (role === 'supplier') {
+    document.getElementById('pdm-quote-amount').value = '';
+    document.getElementById('pdm-quote-note').value = '';
+    document.getElementById('pdm-supplier-section').style.display = 'block';
+  } else {
+    // Owner viewing someone else's project — read only, show owner section without edit
+    document.getElementById('pdm-owner-section').style.display = 'block';
+    document.getElementById('pdm-edit-title').closest('div.fi, div').style.display = 'none';
+  }
+
+  document.getElementById('projectDetailModal').style.display = 'block';
   document.body.style.overflow = 'hidden';
 }
+
 function closeProjectDetail() {
-  var m = document.getElementById('projectDetailModal');
-  if (m) m.style.display = 'none';
+  document.getElementById('projectDetailModal').style.display = 'none';
   document.body.style.overflow = '';
+  _pdmProject = null;
+}
+
+async function saveProjectEdit() {
+  if (!_pdmProject) return;
+  var btn = document.getElementById('pdm-save-btn');
+  var msg = document.getElementById('pdm-save-msg');
+  btn.textContent = 'Saving…'; btn.disabled = true;
+  try {
+    var updates = {
+      title:        document.getElementById('pdm-edit-title').value.trim(),
+      budget_range: document.getElementById('pdm-edit-budget').value.trim(),
+      deadline:     document.getElementById('pdm-edit-deadline').value || null,
+      description:  document.getElementById('pdm-edit-desc').value.trim(),
+      status:       document.getElementById('pdm-edit-status').value
+    };
+    var result = await _supabase.from('dw_projects').update(updates).eq('id', _pdmProject.id);
+    if (result.error) throw new Error(result.error.message);
+    // Update cache
+    Object.assign(_pdmProject, updates);
+    if (window._dwProjCache && window._dwProjCache[_pdmProject.id]) {
+      Object.assign(window._dwProjCache[_pdmProject.id], updates);
+    }
+    // Refresh displays
+    document.getElementById('pdm-title-display').textContent = updates.title;
+    document.getElementById('pdm-budget').textContent = updates.budget_range || 'TBD';
+    document.getElementById('pdm-status-display').textContent = updates.status.toUpperCase();
+    document.getElementById('pdm-status-display').style.color = updates.status === 'open' ? 'var(--teal)' : 'var(--mist)';
+    msg.textContent = '✓ Saved successfully';
+    msg.style.color = 'var(--teal)';
+    msg.style.display = 'block';
+    // Refresh the lists
+    if (window._loadOwnerProjects) window._loadOwnerProjects();
+    if (window._loadBrowseJobs)    window._loadBrowseJobs();
+  } catch(e) {
+    msg.textContent = '✗ Error: ' + e.message;
+    msg.style.color = '#991b1b';
+    msg.style.display = 'block';
+  }
+  btn.textContent = '💾 Save Changes'; btn.disabled = false;
+}
+
+function confirmCloseProject() {
+  if (!_pdmProject) return;
+  if (!confirm('Mark this project as Closed? It will no longer appear in Browse.')) return;
+  document.getElementById('pdm-edit-status').value = 'closed';
+  saveProjectEdit();
+}
+
+async function submitBidFromModal() {
+  if (!_pdmProject) return;
+  var btn = document.querySelector('#pdm-contractor-section .bsm.g');
+  var msg = document.getElementById('pdm-bid-msg');
+  var amount = document.getElementById('pdm-bid-amount').value.trim();
+  var note   = document.getElementById('pdm-bid-note').value.trim();
+  if (!amount) { msg.textContent = 'Please enter a bid amount.'; msg.style.color='#991b1b'; msg.style.display='block'; return; }
+  btn.textContent = 'Submitting…'; btn.disabled = true;
+  try {
+    var result = await _supabase.from('dw_bids').insert([{
+      project_id: _pdmProject.id,
+      bidder_id:  window._cu?.id,
+      amount:     amount,
+      note:       note,
+      status:     'pending'
+    }]);
+    if (result.error) throw new Error(result.error.message);
+    msg.textContent = '✓ Bid submitted! The owner will be notified.';
+    msg.style.color = 'var(--teal)';
+    msg.style.display = 'block';
+    document.getElementById('pdm-bid-amount').value = '';
+    document.getElementById('pdm-bid-note').value = '';
+  } catch(e) {
+    msg.textContent = '✗ ' + e.message;
+    msg.style.color = '#991b1b';
+    msg.style.display = 'block';
+  }
+  btn.textContent = '📤 Submit Bid'; btn.disabled = false;
+}
+
+async function submitQuoteFromModal() {
+  if (!_pdmProject) return;
+  var btn = document.querySelector('#pdm-supplier-section .bsm.g');
+  var msg = document.getElementById('pdm-quote-msg');
+  var amount = document.getElementById('pdm-quote-amount').value.trim();
+  var note   = document.getElementById('pdm-quote-note').value.trim();
+  if (!amount) { msg.textContent = 'Please enter a quote amount.'; msg.style.color='#991b1b'; msg.style.display='block'; return; }
+  btn.textContent = 'Submitting…'; btn.disabled = true;
+  try {
+    var result = await _supabase.from('dw_quotes').insert([{
+      project_id: _pdmProject.id,
+      supplier_id: window._cu?.id,
+      amount:      amount,
+      note:        note,
+      status:      'pending'
+    }]);
+    if (result.error) throw new Error(result.error.message);
+    msg.textContent = '✓ Quote submitted! The poster will be notified.';
+    msg.style.color = 'var(--teal)';
+    msg.style.display = 'block';
+    document.getElementById('pdm-quote-amount').value = '';
+    document.getElementById('pdm-quote-note').value = '';
+  } catch(e) {
+    msg.textContent = '✗ ' + e.message;
+    msg.style.color = '#991b1b';
+    msg.style.display = 'block';
+  }
+  btn.textContent = '📤 Submit Quote'; btn.disabled = false;
 }
 </script>
 </body>
