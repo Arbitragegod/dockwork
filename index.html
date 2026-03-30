@@ -628,9 +628,7 @@ async function confirmRoleSwitch() {
       <div style="font-size:15px;color:var(--mist);"><strong style="color:var(--slate);"><span class="dw-browse-count">0</span></strong> active projects</div>
       <select class="fs" style="width:auto;font-size:14px;padding:6px 11px;"><option>Most Recent</option><option>Budget: Highest</option><option>Deadline: Soonest</option><option>Fewest Bids</option></select>
     </div>
-    <div style="display:flex;flex-direction:column;gap:8px;">
-
-      </div>
+    <div style="display:flex;flex-direction:column;gap:8px;" id="browse-jobs-list"></div>
 </div>
 </div>
 
@@ -906,6 +904,7 @@ async function confirmRoleSwitch() {
       <div id="owner-projects" style="display:none;">
         <div class="dt">My Projects</div><div class="dss">All jobs you have posted.</div>
         <div class="fbar"><div class="fc active" onclick="sortChip(this)">All</div><div class="fc" onclick="sortChip(this)">Active</div><div class="fc" onclick="sortChip(this)">Awarded</div><div class="fc" onclick="sortChip(this)">Closed</div></div>
+        <div id="owner-projects-list" style="display:flex;flex-direction:column;gap:6px;"></div>
         <div id="dashRecs1"></div>
         </div>
         <div style="text-align:center;padding:48px 24px;color:var(--mist);">
@@ -990,6 +989,7 @@ async function confirmRoleSwitch() {
         
         
       </div>
+       <div id="contractor-jobs-list" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;"></div>
       <div id="contractor-bids" style="display:none;">
         <div class="dt">Bid History</div><div class="dss">All bids submitted on DockWork.</div>
         <div class="fbar"><div class="fc active" onclick="sortChip(this)">All</div><div class="fc" onclick="sortChip(this)">Won</div><div class="fc" onclick="sortChip(this)">Pending</div><div class="fc" onclick="sortChip(this)">Not Selected</div></div>
@@ -2919,4 +2919,199 @@ async function submitForgotPassword(){
   </div>
 </div>
 <div id="forgotPasswordOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:4000;align-items:center;justify-content:center;" onclick="if(event.target===this)closeForgotPassword()"><div style="background:#fff;border-radius:16px;width:100%;max-width:400px;box-shadow:0 24px 80px rgba(0,0,0,.25);overflow:hidden;"><div style="background:linear-gradient(135deg,#0d2b45,#1a3d5c);padding:24px 28px;"><div style="font-size:11px;letter-spacing:2.5px;color:rgba(100,180,255,.7);margin-bottom:8px;">ACCOUNT RECOVERY</div><div style="font-size:20px;font-weight:600;color:#fff;">Reset your password</div><div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:4px;">We'll send a reset link to your email.</div></div><div style="padding:24px 28px;"><div id="forgotPwSuccess" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;padding:12px 16px;border-radius:8px;font-size:14px;margin-bottom:16px;text-align:center;">&#x2713; Reset link sent! Check your inbox.</div><div id="forgotPwError" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;"></div><div id="forgotPwForm"><div style="margin-bottom:16px;"><label style="font-size:12px;color:#64748b;display:block;margin-bottom:5px;">Email address</label><input id="forgotEmail" type="email" placeholder="you@example.com" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box;"/></div><div style="display:flex;gap:10px;"><button onclick="closeForgotPassword()" style="flex:1;padding:11px;border:1.5px solid #e2e8f0;border-radius:8px;background:#fff;font-size:14px;cursor:pointer;color:#64748b;">Cancel</button><button id="forgotSubmitBtn" onclick="submitForgotPassword()" style="flex:2;padding:11px;border:none;border-radius:8px;background:#0d2b45;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">Send Reset Link &rarr;</button></div></div></div></div></div>
+
+<script>
+// DockWork Live Data Engine
+(function() {
+
+  function fmtBudget(range) {
+    if (!range) return 'Budget TBD';
+    return range;
+  }
+
+  function timeAgo(ts) {
+    if (!ts) return '';
+    const d = Math.floor((Date.now() - new Date(ts).getTime()) / 86400000);
+    if (d === 0) return 'Today';
+    if (d === 1) return '1 day ago';
+    return d + ' days ago';
+  }
+
+  function fmtDeadline(dl) {
+    if (!dl) return 'Open';
+    return new Date(dl).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function browseCard(p) {
+    const typeLabel = (p.type || 'RFP').toUpperCase();
+    const catLabel  = p.project_type || 'Marine Construction';
+    return '<div class="card" style="padding:28px 24px;cursor:pointer;border-radius:4px;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">' +
+        '<span class="bdg op" style="font-size:11px;">' + typeLabel + ' · ' + catLabel + '</span>' +
+        '<span style="font-size:12px;color:var(--mist);">' + timeAgo(p.created_at) + '</span>' +
+      '</div>' +
+      '<div style="font-family:\'Cormorant Garamond\',serif;font-size:19px;font-weight:500;color:var(--ink);margin-bottom:8px;line-height:1.3;">' + (p.title || 'Untitled Project') + '</div>' +
+      '<div style="font-size:13px;color:var(--mist);margin-bottom:16px;">📍 ' + (p.location || 'South Florida') + '</div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:14px;">' +
+        '<div style="font-family:\'Cormorant Garamond\',serif;font-size:22px;color:var(--ink);">' + fmtBudget(p.budget_range) + '</div>' +
+        '<div style="font-size:12px;color:var(--mist);">Due ' + fmtDeadline(p.deadline) + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function ownerRow(p) {
+    const status = p.status || 'open';
+    const badgeClass = status === 'open' ? 'op' : 'g';
+    return '<div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;">' +
+      '<div style="flex:1;min-width:0;">' +
+        '<div style="font-family:\'Cormorant Garamond\',serif;font-size:17px;color:var(--ink);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + (p.title || 'Untitled') + '</div>' +
+        '<div style="font-size:12px;color:var(--mist);">' + (p.project_type || '') + ' · ' + (p.location || '') + ' · Due ' + fmtDeadline(p.deadline) + ' · ' + fmtBudget(p.budget_range) + '</div>' +
+      '</div>' +
+      '<span class="bdg ' + badgeClass + '" style="font-size:10px;white-space:nowrap;">' + status.toUpperCase() + '</span>' +
+    '</div>';
+  }
+
+  function contractorRow(p) {
+    return '<div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;">' +
+      '<div style="flex:1;min-width:0;">' +
+        '<div style="font-family:\'Cormorant Garamond\',serif;font-size:17px;color:var(--ink);margin-bottom:3px;">' + (p.title || 'Untitled') + '</div>' +
+        '<div style="font-size:12px;color:var(--mist);">' + (p.project_type || '') + ' · ' + (p.location || '') + ' · Due ' + fmtDeadline(p.deadline) + '</div>' +
+      '</div>' +
+      '<div style="text-align:right;flex-shrink:0;">' +
+        '<div style="font-family:\'Cormorant Garamond\',serif;font-size:17px;color:var(--ink);">' + fmtBudget(p.budget_range) + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  async function loadBrowseJobs(filterType) {
+    const el = document.getElementById('browse-jobs-list');
+    if (!el) return;
+    el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--mist);font-size:14px;">Loading projects…</div>';
+    try {
+      let q = _supabase.from('dw_projects').select('*').eq('status','open').order('created_at', { ascending: false });
+      if (filterType && filterType !== 'All' && filterType !== 'Gold Verified Only') {
+        q = q.ilike('type', filterType);
+      }
+      const { data, error } = await q.limit(50);
+      if (error) throw error;
+      // update counts
+      document.querySelectorAll('.dw-browse-count').forEach(el => el.textContent = data.length);
+      const countEl = document.getElementById('browseCount');
+      if (countEl) countEl.textContent = data.length + ' active project' + (data.length !== 1 ? 's' : '');
+      if (!data.length) {
+        el.innerHTML = '<div style="padding:48px;text-align:center;color:var(--mist);"><div style="font-size:36px;margin-bottom:12px;">🔍</div><div style="font-size:15px;">No open projects yet.</div></div>';
+        return;
+      }
+      el.innerHTML = data.map(p => browseCard(p)).join('');
+    } catch(e) {
+      el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--mist);">Could not load projects.</div>';
+      console.error('loadBrowseJobs error:', e);
+    }
+  }
+
+  async function loadOwnerProjects() {
+    const el = document.getElementById('owner-projects-list');
+    if (!el) return;
+    el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--mist);font-size:14px;">Loading your projects…</div>';
+    try {
+      const { data: { session } } = await _supabase.auth.getSession();
+      const uid = session?.user?.id;
+      let q = _supabase.from('dw_projects').select('*').order('created_at', { ascending: false });
+      if (uid) q = q.eq('owner_id', uid);
+      const { data, error } = await q.limit(30);
+      if (error) throw error;
+      if (!data || !data.length) {
+        el.innerHTML = '<div style="padding:48px;text-align:center;color:var(--mist);"><div style="font-size:36px;margin-bottom:12px;">📋</div><div style="font-size:15px;font-weight:500;color:var(--slate);margin-bottom:8px;">No projects posted yet</div><div style="font-size:13px;">Use the Post a Project tab to get started.</div></div>';
+        return;
+      }
+      el.innerHTML = data.map(p => ownerRow(p)).join('');
+    } catch(e) {
+      el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--mist);">Could not load projects.</div>';
+      console.error('loadOwnerProjects error:', e);
+    }
+  }
+
+  async function loadContractorJobs() {
+    const el = document.getElementById('contractor-jobs-list');
+    if (!el) return;
+    el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--mist);font-size:14px;">Loading matched jobs…</div>';
+    try {
+      const { data, error } = await _supabase.from('dw_projects').select('*').eq('status','open').order('created_at', { ascending: false }).limit(30);
+      if (error) throw error;
+      // update stat counters
+      const matchEl = document.querySelector('.dw-stat-matches');
+      if (matchEl) matchEl.textContent = data.length;
+      if (!data || !data.length) {
+        el.innerHTML = '<div style="padding:48px;text-align:center;color:var(--mist);"><div style="font-size:36px;margin-bottom:12px;">🔍</div><div style="font-size:15px;">No open projects at this time.</div></div>';
+        return;
+      }
+      el.innerHTML = data.map(p => contractorRow(p)).join('');
+    } catch(e) {
+      el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--mist);">Could not load jobs.</div>';
+      console.error('loadContractorJobs error:', e);
+    }
+  }
+
+  // Expose globally so sp() and dt() wrappers can call them
+  window._loadBrowseJobs    = loadBrowseJobs;
+  window._loadOwnerProjects = loadOwnerProjects;
+  window._loadContractorJobs = loadContractorJobs;
+
+  // Wrap sp() to auto-load on page navigation
+  document.addEventListener('DOMContentLoaded', function() {
+    var _sp = window.sp;
+    if (typeof _sp === 'function') {
+      window.sp = function(page) {
+        _sp(page);
+        if (page === 'browse')          setTimeout(loadBrowseJobs, 60);
+        if (page === 'owner-dash')      setTimeout(loadOwnerProjects, 60);
+        if (page === 'contractor-dash') setTimeout(loadContractorJobs, 60);
+      };
+    }
+    var _dt = window.dt;
+    if (typeof _dt === 'function') {
+      window.dt = function(dash, tab) {
+        _dt(dash, tab);
+        if (dash === 'owner'      && tab === 'projects')  setTimeout(loadOwnerProjects, 60);
+        if (dash === 'contractor' && (tab === 'overview' || tab === 'feed')) setTimeout(loadContractorJobs, 60);
+      };
+    }
+  });
+
+  // Wire filterByType to pass type to browse loader
+  var _filterByType = window.filterByType;
+  if (typeof _filterByType === 'function') {
+    window.filterByType = function(type, el) {
+      _filterByType(type, el);
+      loadBrowseJobs(type);
+    };
+  }
+
+  // Auto-run for whichever section is currently visible
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      if (document.getElementById('browse-jobs-list'))     loadBrowseJobs();
+      if (document.getElementById('owner-projects-list'))  loadOwnerProjects();
+      if (document.getElementById('contractor-jobs-list')) loadContractorJobs();
+      // Re-wrap sp/dt after full load (they're now definitely defined)
+      var _sp2 = window.sp;
+      if (_sp2 && !_sp2._dwWrapped) {
+        window.sp = function(page) { _sp2(page); if(page==='browse') setTimeout(loadBrowseJobs,60); if(page==='owner-dash') setTimeout(loadOwnerProjects,60); if(page==='contractor-dash') setTimeout(loadContractorJobs,60); };
+        window.sp._dwWrapped = true;
+      }
+      var _dt2 = window.dt;
+      if (_dt2 && !_dt2._dwWrapped) {
+        window.dt = function(dash,tab) { _dt2(dash,tab); if(dash==='owner'&&tab==='projects') setTimeout(loadOwnerProjects,60); if(dash==='contractor'&&(tab==='overview'||tab==='feed')) setTimeout(loadContractorJobs,60); };
+        window.dt._dwWrapped = true;
+      }
+      var _fbt = window.filterByType;
+      if (_fbt && !_fbt._dwWrapped) {
+        window.filterByType = function(type,el){ _fbt(type,el); loadBrowseJobs(type); };
+        window.filterByType._dwWrapped = true;
+      }
+    }, 300);
+  });
+
+})();
+</script>
 </body></html>
