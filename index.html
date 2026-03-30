@@ -2506,7 +2506,7 @@ function showSignIn(){document.getElementById("authFormSignIn").style.display="b
 function showSignUp(){document.getElementById("authFormSignIn").style.display="none";document.getElementById("authFormSignUp").style.display="block";document.getElementById("authModalLabel").textContent="CREATE ACCOUNT";document.getElementById("authModalTitle").textContent="Join DockWork";clearAuthError();}
 function clearAuthError(){var el=document.getElementById("authError");if(el){el.style.display="none";el.textContent="";}} 
 function showAuthError(msg){var el=document.getElementById("authError");if(el){el.textContent=msg;el.style.display="block";}}
-function _dashForRole(r){return{owner:"owner-dash",marina:"marina-bayshore",contractor:"contractor-dash",supplier:"supplier-dash"}[r]||"owner-dash";}
+function _dashForRole(r){return{owner:"owner-dash",marina:"owner-dash",contractor:"contractor-dash",supplier:"supplier-dash"}[r]||"owner-dash";}
 async function doRealSignIn() {
   var email = document.getElementById('authEmail').value.trim();
   var password = document.getElementById('authPassword').value;
