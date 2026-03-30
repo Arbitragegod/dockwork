@@ -139,7 +139,7 @@
     <button class="btn-ghost" id="dashBtn" style="display:none;font-size:12px;" onclick="goDash()">Dashboard</button>
     <button class="btn-ghost" id="signOutBtn" style="display:none;font-size:12px;" onclick="realSignOut()">Sign Out</button>
     <button class="btn-ghost" id="signInBtn" onclick="openRealSignIn()" style="font-size:12px;">Sign In</button>
-    <button class="btn-ghost" id="demoBtn" onclick="openRealSignIn()" style="font-size:11px;border-color:var(--teal);color:var(--teal);font-family:'DM Mono',monospace;letter-spacing:0.5px;">&#x25B6; Try Demo</button>
+    <button class="btn-ghost" id="demoBtn" onclick="openRealSignIn()" style="font-size:11px;border-color:var(--teal);color:var(--teal);font-family:'DM Mono',monospace;letter-spacing:0.5px;">&#x25B6; Try DockWork</button>
     <button class="btn-gold" id="joinBtn" onclick="sp('apply')">Join Now</button>
     <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
   </div>
@@ -2410,25 +2410,21 @@
 <!-- ═══ SIGN IN MODAL ═══ -->
 <div id="siOverlay" class="si-overlay" onclick="if(event.target===this)closeSignIn()">
   <div class="si-modal">
-    <div class="si-head" style="background:linear-gradient(135deg,#1c3a2e,#0f4a3e);">
-      <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2.5px;color:rgba(100,220,180,0.7);margin-bottom:8px;">&#x25B6; DEMO MODE — PROTOTYPE ONLY</div>
-      <div class="si-logo">Dock<em>Work</em> <span style="font-size:13px;font-weight:400;color:rgba(255,255,255,.5);letter-spacing:0;">Demo</span></div>
-      <div class="si-sub">Explore the platform as any user type. No account needed — this is a live prototype.</div>
+    <div class="si-head" style="background:linear-gradient(135deg,#0d2b45,#1a3d5c);">
+      <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2.5px;color:rgba(100,180,255,0.7);margin-bottom:8px;">&#x26F5; DOCKWORK</div>
+      <div class="si-logo">Dock<em>Work</em></div>
+      <div class="si-sub">Select your role to sign in and access the platform.</div>
     </div>
     <div class="si-body">
-      <span class="si-lbl">Explore as...</span>
+      <span class="si-lbl">Sign in as...</span>
       <div class="role-grid" style="grid-template-columns:repeat(2,1fr);">
-        <div class="role-card" id="rc-owner" onclick="selRole('owner')"><div class="role-icon">&#x1F3E1;</div><div class="role-name">Homeowner / HOA</div><div class="role-desc">Waterfront homeowner, HOA</div></div>
-        <div class="role-card" id="rc-marina" onclick="selRole('marina')"><div class="role-icon">&#x2693;</div><div class="role-name">Marina Operator</div><div class="role-desc">Bayshore Landing Marina</div></div>
-        <div class="role-card" id="rc-contractor" onclick="selRole('contractor')"><div class="role-icon">&#x1F527;</div><div class="role-name">Marine Contractor</div><div class="role-desc">Gulf Coast Marine Builders</div></div>
-        <div class="role-card" id="rc-supplier" onclick="selRole('supplier')"><div class="role-icon">&#x1F6D2;</div><div class="role-name">Marine Supplier</div><div class="role-desc">Gulf Marine Supply Co.</div></div>
+        <div class="role-card" id="rc-owner" onclick="selRole('owner')"><div class="role-icon">&#x1F3E1;</div><div class="role-name">Homeowner / HOA</div><div class="role-desc">Robert Ashworth &middot; Gulf Coast, FL</div></div>
+        <div class="role-card" id="rc-marina" onclick="selRole('marina')"><div class="role-icon">&#x2693;</div><div class="role-name">Marina Operator</div><div class="role-desc">Bayshore Landing Marina &middot; FL</div></div>
+        <div class="role-card" id="rc-contractor" onclick="selRole('contractor')"><div class="role-icon">&#x1F528;</div><div class="role-name">Marine Contractor</div><div class="role-desc">Gulf Coast Marine Builders &middot; Tampa</div></div>
+        <div class="role-card" id="rc-supplier" onclick="selRole('supplier')"><div class="role-icon">&#x1F6D2;</div><div class="role-name">Marine Supplier</div><div class="role-desc">Gulf Marine Supply Co. &middot; Pensacola</div></div>
       </div>
-      <div class="role-card" id="rc-ddinc" onclick="selRole('ddinc')" style="grid-column:1/-1;"><div class="role-icon">&#x1F986;</div><div class="role-name">Decks &amp; Docks Lumber Co.</div><div class="role-desc">Charter Supplier &middot; Palm Beach, FL</div></div>
-      <div style="font-size:11px;color:var(--mist);text-align:center;">Demo sign-in for prototype testing.</div>
-    </div>
-    <div class="si-foot">
-      <button class="btn-ghost" style="flex:1;" onclick="closeSignIn()">Cancel</button>
-      <button class="btn-gold" style="flex:2;" id="siConfirmBtn" onclick="doSignIn()" disabled>Sign In &#x2192;</button>
+      <button class="btn-gold" id="siConfirmBtn" disabled onclick="doSignIn()" style="width:100%;margin-top:16px;padding:12px;font-size:14px;">Sign In &#x2192;</button>
+      <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--mist);">New to DockWork? <a href="#" onclick="closeSignIn();openRealSignUp();" style="color:var(--blue);text-decoration:none;">Create a real account</a></div>
     </div>
   </div>
 </div>
@@ -3946,19 +3942,19 @@ function selRole(role) {
 }
 function doSignIn() {
   if (!_sr) return;
-  var map = {
-    owner:      {name:'Robert Ashworth',          dash:'owner-dash',       label:'Charter Member · Owner',    ownPage:null,    tier:'charter'},
-    contractor: {name:'Gulf Coast Marine Builders',dash:'contractor-dash', label:'Charter Member · Contractor', ownPage:'page-contractor-profile', tier:'charter'},
-    supplier:   {name:'Gulf Marine Supply Co.',    dash:'supplier-dash',   label:'Charter Member · Supplier', ownPage:'page-supplier-profile', tier:'charter'},
-    marina:     {name:'Bayshore Landing Marina',   dash:'marina-bayshore', label:'Charter Member · Marina', ownPage:'page-marina-bayshore', tier:'charter'},
-    ddinc:      {name:'Decks & Docks Lumber Co.', dash:'dd-profile',  label:'Decks & Docks',      ownPage:'page-dd-profile'}
+  var accounts = {
+    owner:      {name:'Robert Ashworth',      role:'owner',      dash:'owner-dash',       tier:'charter', ownPage:null},
+    marina:     {name:'Bayshore Landing Marina', role:'marina',   dash:'marina-bayshore',  tier:'charter', ownPage:'page-marina-bayshore'},
+    contractor: {name:'Gulf Coast Marine Builders', role:'contractor', dash:'contractor-dash', tier:'charter', ownPage:'page-contractor-profile'},
+    supplier:   {name:'Gulf Marine Supply Co.', role:'supplier',  dash:'supplier-dash',    tier:'charter', ownPage:'page-supplier-profile'}
   };
-  _cu = {role:_sr, name:map[_sr].name, dash:map[_sr].dash, ownPage:map[_sr].ownPage, tier:map[_sr].tier||'standard'};
+  var a = accounts[_sr]; if (!a) return;
+  _cu = {role:a.role, name:a.name, dash:a.dash, tier:a.tier, ownPage:a.ownPage};
   closeSignIn();
   _updateNav();
-  _updateEditBtns();
+  if (typeof _updateEditBtns==='function') _updateEditBtns();
   sp(_cu.dash);
-  if (typeof toast==='function') toast('Welcome back, '+map[_sr].label+'!');
+  _showInfoToast('✓ Signed in as '+a.name+'.');
 }
 function signOut() {
   _cu = null;
@@ -4207,36 +4203,42 @@ function _showInfoToast(msg) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 function handleInviteToBid() {
   if (!_cu) { joinPrompt('&#x2693;','Invite to Bid','Sign in to invite a contractor.'); return; }
-  if (_cu.role === 'contractor') { _showInfoToast('Contractors cannot invite other contractors to bid.'); return; }
-  _showInfoToast('✓ Invitation sent! The contractor will be notified.');
+  if (_cu.role==='contractor') { _showInfoToast('Contractors cannot invite other contractors to bid.'); return; }
+  _showInfoToast('✓ Bid invitation sent! The contractor will be notified.');
 }
-
 function handleInviteSupplierQuote() {
   if (!_cu) { joinPrompt('&#x1F527;','Request a Quote','Sign in to send an RFQ.'); return; }
-  if (typeof _isSupplier === 'function' && _isSupplier()) { _showInfoToast('Suppliers cannot send RFQs to other suppliers.'); return; }
   _showInfoToast('✓ RFQ sent! The supplier will receive your quote request.');
 }
-
 function handleSubmitQuote(jobType) {
-  if (!_cu) { joinPrompt('&#x1F4CB;','Submit a Quote','Sign in to respond to this posting.'); return; }
+  if (!_cu) { joinPrompt('&#x1F4CB;','Submit a Quote','Sign in to respond.'); return; }
   if (_cu.role==='owner'||_cu.role==='marina'||_cu.role==='dolphin') { _showInfoToast('Owners and Marina Operators post jobs — they do not submit bids.'); return; }
-  if (typeof _isSupplier==='function' && _isSupplier()) {
-    if (jobType && jobType.indexOf('RFQ')===-1) { _showInfoToast('Suppliers can only provide quotes on RFQ postings.'); return; }
-    _showInfoToast('✓ Quote submitted!'); return;
+    if (jobType && jobType.indexOf('RFQ')===-1) { _showInfoToast('Suppliers can only quote on RFQ postings.'); return; }
+    _showInfoToast('✓ Quote submitted! The posting party will be notified.'); return;
   }
   _showInfoToast('✓ Bid submitted! The project owner will be notified.');
-}
 
-function openSupplierRecModal() { var ov=document.getElementById('supRecOverlay'); if(ov)ov.style.display='flex'; }
-function closeSupplierRecModal() { var ov=document.getElementById('supRecOverlay'); if(ov)ov.style.display='none'; }
-function openCtcSupModal() {
-  if (!_cu) { joinPrompt('&#x1F527;','Request Quotes','Sign in to send RFQs.'); return; }
-  if (typeof _isSupplier==='function' && _isSupplier()) { _showInfoToast('Suppliers cannot send RFQs to other suppliers.'); return; }
-  var ov=document.getElementById('ctcSupRecOverlay'); if(ov)ov.style.display='flex';
+function openSupplierRecModal(){var ov=document.getElementById('supRecOverlay');if(ov)ov.style.display='flex';}
+function closeSupplierRecModal(){var ov=document.getElementById('supRecOverlay');if(ov)ov.style.display='none';}
+function openCtcSupModal(){
+  if(!_cu){joinPrompt('&#x1F527;','Request Quotes','Sign in first.');return;}
+  if(typeof _isSupplier==='function'&&_isSupplier()){_showInfoToast('Suppliers cannot send RFQs to other suppliers.');return;}
+  var ov=document.getElementById('ctcSupRecOverlay');if(ov)ov.style.display='flex';
 }
-function closeCtcSupModal() { var ov=document.getElementById('ctcSupRecOverlay'); if(ov)ov.style.display='none'; }
+function closeCtcSupModal(){var ov=document.getElementById('ctcSupRecOverlay');if(ov)ov.style.display='none';}
 
 /* ── MEMBERSHIP RECOMMENDATION ENGINE ── */
 var _ctcData = [
@@ -4305,7 +4307,6 @@ function openPostJob() {
   if (!opts) return;
   var isOwner = _cu.role==='owner'||_cu.role==='marina'||_cu.role==='dolphin';
   var isContractor = _cu.role==='contractor';
-  var isSupplier = typeof _isSupplier==='function' && _isSupplier();
   if (isSupplier) {
     opts.innerHTML = '<div style="text-align:center;padding:30px;color:var(--mist)"><div style="font-size:40px;margin-bottom:12px;">&#x1F527;</div><div style="font-size:16px;color:var(--slate);font-weight:500;margin-bottom:8px;">Suppliers respond to RFQs</div><div style="font-size:13px;line-height:1.7;">Browse the RFQ filter on Active Projects to find material requests to quote on.</div><button class="btn-ghost" onclick="closePostJob()" style="margin-top:16px;font-size:12px;">Browse RFQs &#x2192;</button></div>';
     document.getElementById('postJobOverlay').style.display='flex'; return;
