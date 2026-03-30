@@ -2455,23 +2455,47 @@ function closePostProject() {
   var ov = document.getElementById('postProjectOverlay');
   if (ov) ov.style.display = 'none';
 }
-function submitPostProject() {
-  var title = document.getElementById('ppProjectTitle').value.trim();
-  var desc = document.getElementById('ppDescription').value.trim();
-  var loc = document.getElementById('ppLocation').value.trim();
+async function submitPostProject() {
+  var title = document.getElementById('ppProjectTitle') && document.getElementById('ppProjectTitle').value.trim();
+  var desc = document.getElementById('ppDescription') && document.getElementById('ppDescription').value.trim();
+  var loc = document.getElementById('ppLocation') && document.getElementById('ppLocation').value.trim();
+  var type = document.getElementById('ppType') ? document.getElementById('ppType').value : 'rfp';
+  var budget = document.getElementById('ppBudget') ? document.getElementById('ppBudget').value : '';
+  var projType = document.getElementById('ppProjectType') ? document.getElementById('ppProjectType').value : '';
+  var deadline = document.getElementById('ppDeadline') ? document.getElementById('ppDeadline').value : null;
   var errEl = document.getElementById('ppError');
   if (!title || !desc || !loc) {
-    errEl.textContent = 'Please fill in Project Title, Description, and Location.';
-    errEl.style.display = 'block';
+    if (errEl) { errEl.textContent = 'Please fill in Project Title, Description, and Location.'; errEl.style.display = 'block'; }
+    return;
+  }
+  if (!_cu || !_cu.id) {
+    if (errEl) { errEl.textContent = 'You must be signed in to post a project.'; errEl.style.display = 'block'; }
     return;
   }
   var btn = document.getElementById('ppSubmitBtn');
   if (btn) { btn.textContent = 'Posting...'; btn.disabled = true; }
-  // Simulate submission — in production this would write to Supabase
-  setTimeout(function() {
+  if (errEl) errEl.style.display = 'none';
+  try {
+    var insert = {
+      owner_id: _cu.id,
+      title: title,
+      description: desc,
+      location: loc,
+      type: type || 'rfp',
+      budget_range: budget || null,
+      project_type: projType || null,
+      deadline: deadline || null,
+      status: 'open'
+    };
+    var result = await _supabase.from('dw_projects').insert(insert).select().single();
+    if (result.error) throw new Error(result.error.message);
     closePostProject();
-    _showInfoToast('✓ Project posted! "' + title + '" is now live and accepting bids.');
-  }, 800);
+    _updateDashboard();
+    _showInfoToast('\u2713 Project posted successfully!');
+  } catch(e) {
+    if (errEl) { errEl.textContent = 'Failed to post: ' + e.message; errEl.style.display = 'block'; }
+    if (btn) { btn.textContent = 'Post Project'; btn.disabled = false; }
+  }
 }
 
 
