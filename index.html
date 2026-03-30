@@ -131,7 +131,7 @@
     <li><a onclick="sp('marina-owners')">Marina Owners</a></li>
     <li><a onclick="sp('pricing')">Membership</a></li>
     <li><a onclick="sp('about')">About</a></li>
-    <li><a onclick="sp('apply')">Join Now</a></li>
+    <li><a onclick="openRealSignUp()">Join Now</a></li>
   </ul>
   <div class="nav-right">
     <div class="bell" onclick="sp('notifications')">🔔<div class="bell-dot"></div></div>
@@ -140,7 +140,7 @@
     <button class="btn-ghost" id="signOutBtn" style="display:none;font-size:12px;" onclick="realSignOut()">Sign Out</button>
     <button class="btn-ghost" id="signInBtn" onclick="openRealSignIn()" style="font-size:12px;">Sign In</button>
     <button class="btn-ghost" id="demoBtn" onclick="openRealSignIn()" style="font-size:11px;border-color:var(--teal);color:var(--teal);font-family:'DM Mono',monospace;letter-spacing:0.5px;">&#x25B6; Try DockWork</button>
-    <button class="btn-gold" id="joinBtn" onclick="sp('apply')">Join Now</button>
+    <button class="btn-gold" id="joinBtn" onclick="openRealSignUp()">Join Now</button>
     <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
   </div>
 </nav>
@@ -151,7 +151,7 @@
   <a onclick="sp('suppliers');toggleMenu()">Suppliers</a>
   <a onclick="sp('pricing');toggleMenu()">Membership</a>
   <a onclick="sp('about');toggleMenu()">About</a>
-  <a onclick="sp('apply');toggleMenu()">Join Now</a>
+  <a onclick="openRealSignUp();toggleMenu()">Join Now</a>
   <a onclick="sp('owner-dash');toggleMenu()">Owner Dashboard</a>
   <a onclick="sp('contractor-dash');toggleMenu()">Contractor Dashboard</a>
   <a onclick="sp('supplier-dash');toggleMenu()">Supplier Dashboard</a>
@@ -187,7 +187,7 @@
 
       <!-- Sign in / Sign up row -->
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:48px;">
-        <button class="btn-lg gold" onclick="sp('apply')" style="font-size:14px;padding:14px 32px;box-shadow:0 4px 20px rgba(217,119,6,.4);">Join DockWork →</button>
+        <button class="btn-lg gold" onclick="openRealSignUp()" style="font-size:14px;padding:14px 32px;box-shadow:0 4px 20px rgba(217,119,6,.4);">Join DockWork →</button>
         <button class="btn-lg outline" onclick="sp('owner-dash')" style="font-size:14px;padding:14px 32px;border-color:rgba(255,255,255,.35);color:white;background:rgba(255,255,255,.08);">Sign In</button>
       </div>
 
@@ -358,10 +358,10 @@
     </div>
     <div class="post-types-row" style="margin-top:28px;">
       <div class="pt-card" onclick="sp('browse')" style="cursor:pointer;background:#eff6ff;border-color:#bfdbfe;"><div class="pt-icon">🔍</div><div class="pt-name">RFI</div><div class="pt-desc">Scope your project with expert input before committing</div></div>
-      <div class="pt-card" onclick="sp('apply');selType('owner')" style="cursor:pointer;background:#f0f9ff;border-color:#bae6fd;"><div class="pt-icon">&#x1F3F7;</div><div class="pt-name">RFB</div><div class="pt-desc">Request for Bid — open competitive bidding on a defined scope</div></div>
-      <div class="pt-card" onclick="sp('apply');selType('owner')" style="cursor:pointer;background:#f0fdf9;border-color:#a7f3d0;"><div class="pt-icon">📋</div><div class="pt-name">RFP</div><div class="pt-desc">Request for Proposal — formal bids with full specs</div></div>
-      <div class="pt-card" onclick="sp('apply');selType('owner')" style="cursor:pointer;background:#fffbeb;border-color:#fcd34d;"><div class="pt-icon">💲</div><div class="pt-name">RFQ</div><div class="pt-desc">Request specific pricing for a defined scope of work</div></div>
-      <div class="pt-card" onclick="sp('apply');selType('owner')" style="cursor:pointer;background:#fff1f2;border-color:#fecdd3;"><div class="pt-icon">⚡</div><div class="pt-name">Emergency</div><div class="pt-desc">Fast-track posting for storm damage and urgent repairs</div></div>
+      <div class="pt-card" onclick="openRealSignUp()" style="cursor:pointer;background:#f0f9ff;border-color:#bae6fd;"><div class="pt-icon">&#x1F3F7;</div><div class="pt-name">RFB</div><div class="pt-desc">Request for Bid — open competitive bidding on a defined scope</div></div>
+      <div class="pt-card" onclick="openRealSignUp()" style="cursor:pointer;background:#f0fdf9;border-color:#a7f3d0;"><div class="pt-icon">📋</div><div class="pt-name">RFP</div><div class="pt-desc">Request for Proposal — formal bids with full specs</div></div>
+      <div class="pt-card" onclick="openRealSignUp()" style="cursor:pointer;background:#fffbeb;border-color:#fcd34d;"><div class="pt-icon">💲</div><div class="pt-name">RFQ</div><div class="pt-desc">Request specific pricing for a defined scope of work</div></div>
+      <div class="pt-card" onclick="openRealSignUp()" style="cursor:pointer;background:#fff1f2;border-color:#fecdd3;"><div class="pt-icon">⚡</div><div class="pt-name">Emergency</div><div class="pt-desc">Fast-track posting for storm damage and urgent repairs</div></div>
     </div>
   </div>
 
@@ -398,7 +398,7 @@
     <span class="sec-label" style="color:var(--blue);">Built For</span>
     <div class="h2" style="color:var(--slate);margin-bottom:32px;">One platform.<br><em style="color:var(--blue);">Four member types.</em></div>
     <div class="for-grid-4">
-      <div class="for-card" onclick="sp('apply');selType('owner')" style="cursor:pointer;">
+      <div class="for-card" onclick="openRealSignUp()" style="cursor:pointer;">
         <div class="for-card-icon">🏡</div>
         <div class="for-card-title">Homeowners</div>
         <div class="for-card-desc">Waterfront homeowners who need qualified work done right — and need to trust who's on their property.</div>
@@ -410,7 +410,7 @@
           <li>Photo log &amp; project tracker</li>
         </ul>
       </div>
-      <div class="for-card" onclick="sp('apply');selType('owner')" style="cursor:pointer;">
+      <div class="for-card" onclick="openRealSignUp()" style="cursor:pointer;">
         <div class="for-card-icon">⛵</div>
         <div class="for-card-title">Marina Operators</div>
         <div class="for-card-desc">Marina owners and yacht clubs managing ongoing maintenance, emergency repairs, and capital projects.</div>
@@ -422,7 +422,7 @@
           <li>Bid comparison dashboard</li>
         </ul>
       </div>
-      <div class="for-card" onclick="sp('apply');selType('contractor')" style="cursor:pointer;">
+      <div class="for-card" onclick="openRealSignUp()" style="cursor:pointer;">
         <div class="for-card-icon">⚓</div>
         <div class="for-card-title">Marine Contractors</div>
         <div class="for-card-desc">Licensed, insured contractors who want qualified leads from serious owners — not tire-kickers.</div>
@@ -434,7 +434,7 @@
           <li>Availability status control</li>
         </ul>
       </div>
-      <div class="for-card" onclick="sp('apply');selType('supplier')" style="cursor:pointer;">
+      <div class="for-card" onclick="openRealSignUp()" style="cursor:pointer;">
         <div class="for-card-icon">🔩</div>
         <div class="for-card-title">Marine Suppliers</div>
         <div class="for-card-desc">Hardware, lumber, and equipment suppliers who want direct access to verified contractors with active jobs.</div>
@@ -524,7 +524,7 @@
     <div class="h2" style="max-width:460px;margin:0 auto 14px;color:white;">Ready to work with the best <em style="color:var(--gold-light);">on the water?</em></div>
     <p style="font-size:16px;color:rgba(255,255,255,.82);max-width:380px;margin:0 auto 32px;line-height:1.8;">Founding members receive a Charter badge and locked founding rate for life. Owners approved instantly. Contractors &amp; suppliers reviewed within 24 hours.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-      <button class="btn-lg gold" onclick="sp('apply')">Join DockWork →</button>
+      <button class="btn-lg gold" onclick="openRealSignUp()">Join DockWork →</button>
       <button class="btn-lg" style="background:transparent;border:1px solid rgba(255,255,255,.25);color:white;font-size:14px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:13px 30px;cursor:pointer;" onclick="sp('browse')">Browse Projects</button>
     </div>
   </div>
@@ -533,7 +533,7 @@
     <div class="fg-grid">
       <div><div class="f-logo">Dock<em>Work</em></div><div class="f-desc">Private marketplace for marine construction and supply. Every member verified. Every project protected.</div></div>
       <div class="f-col"><h4>Platform</h4><ul><li><a onclick="sp('browse')">Browse Projects</a></li><li><a onclick="sp('owner-dash')">Post a Job</a></li><li><a onclick="sp('supplier-profile')">Supplier Catalog</a></li></ul></div>
-      <div class="f-col"><h4>Membership</h4><ul><li><a onclick="sp('apply')">Join Now</a></li><li><a onclick="sp('pricing')">Pricing</a></li><li><a onclick="sp('about')">Standards</a></li></ul></div>
+      <div class="f-col"><h4>Membership</h4><ul><li><a onclick="openRealSignUp()">Join Now</a></li><li><a onclick="sp('pricing')">Pricing</a></li><li><a onclick="sp('about')">Standards</a></li></ul></div>
       <div class="f-col"><h4>Dashboards</h4><ul><li><a onclick="sp('owner-dash')">Owner</a></li><li><a onclick="sp('contractor-dash')">Contractor</a></li><li><a onclick="sp('supplier-dash')">Supplier</a></li></ul></div>
     </div>
     <div class="f-bot"><p>© 2026 DockWork LLC. All rights reserved.</p><p style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);">⚜️ Members Verified</p></div>
@@ -703,7 +703,7 @@
           <div style="font-size:14px;font-weight:600;color:var(--slate);margin-bottom:4px;">⚖️ Job Award Fee — $49 flat</div>
           <div style="font-size:14px;color:var(--mist);line-height:1.65;">A one-time $49 fee is charged when you award a job to a contractor. Posting and browsing are always free.</div>
         </div>
-        <button class="btn-lg outline" style="width:100%;margin-top:20px;" onclick="sp('apply')">Join as Owner — Free</button>
+        <button class="btn-lg outline" style="width:100%;margin-top:20px;" onclick="openRealSignUp()">Join as Owner — Free</button>
       </div>
 
       <!-- CONTRACTOR PLAN -->
@@ -888,13 +888,13 @@
     <span class="sec-label" style="color:var(--gold);display:block;text-align:center;margin-bottom:14px;">Charter Membership</span>
     <div class="h2" style="color:white;max-width:440px;margin:0 auto 14px;">Starting right. <em style="color:var(--gold-light);">Done everywhere.</em></div>
     <p style="font-size:16px;color:rgba(255,255,255,.55);max-width:360px;margin:0 auto 26px;line-height:1.8;">Charter spots open now for founding members. Founding rate locked for life. Owners approved instantly. Contractors &amp; suppliers reviewed within 24 hours.</p>
-    <button class="btn-lg gold" onclick="sp('apply')">Join as a Charter Member →</button>
+    <button class="btn-lg gold" onclick="openRealSignUp()">Join as a Charter Member →</button>
   </div>
   <footer>
     <div class="fg-grid">
       <div><div class="f-logo">Dock<em>Work</em></div><div class="f-desc">Private marketplace for marine construction and supply. Every member verified.</div></div>
       <div class="f-col"><h4>Platform</h4><ul><li><a onclick="sp('browse')">Browse</a></li><li><a onclick="sp('owner-dash')">Post a Job</a></li><li><a onclick="sp('supplier-profile')">Supplier Catalog</a></li></ul></div>
-      <div class="f-col"><h4>Membership</h4><ul><li><a onclick="sp('apply')">Join Now</a></li><li><a onclick="sp('pricing')">Pricing</a></li><li><a onclick="sp('about')">Standards</a></li></ul></div>
+      <div class="f-col"><h4>Membership</h4><ul><li><a onclick="openRealSignUp()">Join Now</a></li><li><a onclick="sp('pricing')">Pricing</a></li><li><a onclick="sp('about')">Standards</a></li></ul></div>
       <div class="f-col"><h4>Dashboards</h4><ul><li><a onclick="sp('owner-dash')">Owner</a></li><li><a onclick="sp('contractor-dash')">Contractor</a></li><li><a onclick="sp('supplier-dash')">Supplier</a></li></ul></div>
     </div>
     <div class="f-bot"><p>© 2026 DockWork LLC. All rights reserved.</p><p style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);">⚜️ Members Verified</p></div>
@@ -1306,7 +1306,7 @@
     <p>Every contractor on DockWork is licensed, insured, background-checked, and approved by our team before they ever see a single job. These are the best marine professionals in the business.</p>
     <div class="showcase-notice">⭐ Gold Verified · DW Verified · Charter Members · FL Marine Specialty Licensed</div>
     <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-      <button class="btn-lg gold" onclick="sp('apply')">Join as a Contractor →</button>
+      <button class="btn-lg gold" onclick="openRealSignUp()">Join as a Contractor →</button>
       <button class="btn-lg outline" onclick="sp('browse')">Browse Active Jobs</button>
     </div>
   </div>
@@ -1672,7 +1672,7 @@
       <span class="sec-label" style="display:block;text-align:center;">Are You a Marine Contractor?</span>
       <div class="h2" style="max-width:400px;margin:0 auto 12px;font-size:clamp(22px,3vw,34px);">Join the platform built <em>for professionals.</em></div>
       <p style="font-size:15px;color:var(--mist);max-width:400px;margin:0 auto 24px;line-height:1.8;">Join as a Gold Verified or DockWork Verified contractor. Get matched to serious jobs. Build a credentialed public profile that owners trust.</p>
-      <button class="btn-lg gold" onclick="sp('apply')">Join as a Contractor →</button>
+      <button class="btn-lg gold" onclick="openRealSignUp()">Join as a Contractor →</button>
     </div>
   </div>
 
@@ -1686,7 +1686,7 @@
     <p>Every supplier on DockWork is product-verified, fulfillment-checked, and approved before receiving a single RFQ. These are the marine supply professionals that contractors actually rely on.</p>
     <div class="showcase-notice">🔩 Certified Supplier · Inventory Verified · Fulfillment Checked</div>
     <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px;">
-      <button class="btn-lg gold" onclick="sp('apply')">Join as a Supplier →</button>
+      <button class="btn-lg gold" onclick="openRealSignUp()">Join as a Supplier →</button>
       <button class="btn-lg outline" onclick="sp('supplier-profile')">View Sample Storefront</button>
     </div>
   </div>
@@ -2316,7 +2316,7 @@
       <span class="sec-label" style="display:block;text-align:center;color:var(--gold);">Are You a Marine Supplier?</span>
       <div class="h2" style="max-width:400px;margin:0 auto 12px;color:white;font-size:clamp(22px,3vw,34px);">Get in front of the contractors <em>who need you.</em></div>
       <p style="font-size:15px;color:rgba(255,255,255,.82);max-width:400px;margin:0 auto 24px;line-height:1.8;">Join as a Certified Supplier. List your catalog. Start receiving RFQs from verified contractors with active jobs — no cold outreach needed.</p>
-      <button class="btn-lg gold" onclick="sp('apply');selType('supplier')">Join as a Supplier →</button>
+      <button class="btn-lg gold" onclick="openRealSignUp()">Join as a Supplier →</button>
     </div>
   </div>
 </div>
@@ -2398,8 +2398,8 @@
     <div class="join-box-title" id="jpTitle">Join DockWork to continue</div>
     <div class="join-box-sub" id="jpSub">This feature is available to verified DockWork members. Browse everything free — join to take action.</div>
     <div class="join-box-btns">
-      <button class="btn-lg gold" onclick="closeJoinPrompt();sp('apply');selType('owner')">Join as Owner — Free →</button>
-      <button class="btn-lg" style="background:var(--teal);color:white;border:none;font-size:13px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:13px 28px;cursor:pointer;border-radius:6px;" onclick="closeJoinPrompt();sp('apply');selType('contractor')">Apply as Contractor →</button>
+      <button class="btn-lg gold" onclick="openRealSignUp()">Join as Owner — Free →</button>
+      <button class="btn-lg" style="background:var(--teal);color:white;border:none;font-size:13px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;padding:13px 28px;cursor:pointer;border-radius:6px;" onclick="openRealSignUp()">Apply as Contractor →</button>
       <button class="btn-lg outline" onclick="closeJoinPrompt();sp('pricing')">View Membership Plans</button>
     </div>
     <div class="join-dismiss" onclick="closeJoinPrompt()">Continue browsing</div>
@@ -3186,7 +3186,7 @@
         </div>
       </div>
       <div style="font-size:12px;color:var(--mist);text-align:center;">
-        Not a member yet? <a style="color:var(--gold);cursor:pointer;" onclick="closeRealSignIn();sp('apply');">Apply to join &#x2192;</a>
+        Not a member yet? <a style="color:var(--gold);cursor:pointer;" onclick="closeRealSignIn();openRealSignUp()">Apply to join &#x2192;</a>
       </div>
       <div style="text-align:center;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
         <div style="font-size:11px;color:var(--mist);margin-bottom:8px;">Want to explore the platform first?</div>
