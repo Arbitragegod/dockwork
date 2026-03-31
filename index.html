@@ -3246,78 +3246,91 @@ async function submitBid() {
 
 
 <script>
-// ── RFQ Modal for supply quotes ──────────────────────────────────────────────
 var _rfqProject = null;
 
 function openRFQModal(p) {
   if (!p) return;
   _rfqProject = p;
-  // Build a simple inline RFQ prompt using the bid modal repurposed,
-  // or show a toast with guidance if no modal exists yet
-  var html = '<div id="rfqOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9100;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:60px 16px;" onclick="if(event.target===this)this.remove()">' +
-    '<div style="background:white;max-width:520px;width:100%;border-radius:8px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.25);">' +
-      '<div style="background:linear-gradient(135deg,#0891b2,#0e8fa8);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;">' +
-        '<div>' +
-          '<div style="font-size:11px;letter-spacing:2px;color:rgba(255,255,255,.7);margin-bottom:4px;">REQUEST MATERIAL QUOTE</div>' +
-          '<div style="font-size:16px;font-weight:600;color:white;">' + (p.title || '').substring(0,45) + '</div>' +
-        '</div>' +
-        '<button onclick="document.getElementById('rfqOverlay').remove()" style="background:rgba(255,255,255,.15);border:none;color:white;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;">×</button>' +
-      '</div>' +
-      '<div style="padding:24px;">' +
-        '<p style="font-size:13px;color:#475569;margin-bottom:16px;line-height:1.6;">Describe the materials you need for this project. Your RFQ will be posted to the marketplace where certified suppliers can respond with quotes.</p>' +
-        '<div style="margin-bottom:14px;">' +
-          '<label style="font-size:11px;letter-spacing:1.5px;color:#64748b;display:block;margin-bottom:6px;">MATERIALS NEEDED *</label>' +
-          '<textarea id="rfq-desc" class="ft" style="width:100%;height:80px;" placeholder="e.g. Marine-grade PT lumber 4,200 BF, 316 SS hardware, composite decking…"></textarea>' +
-        '</div>' +
-        '<div style="margin-bottom:20px;">' +
-          '<label style="font-size:11px;letter-spacing:1.5px;color:#64748b;display:block;margin-bottom:6px;">BUDGET RANGE (optional)</label>' +
-          '<input id="rfq-budget" class="fi" type="text" placeholder="e.g. $15,000 – $25,000" style="width:100%;">' +
-        '</div>' +
-        '<div style="display:flex;gap:10px;">' +
-          '<button style="flex:1;background:#0891b2;color:white;border:none;border-radius:4px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;" onclick="submitRFQFromBrowse()">📤 Post RFQ to Suppliers</button>' +
-          '<button style="padding:11px 16px;background:white;border:1px solid #e2e8f0;border-radius:4px;font-size:13px;cursor:pointer;" onclick="document.getElementById('rfqOverlay').remove()">Cancel</button>' +
-        '</div>' +
-        '<div id="rfq-overlay-msg" style="display:none;margin-top:12px;font-size:13px;padding:10px;border-radius:4px;"></div>' +
-      '</div>' +
-    '</div>' +
-  '</div>';
-  document.body.insertAdjacentHTML('beforeend', html);
-  setTimeout(function(){ document.getElementById('rfq-desc')?.focus(); }, 100);
+  // Remove any existing overlay
+  var existing = document.getElementById('rfqOverlay');
+  if (existing) existing.remove();
+
+  var overlay = document.createElement('div');
+  overlay.id = 'rfqOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9100;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:60px 16px;';
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); });
+
+  var modal = document.createElement('div');
+  modal.style.cssText = 'background:white;max-width:520px;width:100%;border-radius:8px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.25);';
+
+  var title = (p.title || '').substring(0,45);
+  modal.innerHTML = [
+    '<div style="background:linear-gradient(135deg,#0891b2,#0e8fa8);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;">',
+      '<div>',
+        '<div style="font-size:11px;letter-spacing:2px;color:rgba(255,255,255,.7);margin-bottom:4px;">REQUEST MATERIAL QUOTE</div>',
+        '<div style="font-size:16px;font-weight:600;color:white;">' + title + '</div>',
+      '</div>',
+      '<button id="rfqCloseBtn" style="background:rgba(255,255,255,.15);border:none;color:white;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:18px;line-height:1;">×</button>',
+    '</div>',
+    '<div style="padding:24px;">',
+      '<p style="font-size:13px;color:#475569;margin-bottom:16px;line-height:1.6;">Describe the materials you need. Your RFQ will be posted to the marketplace so certified suppliers can respond with quotes.</p>',
+      '<div style="margin-bottom:14px;">',
+        '<label style="font-size:11px;letter-spacing:1.5px;color:#64748b;display:block;margin-bottom:6px;">MATERIALS NEEDED *</label>',
+        '<textarea id="rfq-desc" style="width:100%;height:80px;font-family:DM Sans,sans-serif;font-size:14px;background:white;border:1px solid rgba(15,45,84,.12);color:#0f2d54;padding:10px 13px;outline:none;border-radius:8px;resize:vertical;box-sizing:border-box;" placeholder="e.g. Marine-grade PT lumber 4,200 BF, 316 SS hardware, composite decking…"></textarea>',
+      '</div>',
+      '<div style="margin-bottom:20px;">',
+        '<label style="font-size:11px;letter-spacing:1.5px;color:#64748b;display:block;margin-bottom:6px;">BUDGET RANGE (optional)</label>',
+        '<input id="rfq-budget" style="width:100%;font-family:DM Sans,sans-serif;font-size:16px;background:white;border:1px solid rgba(15,45,84,.12);color:#0f2d54;padding:10px 13px;outline:none;border-radius:8px;box-sizing:border-box;" type="text" placeholder="e.g. $15,000 – $25,000">',
+      '</div>',
+      '<div style="display:flex;gap:10px;">',
+        '<button id="rfqSubmitBtn" style="flex:1;background:#0891b2;color:white;border:none;border-radius:4px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;">📤 Post RFQ to Suppliers</button>',
+        '<button id="rfqCancelBtn" style="padding:11px 16px;background:white;border:1px solid #e2e8f0;border-radius:4px;font-size:13px;cursor:pointer;">Cancel</button>',
+      '</div>',
+      '<div id="rfq-overlay-msg" style="display:none;margin-top:12px;font-size:13px;padding:10px;border-radius:4px;"></div>',
+    '</div>'
+  ].join('');
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  // Wire up buttons after DOM insert
+  document.getElementById('rfqCloseBtn').onclick = function(){ overlay.remove(); };
+  document.getElementById('rfqCancelBtn').onclick = function(){ overlay.remove(); };
+  document.getElementById('rfqSubmitBtn').onclick = submitRFQFromBrowse;
+  setTimeout(function(){ var el = document.getElementById('rfq-desc'); if(el) el.focus(); }, 100);
 }
 
 async function submitRFQFromBrowse() {
-  var desc   = document.getElementById('rfq-desc')?.value?.trim();
-  var budget = document.getElementById('rfq-budget')?.value?.trim();
-  var msg    = document.getElementById('rfq-overlay-msg');
+  var desc = (document.getElementById('rfq-desc') || {}).value || '';
+  var budget = (document.getElementById('rfq-budget') || {}).value || '';
+  var msg = document.getElementById('rfq-overlay-msg');
+  desc = desc.trim();
   if (!desc) {
-    msg.textContent = 'Please describe the materials needed.';
-    msg.style.background = '#fef2f2'; msg.style.color = '#991b1b';
-    msg.style.display = 'block'; return;
+    if (msg) { msg.textContent = 'Please describe the materials needed.'; msg.style.background='#fef2f2'; msg.style.color='#991b1b'; msg.style.display='block'; }
+    return;
   }
+  var btn = document.getElementById('rfqSubmitBtn');
+  if (btn) { btn.textContent = 'Posting…'; btn.disabled = true; }
   try {
     var s = await _supabase.auth.getSession();
-    var uid = s?.data?.session?.user?.id;
+    var uid = s && s.data && s.data.session && s.data.session.user && s.data.session.user.id;
     if (!uid) throw new Error('Please sign in first.');
     var result = await _supabase.from('dw_projects').insert([{
-      owner_id:     uid,
-      title:        'Material RFQ — ' + (_rfqProject?.title || 'Project').substring(0,50),
-      description:  desc + (budget ? '\n\nBudget: ' + budget : '') + '\n\nLinked to: ' + (_rfqProject?.title || ''),
-      type:         'rfq',
+      owner_id: uid,
+      title: 'Material RFQ — ' + ((_rfqProject && _rfqProject.title) ? _rfqProject.title.substring(0,50) : 'Project'),
+      description: desc + (budget ? '\nBudget: ' + budget : '') + '\nLinked to: ' + ((_rfqProject && _rfqProject.title) || ''),
+      type: 'rfq',
       project_type: 'Materials & Supply',
-      location:     _rfqProject?.location || '',
+      location: (_rfqProject && _rfqProject.location) || '',
       budget_range: budget || '',
-      deadline:     _rfqProject?.deadline || null,
-      status:       'open'
+      status: 'open'
     }]);
     if (result.error) throw new Error(result.error.message);
-    msg.textContent = '✓ RFQ posted — certified suppliers will respond shortly.';
-    msg.style.background = '#f0fdf4'; msg.style.color = '#166534';
-    msg.style.display = 'block';
-    setTimeout(function(){ document.getElementById('rfqOverlay')?.remove(); }, 2000);
+    if (msg) { msg.textContent = '✓ RFQ posted — certified suppliers will respond shortly.'; msg.style.background='#f0fdf4'; msg.style.color='#166534'; msg.style.display='block'; }
+    setTimeout(function(){ var ov = document.getElementById('rfqOverlay'); if(ov) ov.remove(); }, 2000);
   } catch(e) {
-    msg.textContent = '✗ ' + e.message;
-    msg.style.background = '#fef2f2'; msg.style.color = '#991b1b';
-    msg.style.display = 'block';
+    if (btn) { btn.textContent = '📤 Post RFQ to Suppliers'; btn.disabled = false; }
+    if (msg) { msg.textContent = '✗ ' + e.message; msg.style.background='#fef2f2'; msg.style.color='#991b1b'; msg.style.display='block'; }
   }
 }
 
@@ -3327,7 +3340,6 @@ function messagePoster(p) {
     if (typeof joinPrompt === 'function') joinPrompt('💬', 'Message Poster', 'Sign in to message project posters directly.');
     return;
   }
-  // Store context and navigate to messages
   window._dwMsgContext = { projectId: p.id, projectTitle: p.title, ownerId: p.owner_id };
   sp('messages');
   if (typeof toast === 'function') toast('Compose a message to the project poster from here.', 'info');
