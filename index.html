@@ -3254,11 +3254,14 @@ async function loadOwnerProjects() {
 
   // Expose globally so sp() and dt() wrappers can call them
   window._loadBrowseJobs    = loadBrowseJobs;
+  window.loadBrowseJobs      = loadBrowseJobs;
+  window.loadOwnerProjects   = loadOwnerProjects;
+  window.loadContractorJobs  = loadContractorJobs;
   window._loadOwnerProjects = loadOwnerProjects;
   window._loadContractorJobs = loadContractorJobs;
 
   // Auto-wire sp(), dt(), filterByType() — runs immediately after page scripts load
-  window.addEventListener('load', function() {
+  (function() {  // runs immediately on parse
     // Wrap sp() — with default tab routing per dashboard
     var _sp = window.sp;
     if (typeof _sp === 'function' && !_sp._dwWrapped) {
@@ -3312,7 +3315,7 @@ async function loadOwnerProjects() {
       if (document.getElementById('dw-proj-list'))  loadOwnerProjects();
       if (document.getElementById('dw-jobs-list')) loadContractorJobs();
     }, 150);
-  });
+  }());
 
 })();
 </script>
