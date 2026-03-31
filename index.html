@@ -3318,7 +3318,7 @@ window.dwShowFullProfile = function(uid) {
   var isSelf=window._cu&&window._cu.id===uid;
   var ex=document.getElementById('dwFullProf');if(ex)ex.remove();
   var fp=document.createElement('div');fp.id='dwFullProf';
-  fp.style.cssText='position:fixed;inset:0;background:#f1f5f9;z-index:9100;overflow-y:auto;opacity:0;transition:opacity .2s;';
+  fp.style.cssText='position:fixed;inset:0;background:#f1f5f9;z-index:9100;overflow-y:auto;';
   // Banner
   var ban=document.createElement('div');ban.style.cssText='background:linear-gradient(135deg,'+color+',#0d1f33);';
   var bni=document.createElement('div');bni.style.cssText='max-width:820px;margin:0 auto;padding:20px 24px 32px;';
@@ -3364,7 +3364,7 @@ window.dwShowFullProfile = function(uid) {
   [{l:'Role',v:label},{l:'Since',v:year},{l:'Tier',v:(u.tier||'Standard').charAt(0).toUpperCase()+(u.tier||'standard').slice(1)},{l:'Area',v:u.location||'South Florida'}].forEach(function(item){var r=document.createElement('div');r.style.cssText='display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #f1f5f9;';var il=document.createElement('span');il.style.color='#94a3b8';il.textContent=item.l;var iv=document.createElement('span');iv.style.color='#475569';iv.textContent=item.v;r.appendChild(il);r.appendChild(iv);mi.appendChild(r);});
   right2.appendChild(mi);cont.appendChild(right2);fp.appendChild(cont);
   document.body.appendChild(fp);
-  requestAnimationFrame(function(){fp.style.opacity='1';});
+  
 };
 
 <script></script>
@@ -3686,7 +3686,7 @@ window.dwShowProfile = function(uid) {
   ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9200;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;';
   ov.onclick=function(e){if(e.target===ov)ov.remove();};
   var modal=document.createElement('div');
-  modal.style.cssText='background:white;width:100%;max-width:400px;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.3);transform:scale(.93);opacity:0;transition:transform .2s cubic-bezier(.34,1.56,.64,1),opacity .18s;';
+  modal.style.cssText='background:white;width:100%;max-width:400px;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.3);transform:scale(1);opacity:1;';
   var hd=document.createElement('div');
   hd.style.cssText='background:linear-gradient(135deg,'+color+',#0d1f33);padding:22px 20px 18px;display:flex;align-items:center;gap:14px;position:relative;';
   var xb=document.createElement('button'); xb.textContent='x';
@@ -3728,7 +3728,7 @@ window.dwShowProfile = function(uid) {
     ar.appendChild(msg); ar.appendChild(act); bd.appendChild(ar);
   }
   modal.appendChild(bd); ov.appendChild(modal); document.body.appendChild(ov);
-  requestAnimationFrame(function(){requestAnimationFrame(function(){modal.style.transform='scale(1)';modal.style.opacity='1';});});
+  
 };
 
 window.dwFullProfile = function(uid) {
