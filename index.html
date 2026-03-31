@@ -2707,6 +2707,9 @@ function _hookDirectories() {
   var _baseSp = window.sp;
   window.sp = function(page) {
     _baseSp(page);
+    if (page === 'browse') { setTimeout(function(){ if(typeof window.loadBrowseJobs==='function') window.loadBrowseJobs(); }, 80); }
+    if (page === 'owner-dash') { setTimeout(function(){ if(typeof window.loadOwnerProjects==='function') window.loadOwnerProjects(); }, 150); }
+    if (page === 'contractor-dash') { setTimeout(function(){ if(typeof window.loadContractorJobs==='function') window.loadContractorJobs(); }, 150); }
     if (page === 'contractors') _loadDirectoryPage('page-contractors','contractor','ctc-grid','🔨','Contractors');
     if (page === 'suppliers') _loadDirectoryPage('page-suppliers','supplier','ctc-grid','🛒','Suppliers');
     if (page === 'marina-owners') _loadDirectoryPage('page-marina-owners','marina','marina-grid','⚓','Marina Operators');
