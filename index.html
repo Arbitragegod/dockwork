@@ -3667,5 +3667,131 @@ function dwSendMessage() {
 
 
 
+<script>
+window._dwUserCache = window._dwUserCache || {};
+
+window.dwShowProfile = function(uid) {
+  var u = window._dwUserCache[uid];
+  if (!u) { console.warn('no cache for', uid); return; }
+  var RL = {contractor:'Licensed Contractor',supplier:'Material Supplier',marina:'Marina Operator',owner:'Property Owner'};
+  var RC = {contractor:'#d97706',supplier:'#0891b2',marina:'#0f2d54',owner:'#16a34a'};
+  var label = RL[u.role]||'Member', color = RC[u.role]||'#0f2d54';
+  var name = u.full_name||u.email.split('@')[0], company = u.company_name||'';
+  var display = company||name;
+  var initials = display.split(' ').map(function(w){return w[0];}).join('').toUpperCase().substring(0,2);
+  var year = new Date(u.created_at||Date.now()).getFullYear();
+  var isSelf = window._cu && window._cu.id===uid;
+  var ex=document.getElementById('dwProfOv'); if(ex) ex.remove();
+  var ov=document.createElement('div'); ov.id='dwProfOv';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9200;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;';
+  ov.onclick=function(e){if(e.target===ov)ov.remove();};
+  var modal=document.createElement('div');
+  modal.style.cssText='background:white;width:100%;max-width:400px;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.3);transform:scale(.93);opacity:0;transition:transform .2s cubic-bezier(.34,1.56,.64,1),opacity .18s;';
+  var hd=document.createElement('div');
+  hd.style.cssText='background:linear-gradient(135deg,'+color+',#0d1f33);padding:22px 20px 18px;display:flex;align-items:center;gap:14px;position:relative;';
+  var xb=document.createElement('button'); xb.textContent='x';
+  xb.style.cssText='position:absolute;top:10px;right:10px;background:rgba(255,255,255,.18);border:none;color:white;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:14px;';
+  xb.onclick=function(){ov.remove();};
+  var av=document.createElement('div');
+  av.style.cssText='width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:white;flex-shrink:0;';
+  av.textContent=initials;
+  var info=document.createElement('div'); info.style.flex='1';
+  var lbl=document.createElement('div'); lbl.style.cssText='font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.6);margin-bottom:3px;font-weight:600;'; lbl.textContent=label.toUpperCase();
+  var nm=document.createElement('div'); nm.style.cssText='font-size:16px;font-weight:700;color:white;line-height:1.2;'; nm.textContent=display;
+  info.appendChild(lbl); info.appendChild(nm);
+  if(company&&company!==name){var sub=document.createElement('div');sub.style.cssText='font-size:11px;color:rgba(255,255,255,.6);margin-top:1px;';sub.textContent=name;info.appendChild(sub);}
+  hd.appendChild(xb); hd.appendChild(av); hd.appendChild(info); modal.appendChild(hd);
+  var sr=document.createElement('div'); sr.style.cssText='display:flex;border-bottom:1px solid #e2e8f0;';
+  [{l:'SINCE',v:year},{l:'TIER',v:(u.tier||'Standard').charAt(0).toUpperCase()+(u.tier||'standard').slice(1)},{l:'AREA',v:u.location||'South FL'}].forEach(function(s,i){
+    var b=document.createElement('div'); b.style.cssText='flex:1;padding:11px 6px;text-align:center;'+(i<2?'border-right:1px solid #e2e8f0;':'');
+    var l2=document.createElement('div'); l2.style.cssText='font-size:9px;letter-spacing:1.5px;color:#94a3b8;font-weight:600;'; l2.textContent=s.l;
+    var v2=document.createElement('div'); v2.style.cssText='font-size:13px;font-weight:700;color:#0f172a;margin-top:2px;'; v2.textContent=s.v;
+    b.appendChild(l2); b.appendChild(v2); sr.appendChild(b);
+  });
+  modal.appendChild(sr);
+  var bd=document.createElement('div'); bd.style.cssText='padding:16px 18px 18px;';
+  var descs={contractor:'Licensed marine contractor - seawall repair, dock construction, pile driving, and coastal work throughout South Florida.',supplier:'Verified marine materials supplier - pilings, lumber, vinyl sheet piling, hardware, and delivery throughout South Florida.',marina:'Full-service marina - slip rentals, dry storage, haul-out, fuel dock, and maintenance coordination.',owner:'Waterfront property owner seeking licensed contractors and verified suppliers for marine construction.'};
+  var dsc=document.createElement('div'); dsc.style.cssText='font-size:13px;color:#475569;line-height:1.6;margin-bottom:14px;'; dsc.textContent=descs[u.role]||'DockWork verified member.';
+  bd.appendChild(dsc);
+  var vb=document.createElement('button');
+  vb.style.cssText='width:100%;background:linear-gradient(135deg,'+color+',#0d1f33);color:white;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;';
+  vb.textContent='View Full Profile';
+  vb.onclick=function(){ov.remove();window.dwFullProfile(uid);};
+  bd.appendChild(vb);
+  if(!isSelf){
+    var ar=document.createElement('div'); ar.style.cssText='display:flex;gap:8px;';
+    var msg=document.createElement('button'); msg.style.cssText='flex:1;background:white;border:1.5px solid #e2e8f0;color:#0f172a;border-radius:8px;padding:9px;font-size:13px;font-weight:600;cursor:pointer;'; msg.textContent='Message';
+    msg.onclick=function(){ov.remove();if(window._cu){if(typeof messagePoster==='function')messagePoster({id:uid,title:'Message to '+display});}else if(typeof openRealSignIn==='function')openRealSignIn();};
+    var act=document.createElement('button'); act.style.cssText='flex:1;background:white;border:1.5px solid '+color+';color:'+color+';border-radius:8px;padding:9px;font-size:13px;font-weight:600;cursor:pointer;';
+    act.textContent={contractor:'Invite to Bid',supplier:'Request Quote',marina:'Request Berth',owner:'Connect'}[u.role]||'Connect';
+    act.onclick=function(){if(typeof toast==='function')toast('Request sent to '+display,'success');ov.remove();};
+    ar.appendChild(msg); ar.appendChild(act); bd.appendChild(ar);
+  }
+  modal.appendChild(bd); ov.appendChild(modal); document.body.appendChild(ov);
+  requestAnimationFrame(function(){requestAnimationFrame(function(){modal.style.transform='scale(1)';modal.style.opacity='1';});});
+};
+
+window.dwFullProfile = function(uid) {
+  var u=window._dwUserCache[uid]; if(!u) return;
+  var RL={contractor:'Licensed Contractor',supplier:'Material Supplier',marina:'Marina Operator',owner:'Property Owner'};
+  var RC={contractor:'#d97706',supplier:'#0891b2',marina:'#0f2d54',owner:'#16a34a'};
+  var label=RL[u.role]||'Member', color=RC[u.role]||'#0f2d54';
+  var name=u.full_name||u.email.split('@')[0], company=u.company_name||'';
+  var display=company||name;
+  var initials=display.split(' ').map(function(w){return w[0];}).join('').toUpperCase().substring(0,2);
+  var year=new Date(u.created_at||Date.now()).getFullYear();
+  var isSelf=window._cu&&window._cu.id===uid;
+  var ex=document.getElementById('dwFullProf'); if(ex) ex.remove();
+  var fp=document.createElement('div'); fp.id='dwFullProf';
+  fp.style.cssText='position:fixed;inset:0;background:#f1f5f9;z-index:9100;overflow-y:auto;opacity:0;transition:opacity .2s;';
+  var ban=document.createElement('div'); ban.style.cssText='background:linear-gradient(135deg,'+color+',#0d1f33);';
+  var bni=document.createElement('div'); bni.style.cssText='max-width:840px;margin:0 auto;padding:20px 24px 32px;';
+  var bk=document.createElement('button'); bk.textContent='Back';
+  bk.style.cssText='background:rgba(255,255,255,.15);border:none;color:white;padding:8px 18px;border-radius:20px;cursor:pointer;font-size:13px;font-weight:600;margin-bottom:20px;display:block;';
+  bk.onclick=function(){fp.remove();};
+  var hr=document.createElement('div'); hr.style.cssText='display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;';
+  var av2=document.createElement('div');
+  av2.style.cssText='width:80px;height:80px;border-radius:12px;background:rgba(255,255,255,.18);border:3px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:white;flex-shrink:0;';
+  av2.textContent=initials;
+  var hi=document.createElement('div'); hi.style.cssText='flex:1;min-width:180px;';
+  var ht=document.createElement('div'); ht.style.cssText='font-size:11px;letter-spacing:2.5px;color:rgba(255,255,255,.6);margin-bottom:4px;'; ht.textContent=label.toUpperCase();
+  var hn=document.createElement('div'); hn.style.cssText='font-size:26px;font-weight:700;color:white;margin-bottom:8px;'; hn.textContent=display;
+  var hm=document.createElement('div'); hm.style.cssText='display:flex;gap:12px;flex-wrap:wrap;align-items:center;';
+  var hs=document.createElement('span'); hs.style.cssText='font-size:12px;color:rgba(255,255,255,.75);'; hs.textContent='Member since '+year;
+  var htr=document.createElement('span'); htr.style.cssText='background:rgba(255,255,255,.2);color:white;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;'; htr.textContent=(u.tier||'STANDARD').toUpperCase();
+  hm.appendChild(hs); hm.appendChild(htr); hi.appendChild(ht); hi.appendChild(hn); hi.appendChild(hm);
+  hr.appendChild(av2); hr.appendChild(hi); bni.appendChild(bk); bni.appendChild(hr); ban.appendChild(bni); fp.appendChild(ban);
+  var grid=document.createElement('div'); grid.style.cssText='max-width:840px;margin:0 auto;padding:24px;display:grid;grid-template-columns:1fr 260px;gap:20px;align-items:start;';
+  var left=document.createElement('div');
+  function mkCard(title,fn){var c=document.createElement('div');c.style.cssText='background:white;border-radius:12px;padding:22px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);';var t=document.createElement('div');t.style.cssText='font-size:10px;letter-spacing:2px;color:'+color+';font-weight:700;margin-bottom:12px;';t.textContent=title;c.appendChild(t);fn(c);return c;}
+  var bios={contractor:'A licensed marine construction contractor serving waterfront property owners, HOAs, and marina operators throughout Palm Beach, Broward, and Miami-Dade counties. Specializing in seawall repair, dock construction, pile driving, and coastal restoration.',supplier:'A verified marine materials supplier stocking a full range of products for waterfront construction projects throughout South Florida. Serving contractors and property owners with competitive pricing and fast delivery.',marina:'A full-service marina facility offering wet slip rentals, dry storage, haul-out services, fuel, and waterfront access for vessels of all sizes.',owner:'A waterfront property owner seeking licensed contractors and verified suppliers for marine construction and dock maintenance projects in South Florida.'};
+  left.appendChild(mkCard('ABOUT',function(c){var p=document.createElement('div');p.style.cssText='font-size:14px;color:#475569;line-height:1.75;';p.textContent=bios[u.role]||'';c.appendChild(p);}));
+  var servs={contractor:['Seawall Repair and Replacement','Dock and Pier Construction','Pile Driving and Installation','FDEP Permitting','Dredging and Excavation','Boat Lift Installation','Coastal Restoration','Fender Systems'],supplier:['Marine-Grade Lumber','Vinyl Sheet Piling','Concrete Pilings','Dock Hardware','Boat Lift Components','Fender Systems','Underwater Concrete','Composite Decking'],marina:['Wet Slip Rental','Dry Stack Storage','Haul-Out Service','Fuel Dock','Pump-Out Stations','Ship Store','Maintenance Coordination','Transient Dockage'],owner:['Seawall Inspection','Dock Replacement','Boat Lift Upgrade','Permit Coordination']};
+  var sl=servs[u.role]||[];
+  if(sl.length)left.appendChild(mkCard(u.role==='owner'?'PROJECT NEEDS':'SERVICES OFFERED',function(c){var g=document.createElement('div');g.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px;';sl.forEach(function(s){var item=document.createElement('div');item.style.cssText='display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8fafc;border-radius:8px;font-size:13px;color:#334155;';var ck=document.createElement('span');ck.style.cssText='color:'+color+';font-weight:700;font-size:11px;flex-shrink:0;';ck.textContent='v';var st=document.createElement('span');st.textContent=s;item.appendChild(ck);item.appendChild(st);g.appendChild(item);});c.appendChild(g);}));
+  var creds={contractor:['Florida Certified Marine Contractor','FDEP ERP Permit Holder','General Liability Insured','Workers Comp Certified'],supplier:['Verified DockWork Supplier','Florida Business License','Commercial Delivery Fleet','Fully Insured'],marina:['FDEP Marina Permit','County Operating License','EPA Stormwater Compliant','ADA Accessible'],owner:['Verified Property Owner','Active Project Poster','DockWork Member']};
+  left.appendChild(mkCard('CREDENTIALS',function(c){(creds[u.role]||[]).forEach(function(cr){var r=document.createElement('div');r.style.cssText='display:flex;align-items:center;gap:10px;font-size:13px;color:#334155;margin-bottom:8px;';var ck=document.createElement('span');ck.style.cssText='width:20px;height:20px;background:'+color+';border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:700;flex-shrink:0;';ck.textContent='OK';var ct=document.createElement('span');ct.textContent=cr;r.appendChild(ck);r.appendChild(ct);c.appendChild(r);});}));
+  grid.appendChild(left);
+  var right=document.createElement('div'); right.style.cssText='position:sticky;top:20px;';
+  var cc=document.createElement('div'); cc.style.cssText='background:white;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:12px;';
+  var ctitle=document.createElement('div'); ctitle.style.cssText='font-size:10px;letter-spacing:2px;color:'+color+';font-weight:700;margin-bottom:12px;'; ctitle.textContent='CONTACT'; cc.appendChild(ctitle);
+  if(!isSelf){
+    var c1=document.createElement('button'); c1.style.cssText='width:100%;background:linear-gradient(135deg,'+color+',#0d1f33);color:white;border:none;border-radius:8px;padding:12px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:8px;';
+    c1.textContent={contractor:'Invite to Bid',supplier:'Request Material Quote',marina:'Request Berth Info',owner:'View Projects'}[u.role]||'Connect';
+    c1.onclick=function(){fp.remove();if(window._cu){if(typeof messagePoster==='function')messagePoster({id:uid,title:'Message to '+display});}else if(typeof openRealSignIn==='function')openRealSignIn();};
+    var c2=document.createElement('button'); c2.style.cssText='width:100%;background:white;border:1.5px solid '+color+';color:'+color+';border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;';
+    c2.textContent='Send Message';
+    c2.onclick=function(){if(typeof toast==='function')toast('Request sent to '+display,'success');fp.remove();};
+    cc.appendChild(c1); cc.appendChild(c2);
+  }else{var sn=document.createElement('div');sn.style.cssText='text-align:center;font-size:13px;color:#94a3b8;padding:10px;background:#f8fafc;border-radius:8px;';sn.textContent='Your public profile';cc.appendChild(sn);}
+  right.appendChild(cc);
+  var mi=document.createElement('div'); mi.style.cssText='background:white;border-radius:12px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,.06);';
+  var mt=document.createElement('div'); mt.style.cssText='font-size:10px;letter-spacing:2px;color:#94a3b8;font-weight:600;margin-bottom:10px;'; mt.textContent='MEMBER INFO'; mi.appendChild(mt);
+  [{l:'Role',v:label},{l:'Since',v:year},{l:'Tier',v:(u.tier||'Standard').charAt(0).toUpperCase()+(u.tier||'standard').slice(1)},{l:'Area',v:u.location||'South Florida'}].forEach(function(item){var r=document.createElement('div');r.style.cssText='display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #f1f5f9;';var il=document.createElement('span');il.style.color='#94a3b8';il.textContent=item.l;var iv=document.createElement('span');iv.style.color='#475569';iv.textContent=item.v;r.appendChild(il);r.appendChild(iv);mi.appendChild(r);});
+  right.appendChild(mi); grid.appendChild(right); fp.appendChild(grid);
+  document.body.appendChild(fp);
+  requestAnimationFrame(function(){fp.style.opacity='1';});
+};
+</script>
 </body>
 </html>
