@@ -2659,190 +2659,155 @@ function _memberCard(user, type) {
 }
 window._dwProfile = function _dwProfile(uid) {
   var u = (window._dwUserCache||{})[uid];
-  if (!u) { console.warn("User not in cache:", uid); return; }
-  var ex = document.getElementById("dwProfileOverlay");
-  if (ex) ex.remove();
-
-  // Data prep
-  var rl = {contractor:"Licensed Contractor",supplier:"Material Supplier",marina:"Marina Operator",owner:"Property Owner"};
-  var ri = {contractor:"🔨",supplier:"📦",marina:"⚓",owner:"🏡"};
-  var rc = {contractor:"#d97706",supplier:"#0891b2",marina:"#0f2d54",owner:"#16a34a"};
-  var rd = {
-    contractor:"Marine construction specialist available for seawall repair, dock builds, pile driving, and coastal restoration projects throughout South Florida.",
-    supplier:"Verified marine materials supplier stocking pilings, lumber, hardware, vinyl sheeting, and concrete products for waterfront construction.",
-    marina:"Full-service marina facility offering slip rental, haul-out, vessel storage, maintenance coordination, and waterfront access.",
-    owner:"Waterfront property owner seeking licensed contractors and verified suppliers for marine construction and dock maintenance projects."
-  };
-  var label = rl[u.role]||"Member";
-  var icon = ri[u.role]||"👤";
-  var color = rc[u.role]||"#0f2d54";
-  var desc = rd[u.role]||"";
-  var name = u.full_name||u.email.split("@")[0];
-  var company = u.company_name||"";
-  var initials = name.split(" ").map(function(w){return w[0];}).join("").toUpperCase().substring(0,2);
-  var year = new Date(u.created_at||Date.now()).getFullYear();
-  var isSelf = window._cu && window._cu.id === uid;
-
-  // Overlay
-  var ov = document.createElement("div");
-  ov.id = "dwProfileOverlay";
-  ov.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9200;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;";
-  ov.addEventListener("click", function(e){ if(e.target===ov) ov.remove(); });
-
-  // Modal
-  var modal = document.createElement("div");
-  modal.style.cssText = "background:white;width:100%;max-width:560px;border-radius:16px;overflow:hidden;box-shadow:0 32px 100px rgba(0,0,0,.35);transform:scale(.94);opacity:0;transition:transform .25s cubic-bezier(.34,1.56,.64,1),opacity .2s ease;max-height:90vh;overflow-y:auto;";
-
-  // Header banner
-  var header = document.createElement("div");
-  header.style.cssText = "background:linear-gradient(135deg,"+color+",#0d1f33);padding:32px 28px 24px;position:relative;";
-
-  var closeBtn = document.createElement("button");
-  closeBtn.innerHTML = "×";
-  closeBtn.style.cssText = "position:absolute;top:14px;right:14px;background:rgba(255,255,255,.15);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;";
-  closeBtn.onclick = function(){ ov.remove(); };
-  header.appendChild(closeBtn);
-
-  var avatar = document.createElement("div");
-  avatar.style.cssText = "width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.18);border:3px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:white;margin-bottom:16px;";
-  avatar.textContent = initials;
-  header.appendChild(avatar);
-
-  var roleTag = document.createElement("div");
-  roleTag.style.cssText = "font-size:10px;letter-spacing:2.5px;color:rgba(255,255,255,.6);margin-bottom:6px;font-weight:600;";
-  roleTag.textContent = icon+" "+label.toUpperCase();
-  header.appendChild(roleTag);
-
-  var nameEl = document.createElement("div");
-  nameEl.style.cssText = "font-size:24px;font-weight:700;color:white;line-height:1.2;margin-bottom:2px;";
-  nameEl.textContent = company||name;
-  header.appendChild(nameEl);
-
-  if (company && company !== name) {
-    var nameSmall = document.createElement("div");
-    nameSmall.style.cssText = "font-size:14px;color:rgba(255,255,255,.65);margin-top:3px;";
-    nameSmall.textContent = name;
-    header.appendChild(nameSmall);
-  }
-  modal.appendChild(header);
-
-  // Body
-  var body = document.createElement("div");
-  body.style.cssText = "padding:24px 28px 28px;";
-
-  // About section
-  var aboutSection = document.createElement("div");
-  aboutSection.style.cssText = "margin-bottom:20px;";
-  var aboutTitle = document.createElement("div");
-  aboutTitle.style.cssText = "font-size:10px;letter-spacing:2px;color:#94a3b8;font-weight:600;margin-bottom:8px;";
-  aboutTitle.textContent = "ABOUT";
-  aboutSection.appendChild(aboutTitle);
-  var aboutText = document.createElement("div");
-  aboutText.style.cssText = "font-size:14px;color:#475569;line-height:1.65;";
-  aboutText.textContent = desc;
-  aboutSection.appendChild(aboutText);
-  body.appendChild(aboutSection);
-
-  // Stats grid
-  var statsGrid = document.createElement("div");
-  statsGrid.style.cssText = "display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;";
-  var stats = [
-    {label:"MEMBER SINCE",val:year},
-    {label:"TIER",val:(u.tier||"Standard").charAt(0).toUpperCase()+(u.tier||"standard").slice(1)},
-    {label:"LOCATION",val:u.location||"South Florida"}
-  ];
-  stats.forEach(function(s){
-    var box = document.createElement("div");
-    box.style.cssText = "background:#f8fafc;border-radius:10px;padding:12px 10px;text-align:center;";
-    box.innerHTML = "<div style='font-size:9px;letter-spacing:1.5px;color:#94a3b8;font-weight:600;margin-bottom:5px;'>"+s.label+"</div><div style='font-size:14px;font-weight:700;color:#0f172a;'>"+s.val+"</div>";
-    statsGrid.appendChild(box);
+  if (!u) return;
+  var ex = document.getElementById("dwProfileOverlay"); if (ex) ex.remove();
+  var rl={contractor:"Licensed Contractor",supplier:"Material Supplier",marina:"Marina Operator",owner:"Property Owner"};
+  var ri={contractor:"🔨",supplier:"📦",marina:"⚓",owner:"🏡"};
+  var rc={contractor:"#d97706",supplier:"#0891b2",marina:"#0f2d54",owner:"#16a34a"};
+  var label=rl[u.role]||"Member", icon=ri[u.role]||"👤", color=rc[u.role]||"#0f2d54";
+  var name=u.full_name||u.email.split("@")[0], company=u.company_name||"";
+  var initials=name.split(" ").map(function(w){return w[0];}).join("").toUpperCase().substring(0,2);
+  var year=new Date(u.created_at||Date.now()).getFullYear();
+  var isSelf=window._cu&&window._cu.id===uid;
+  var ov=document.createElement("div");
+  ov.id="dwProfileOverlay";
+  ov.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9200;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;";
+  ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
+  var modal=document.createElement("div");
+  modal.style.cssText="background:white;width:100%;max-width:420px;border-radius:16px;overflow:hidden;box-shadow:0 32px 100px rgba(0,0,0,.35);transform:scale(.94);opacity:0;transition:transform .25s cubic-bezier(.34,1.56,.64,1),opacity .2s;";
+  var hd=document.createElement("div");
+  hd.style.cssText="background:linear-gradient(135deg,"+color+",#0d1f33);padding:24px 24px 20px;position:relative;display:flex;align-items:center;gap:16px;";
+  var cx=document.createElement("button");
+  cx.innerHTML="&times;"; cx.style.cssText="position:absolute;top:12px;right:12px;background:rgba(255,255,255,.15);border:none;color:white;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:18px;line-height:1;"; cx.onclick=function(){ov.remove();};
+  hd.appendChild(cx);
+  var av=document.createElement("div");
+  av.style.cssText="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.18);border:2.5px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:white;flex-shrink:0;";
+  av.textContent=initials; hd.appendChild(av);
+  var nm=document.createElement("div");
+  nm.innerHTML="<div style='font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.6);margin-bottom:3px;'>"+icon+" "+label.toUpperCase()+"</div><div style='font-size:17px;font-weight:700;color:white;line-height:1.2;'>"+(company||name)+"</div>"+(company&&company!==name?"<div style='font-size:12px;color:rgba(255,255,255,.65);'>"+name+"</div>":"");
+  hd.appendChild(nm); modal.appendChild(hd);
+  var sb=document.createElement("div");
+  sb.style.cssText="display:flex;border-bottom:1px solid #e2e8f0;";
+  [{l:"SINCE",v:year},{l:"TIER",v:(u.tier||"Standard").charAt(0).toUpperCase()+(u.tier||"standard").slice(1)},{l:"AREA",v:u.location||"South FL"}].forEach(function(s,i){
+    var box=document.createElement("div");
+    box.style.cssText="flex:1;padding:12px 8px;text-align:center;"+(i<2?"border-right:1px solid #e2e8f0;":"");
+    box.innerHTML="<div style='font-size:9px;letter-spacing:1.5px;color:#94a3b8;font-weight:600;'>"+s.l+"</div><div style='font-size:13px;font-weight:700;color:#0f172a;margin-top:3px;'>"+s.v+"</div>";
+    sb.appendChild(box);
   });
-  body.appendChild(statsGrid);
-
-  // Specialties / tags by role
-  var tagData = {
-    contractor:["Seawall Repair","Dock Construction","Pile Driving","Dredging","Permits"],
-    supplier:["Marine Lumber","Vinyl Sheet Piling","Concrete Products","Hardware","Delivery"],
-    marina:["Wet Slips","Dry Storage","Haul-Out","Fuel Dock","Maintenance"],
-    owner:["Waterfront Property","Dock Maintenance","Seawall","Renovation","Permits"]
-  };
-  var tags = tagData[u.role]||[];
-  if (tags.length) {
-    var tagSection = document.createElement("div");
-    tagSection.style.cssText = "margin-bottom:20px;";
-    var tagTitle = document.createElement("div");
-    tagTitle.style.cssText = "font-size:10px;letter-spacing:2px;color:#94a3b8;font-weight:600;margin-bottom:10px;";
-    tagTitle.textContent = "SPECIALTIES";
-    tagSection.appendChild(tagTitle);
-    var tagWrap = document.createElement("div");
-    tagWrap.style.cssText = "display:flex;flex-wrap:wrap;gap:8px;";
-    tags.forEach(function(t){
-      var tag = document.createElement("span");
-      tag.style.cssText = "background:rgba("+
-        (u.role==="supplier"?"8,145,178":"15,45,84")+
-        ",.08);color:"+(u.role==="supplier"?"#0891b2":"#0f2d54")+
-        ";padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;";
-      tag.textContent = t;
-      tagWrap.appendChild(tag);
-    });
-    tagSection.appendChild(tagWrap);
-    body.appendChild(tagSection);
+  modal.appendChild(sb);
+  var body=document.createElement("div"); body.style.cssText="padding:18px 20px 20px;";
+  var rd={contractor:"Marine construction specialist — seawall repair, dock builds, pile driving & coastal work.",supplier:"Verified marine materials supplier — pilings, lumber, hardware, vinyl & delivery.",marina:"Full-service marina — slip rental, haul-out, storage & maintenance coordination.",owner:"Waterfront property owner posting projects for contractors & suppliers."};
+  var desc=document.createElement("div"); desc.style.cssText="font-size:13px;color:#475569;line-height:1.6;margin-bottom:16px;"; desc.textContent=rd[u.role]||""; body.appendChild(desc);
+  var viewBtn=document.createElement("button");
+  viewBtn.style.cssText="width:100%;background:linear-gradient(135deg,"+color+",#0d1f33);color:white;border:none;border-radius:8px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.3px;margin-bottom:10px;";
+  viewBtn.textContent="View Full Profile →";
+  viewBtn.onclick=function(){ov.remove();if(typeof window.openFullProfile==="function")window.openFullProfile(uid);};
+  body.appendChild(viewBtn);
+  if(!isSelf){
+    var ar=document.createElement("div"); ar.style.cssText="display:flex;gap:8px;";
+    var mb=document.createElement("button"); mb.style.cssText="flex:1;background:white;border:1.5px solid #e2e8f0;color:#0f172a;border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;"; mb.textContent="💬 Message";
+    mb.onclick=function(){ov.remove();if(window._cu){if(typeof messagePoster==="function")messagePoster({id:uid,title:"Message to "+(company||name)});}else if(typeof openRealSignIn==="function")openRealSignIn();};
+    ar.appendChild(mb);
+    var a2=document.createElement("button"); a2.style.cssText="flex:1;background:white;border:1.5px solid "+color+";color:"+color+";border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;";
+    a2.textContent={contractor:"📋 Invite to Bid",supplier:"📦 Request Quote",marina:"⚓ Request Berth",owner:"🤝 Connect"}[u.role]||"🤝 Connect";
+    a2.onclick=function(){if(typeof toast==="function")toast("Request sent to "+(company||name),"success");ov.remove();};
+    ar.appendChild(a2); body.appendChild(ar);
   }
-
-  // Action buttons
-  var btnRow = document.createElement("div");
-  btnRow.style.cssText = "display:flex;gap:10px;margin-top:4px;";
-
-  if (!isSelf) {
-    // Message button — always
-    var msgBtn = document.createElement("button");
-    msgBtn.style.cssText = "flex:1;background:linear-gradient(135deg,"+color+",#0d1f33);color:white;border:none;border-radius:8px;padding:13px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.3px;";
-    msgBtn.textContent = "💬 Send Message";
-    msgBtn.onclick = function(){
-      ov.remove();
-      if (window._cu) {
-        if (typeof messagePoster==="function") messagePoster({id:uid,title:"Message to "+(company||name)});
-      } else {
-        if (typeof openRealSignIn==="function") openRealSignIn();
-        else if (typeof toast==="function") toast("Sign in to send messages","info");
-      }
-    };
-    btnRow.appendChild(msgBtn);
-
-    // Role-specific second button
-    var secondBtn = document.createElement("button");
-    secondBtn.style.cssText = "flex:1;background:white;border:1.5px solid "+color+";color:"+color+";border-radius:8px;padding:13px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.3px;";
-    if (u.role==="contractor") {
-      secondBtn.textContent = "📋 Invite to Bid";
-      secondBtn.onclick = function(){ if(typeof toast==="function") toast("Invite sent to "+(company||name),"success"); ov.remove(); };
-    } else if (u.role==="supplier") {
-      secondBtn.textContent = "📦 Request Quote";
-      secondBtn.onclick = function(){ if(typeof toast==="function") toast("Quote request sent to "+(company||name),"success"); ov.remove(); };
-    } else if (u.role==="marina") {
-      secondBtn.textContent = "⚓ Request Berth";
-      secondBtn.onclick = function(){ if(typeof toast==="function") toast("Berth request sent to "+(company||name),"success"); ov.remove(); };
-    } else {
-      secondBtn.textContent = "🤝 Connect";
-      secondBtn.onclick = function(){ if(typeof toast==="function") toast("Connection request sent","success"); ov.remove(); };
-    }
-    btnRow.appendChild(secondBtn);
-  } else {
-    var selfNote = document.createElement("div");
-    selfNote.style.cssText = "width:100%;text-align:center;padding:12px;font-size:13px;color:#94a3b8;background:#f8fafc;border-radius:8px;";
-    selfNote.textContent = "This is your profile — visible to all DockWork members";
-    btnRow.appendChild(selfNote);
-  }
-  body.appendChild(btnRow);
-  modal.appendChild(body);
-  ov.appendChild(modal);
-  document.body.appendChild(ov);
-
-  // Animate in
-  requestAnimationFrame(function(){ requestAnimationFrame(function(){
-    modal.style.transform = "scale(1)";
-    modal.style.opacity = "1";
-  }); });
+  modal.appendChild(body); ov.appendChild(modal); document.body.appendChild(ov);
+  requestAnimationFrame(function(){requestAnimationFrame(function(){modal.style.transform="scale(1)";modal.style.opacity="1";});});
 };
+
+window.openFullProfile = function openFullProfile(uid) {
+  var u=(window._dwUserCache||{})[uid]; if(!u) return;
+  var rl={contractor:"Licensed Contractor",supplier:"Material Supplier",marina:"Marina Operator",owner:"Property Owner"};
+  var ri={contractor:"🔨",supplier:"📦",marina:"⚓",owner:"🏡"};
+  var rc={contractor:"#d97706",supplier:"#0891b2",marina:"#0f2d54",owner:"#16a34a"};
+  var label=rl[u.role]||"Member", icon=ri[u.role]||"👤", color=rc[u.role]||"#0f2d54";
+  var name=u.full_name||u.email.split("@")[0], company=u.company_name||"";
+  var initials=name.split(" ").map(function(w){return w[0];}).join("").toUpperCase().substring(0,2);
+  var year=new Date(u.created_at||Date.now()).getFullYear();
+  var isSelf=window._cu&&window._cu.id===uid;
+  var content={
+    contractor:{about:"A licensed marine construction contractor serving waterfront property owners, HOAs, and marina operators throughout Palm Beach, Broward, and Miami-Dade counties. Specializing in seawall repair and replacement, dock construction, pile driving, and coastal restoration.",services:["Seawall Repair and Replacement","Dock and Pier Construction","Pile Driving and Installation","Dredging and Excavation","Boat Lift Installation","FDEP Permitting Assistance","Coastal Restoration","Fender System Installation"],creds:["Florida Certified Marine Contractor","FDEP ERP Permit Holder","General Liability Insured","Workers Comp Certified"],cta1:"📋 Invite to Bid",cta2:"📞 Request Consultation"},
+    supplier:{about:"A verified marine materials supplier stocking a full range of products for waterfront construction projects. Serving contractors, property owners, and marina operators with competitive pricing and reliable South Florida delivery.",services:["Marine-Grade Lumber and Decking","Vinyl Sheet Piling","Concrete Pilings and Caps","Dock Hardware and Fasteners","Boat Lift Components","Fender and Fendering Systems","Underwater Concrete Products","Composite Decking Materials"],creds:["Verified DockWork Supplier","Florida Business License","Commercial Delivery Fleet","Fully Insured"],cta1:"📦 Request Material Quote",cta2:"📞 Contact Supplier"},
+    marina:{about:"A full-service marina facility offering wet slip rentals, dry storage, haul-out services, and waterfront access for vessels of all sizes. Coordinating maintenance and construction projects for slip holders and transient guests.",services:["Wet Slip Rental","Dry Stack Storage","Haul-Out and Bottom Paint","Fuel Dock Gas and Diesel","Pump-Out Stations","Ship Store","Maintenance Coordination","Transient Dockage"],creds:["FDEP Marina Permit","County Operating License","EPA Stormwater Compliant","ADA Accessible Facility"],cta1:"⚓ Request Berth Info",cta2:"📞 Contact Marina"},
+    owner:{about:"A waterfront property owner actively seeking licensed contractors and verified suppliers for marine construction and dock maintenance projects. Located in South Florida with access to the Intracoastal Waterway.",services:["Seawall Inspection","Dock Replacement","Boat Lift Upgrade","Permit Coordination","HOA Compliance"],creds:["Verified Property Owner","Active Project Poster","DockWork Charter Member"],cta1:"📋 View Posted Projects",cta2:"💬 Send Message"}
+  };
+  var rc2=content[u.role]||content.contractor;
+  var ex=document.getElementById("dwFullProfile"); if(ex) ex.remove();
+  var fp=document.createElement("div"); fp.id="dwFullProfile";
+  fp.style.cssText="position:fixed;inset:0;background:#f1f5f9;z-index:9100;overflow-y:auto;opacity:0;transition:opacity .2s;";
+
+  // Build via DOM to avoid all quote issues
+  fp.innerHTML=
+    "<div style='background:linear-gradient(135deg,"+color+",#0d1f33);'>"+
+      "<div style='max-width:820px;margin:0 auto;padding:20px 24px 36px;'>"+
+        "<button id='dwFPBack' style='background:rgba(255,255,255,.15);border:none;color:white;padding:8px 18px;border-radius:20px;cursor:pointer;font-size:13px;font-weight:600;margin-bottom:24px;'>&#8592; Back</button>"+
+        "<div style='display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;'>"+
+          "<div style='width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.18);border:3px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;color:white;flex-shrink:0;'>"+initials+"</div>"+
+          "<div style='flex:1;min-width:200px;'>"+
+            "<div style='font-size:11px;letter-spacing:2.5px;color:rgba(255,255,255,.6);margin-bottom:5px;font-weight:600;'>"+icon+" "+label.toUpperCase()+"</div>"+
+            "<div style='font-size:30px;font-weight:700;color:white;line-height:1.2;margin-bottom:2px;'>"+(company||name)+"</div>"+
+            (company&&company!==name?"<div style='font-size:14px;color:rgba(255,255,255,.7);'>"+name+"</div>":"")+
+            "<div style='display:flex;align-items:center;gap:16px;margin-top:10px;flex-wrap:wrap;'>"+
+              "<span style='font-size:12px;color:rgba(255,255,255,.75);'>&#128205; "+(u.location||"South Florida")+"</span>"+
+              "<span style='font-size:12px;color:rgba(255,255,255,.75);'>&#128197; Member since "+year+"</span>"+
+              "<span style='background:rgba(255,255,255,.2);color:white;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;letter-spacing:.5px;'>"+(u.tier||"STANDARD").toUpperCase()+"</span>"+
+            "</div>"+
+          "</div>"+
+        "</div>"+
+      "</div>"+
+    "</div>"+
+    "<div style='max-width:820px;margin:0 auto;padding:24px;display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start;'>"+
+      "<div>"+
+        "<div style='background:white;border-radius:12px;padding:24px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);'>"+
+          "<div style='font-size:10px;letter-spacing:2px;color:"+color+";font-weight:700;margin-bottom:10px;'>ABOUT</div>"+
+          "<div style='font-size:14px;color:#475569;line-height:1.75;'>"+rc2.about+"</div>"+
+        "</div>"+
+        "<div style='background:white;border-radius:12px;padding:24px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);'>"+
+          "<div style='font-size:10px;letter-spacing:2px;color:"+color+";font-weight:700;margin-bottom:14px;'>"+(u.role==="owner"?"PROJECT NEEDS":"SERVICES OFFERED")+"</div>"+
+          "<div style='display:grid;grid-template-columns:1fr 1fr;gap:8px;'>"+
+            rc2.services.map(function(s){return "<div style='display:flex;align-items:center;gap:8px;padding:9px 12px;background:#f8fafc;border-radius:8px;font-size:13px;color:#334155;'><span style='color:"+color+";'>&#10003;</span>"+s+"</div>";}).join("")+
+          "</div>"+
+        "</div>"+
+        "<div style='background:white;border-radius:12px;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,.06);'>"+
+          "<div style='font-size:10px;letter-spacing:2px;color:"+color+";font-weight:700;margin-bottom:14px;'>CREDENTIALS</div>"+
+          "<div style='display:flex;flex-direction:column;gap:10px;'>"+
+            rc2.creds.map(function(c){return "<div style='display:flex;align-items:center;gap:10px;font-size:13px;color:#334155;'><span style='width:22px;height:22px;background:"+color+";border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:700;flex-shrink:0;'>&#10003;</span>"+c+"</div>";}).join("")+
+          "</div>"+
+        "</div>"+
+      "</div>"+
+      "<div style='position:sticky;top:20px;'>"+
+        "<div style='background:white;border-radius:12px;padding:22px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:12px;'>"+
+          "<div style='font-size:10px;letter-spacing:2px;color:"+color+";font-weight:700;margin-bottom:14px;'>CONTACT</div>"+
+          (!isSelf?
+            "<button id='dwFPCTA1' style='width:100%;background:linear-gradient(135deg,"+color+",#0d1f33);color:white;border:none;border-radius:8px;padding:13px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:8px;'>"+rc2.cta1+"</button>"+
+            "<button id='dwFPCTA2' style='width:100%;background:white;border:1.5px solid "+color+";color:"+color+";border-radius:8px;padding:12px;font-size:13px;font-weight:700;cursor:pointer;'>"+rc2.cta2+"</button>"
+          :"<div style='text-align:center;font-size:13px;color:#94a3b8;padding:10px;background:#f8fafc;border-radius:8px;'>This is your profile</div>")+
+        "</div>"+
+        "<div style='background:white;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.06);'>"+
+          "<div style='font-size:10px;letter-spacing:2px;color:#94a3b8;font-weight:600;margin-bottom:10px;'>MEMBER INFO</div>"+
+          "<div style='font-size:13px;color:#475569;line-height:2;'>"+
+            "<div><span style='color:#94a3b8;'>Role: </span>"+label+"</div>"+
+            "<div><span style='color:#94a3b8;'>Member Since: </span>"+year+"</div>"+
+            "<div><span style='color:#94a3b8;'>Tier: </span>"+(u.tier||"Standard").charAt(0).toUpperCase()+(u.tier||"standard").slice(1)+"</div>"+
+            "<div><span style='color:#94a3b8;'>Service Area: </span>"+(u.location||"South Florida")+"</div>"+
+          "</div>"+
+        "</div>"+
+      "</div>"+
+    "</div>";
+
+  document.body.appendChild(fp);
+  // Wire up back button and CTAs after DOM insert
+  var backBtn=fp.querySelector("#dwFPBack");
+  if(backBtn) backBtn.onclick=function(){fp.remove();};
+  var cta1=fp.querySelector("#dwFPCTA1");
+  if(cta1) cta1.onclick=function(){fp.remove();if(window._cu){if(typeof messagePoster==="function")messagePoster({id:uid,title:"Message to "+(company||name)});}else if(typeof openRealSignIn==="function")openRealSignIn();};
+  var cta2=fp.querySelector("#dwFPCTA2");
+  if(cta2) cta2.onclick=function(){if(typeof toast==="function")toast("Request sent to "+(company||name),"success");fp.remove();};
+  requestAnimationFrame(function(){fp.style.opacity="1";});
+};
+
 
 
 
