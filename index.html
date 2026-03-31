@@ -3154,7 +3154,9 @@ async function loadOwnerProjects() {
   }
 
   // Expose globally so sp() and dt() wrappers can call them
-  window._loadBrowseJobs    = loadBrowseJobs;
+  window._loadBrowseJobs          = loadBrowseJobs;
+  window.loadBrowseJobs              = loadBrowseJobs;
+  window.openSupplierQuoteModal      = openSupplierQuoteModal;
   window.loadBrowseJobs      = loadBrowseJobs;
   window.loadOwnerProjects   = loadOwnerProjects;
   window.loadContractorJobs  = loadContractorJobs;
