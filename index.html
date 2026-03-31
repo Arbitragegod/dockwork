@@ -1680,9 +1680,10 @@ var db = document.getElementById('dashBtn');
 if (db) {
 db.style.display = (name === 'owner-dash' || name === 'contractor-dash' || name === 'supplier-dash') ? 'none' : 'inline-block';
 }
-if (name === 'home') {
-setTimeout(animateStats, 300);
-}
+if (name === 'home') { setTimeout(animateStats, 300); }
+  if (name === 'browse') { setTimeout(function(){ if(typeof window.loadBrowseJobs==='function') window.loadBrowseJobs(); }, 100); }
+  if (name === 'owner-dash') { setTimeout(function(){ if(typeof window.loadOwnerProjects==='function') window.loadOwnerProjects(); }, 200); }
+  if (name === 'contractor-dash') { setTimeout(function(){ if(typeof window.loadContractorJobs==='function') window.loadContractorJobs(); }, 200); }
 }
 function toggleMenu() {
 var mm = document.getElementById('mm');
@@ -3153,6 +3154,8 @@ async function loadOwnerProjects() {
   // Expose globally so sp() and dt() wrappers can call them
   window._loadBrowseJobs          = loadBrowseJobs;
   window.loadBrowseJobs              = loadBrowseJobs;
+  window.loadOwnerProjects           = loadOwnerProjects;
+  window.loadContractorJobs          = loadContractorJobs;
   window.openSupplierQuoteModal      = openSupplierQuoteModal;
   window.loadBrowseJobs      = loadBrowseJobs;
   window.loadOwnerProjects   = loadOwnerProjects;
