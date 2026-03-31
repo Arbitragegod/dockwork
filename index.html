@@ -2659,51 +2659,191 @@ function _memberCard(user, type) {
 }
 window._dwProfile = function _dwProfile(uid) {
   var u = (window._dwUserCache||{})[uid];
-  if (!u) return;
-  var existing = document.getElementById("dwProfileOverlay");
-  if (existing) existing.remove();
-  var ov = document.createElement("div");
-  ov.id = "dwProfileOverlay";
-  ov.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9200;display:flex;align-items:flex-end;justify-content:center;";
-  ov.addEventListener("click", function(e){ if(e.target===ov) ov.remove(); });
+  if (!u) { console.warn("User not in cache:", uid); return; }
+  var ex = document.getElementById("dwProfileOverlay");
+  if (ex) ex.remove();
+
+  // Data prep
   var rl = {contractor:"Licensed Contractor",supplier:"Material Supplier",marina:"Marina Operator",owner:"Property Owner"};
   var ri = {contractor:"🔨",supplier:"📦",marina:"⚓",owner:"🏡"};
-  var label = rl[u.role]||"Member"; var icon = ri[u.role]||"👤";
-  var name = u.full_name||u.email.split("@")[0]; var company = u.company_name||"";
+  var rc = {contractor:"#d97706",supplier:"#0891b2",marina:"#0f2d54",owner:"#16a34a"};
+  var rd = {
+    contractor:"Marine construction specialist available for seawall repair, dock builds, pile driving, and coastal restoration projects throughout South Florida.",
+    supplier:"Verified marine materials supplier stocking pilings, lumber, hardware, vinyl sheeting, and concrete products for waterfront construction.",
+    marina:"Full-service marina facility offering slip rental, haul-out, vessel storage, maintenance coordination, and waterfront access.",
+    owner:"Waterfront property owner seeking licensed contractors and verified suppliers for marine construction and dock maintenance projects."
+  };
+  var label = rl[u.role]||"Member";
+  var icon = ri[u.role]||"👤";
+  var color = rc[u.role]||"#0f2d54";
+  var desc = rd[u.role]||"";
+  var name = u.full_name||u.email.split("@")[0];
+  var company = u.company_name||"";
   var initials = name.split(" ").map(function(w){return w[0];}).join("").toUpperCase().substring(0,2);
   var year = new Date(u.created_at||Date.now()).getFullYear();
   var isSelf = window._cu && window._cu.id === uid;
-  var act = "";
-  if (!isSelf && window._cu) {
-    var mBtn = "<button onclick=\"document.getElementById('dwProfileOverlay').remove()\" style=\"flex:1;background:linear-gradient(135deg,#0f2d54,#0891b2);color:white;border:none;border-radius:6px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;\">💬 Message</button>";
-    if (u.role==="contractor") act="<div style=\"display:flex;gap:10px;\">"+mBtn+"<button onclick=\"toast('Invite sent','success');document.getElementById('dwProfileOverlay').remove()\" style=\"flex:1;background:white;color:#0f2d54;border:1.5px solid #0f2d54;border-radius:6px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;\">📋 Invite to Bid</button></div>";
-    else if (u.role==="supplier") act="<div style=\"display:flex;gap:10px;\">"+mBtn+"<button onclick=\"toast('Quote request sent','success');document.getElementById('dwProfileOverlay').remove()\" style=\"flex:1;background:white;color:#0891b2;border:1.5px solid #0891b2;border-radius:6px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;\">📦 Request Quote</button></div>";
-    else if (u.role==="marina") act="<div style=\"display:flex;gap:10px;\">"+mBtn+"<button onclick=\"toast('Connection request sent','success');document.getElementById('dwProfileOverlay').remove()\" style=\"flex:1;background:white;color:#0f2d54;border:1.5px solid #0f2d54;border-radius:6px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;\">🤝 Connect</button></div>";
-    else act="<div>"+mBtn.replace("flex:1;","width:100%;")+"</div>";
+
+  // Overlay
+  var ov = document.createElement("div");
+  ov.id = "dwProfileOverlay";
+  ov.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9200;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;";
+  ov.addEventListener("click", function(e){ if(e.target===ov) ov.remove(); });
+
+  // Modal
+  var modal = document.createElement("div");
+  modal.style.cssText = "background:white;width:100%;max-width:560px;border-radius:16px;overflow:hidden;box-shadow:0 32px 100px rgba(0,0,0,.35);transform:scale(.94);opacity:0;transition:transform .25s cubic-bezier(.34,1.56,.64,1),opacity .2s ease;max-height:90vh;overflow-y:auto;";
+
+  // Header banner
+  var header = document.createElement("div");
+  header.style.cssText = "background:linear-gradient(135deg,"+color+",#0d1f33);padding:32px 28px 24px;position:relative;";
+
+  var closeBtn = document.createElement("button");
+  closeBtn.innerHTML = "×";
+  closeBtn.style.cssText = "position:absolute;top:14px;right:14px;background:rgba(255,255,255,.15);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;";
+  closeBtn.onclick = function(){ ov.remove(); };
+  header.appendChild(closeBtn);
+
+  var avatar = document.createElement("div");
+  avatar.style.cssText = "width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.18);border:3px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:white;margin-bottom:16px;";
+  avatar.textContent = initials;
+  header.appendChild(avatar);
+
+  var roleTag = document.createElement("div");
+  roleTag.style.cssText = "font-size:10px;letter-spacing:2.5px;color:rgba(255,255,255,.6);margin-bottom:6px;font-weight:600;";
+  roleTag.textContent = icon+" "+label.toUpperCase();
+  header.appendChild(roleTag);
+
+  var nameEl = document.createElement("div");
+  nameEl.style.cssText = "font-size:24px;font-weight:700;color:white;line-height:1.2;margin-bottom:2px;";
+  nameEl.textContent = company||name;
+  header.appendChild(nameEl);
+
+  if (company && company !== name) {
+    var nameSmall = document.createElement("div");
+    nameSmall.style.cssText = "font-size:14px;color:rgba(255,255,255,.65);margin-top:3px;";
+    nameSmall.textContent = name;
+    header.appendChild(nameSmall);
   }
-  ov.innerHTML = "<div id=\"dwPP\" style=\"background:white;width:100%;max-width:540px;border-radius:16px 16px 0 0;overflow:hidden;max-height:85vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);\">"+
-    "<div style=\"background:linear-gradient(135deg,#0f2d54,#0d2b45);padding:28px 24px 20px;position:relative;\">"+
-      "<button onclick=\"document.getElementById('dwProfileOverlay').remove()\" style=\"position:absolute;top:16px;right:16px;background:rgba(255,255,255,.15);border:none;color:white;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;\">×</button>"+
-      "<div style=\"display:flex;align-items:center;gap:16px;\">"+
-        "<div style=\"width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px;border:2px solid rgba(255,255,255,.3);\">"+initials+"</div>"+
-        "<div><div style=\"font-size:11px;letter-spacing:2px;color:rgba(255,255,255,.6);margin-bottom:3px;\">"+icon+" "+label.toUpperCase()+"</div>"+
-        "<div style=\"font-size:20px;font-weight:600;color:white;\">"+(company||name)+"</div>"+
-        (company?"<div style=\"font-size:13px;color:rgba(255,255,255,.7);margin-top:2px;\">"+name+"</div>":"")+"</div>"+
-      "</div>"+
-    "</div>"+
-    "<div style=\"padding:20px 24px;\">"+
-      "<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;\">"+
-        "<div style=\"background:#f8fafc;border-radius:8px;padding:12px;\"><div style=\"font-size:10px;letter-spacing:1.5px;color:#94a3b8;margin-bottom:4px;\">MEMBER SINCE</div><div style=\"font-size:14px;font-weight:600;color:#0f172a;\">"+year+"</div></div>"+
-        "<div style=\"background:#f8fafc;border-radius:8px;padding:12px;\"><div style=\"font-size:10px;letter-spacing:1.5px;color:#94a3b8;margin-bottom:4px;\">TIER</div><div style=\"font-size:14px;font-weight:600;color:#0f172a;\">"+(u.tier||"Standard").charAt(0).toUpperCase()+(u.tier||"standard").slice(1)+"</div></div>"+
-        (u.location?"<div style=\"grid-column:1/-1;background:#f8fafc;border-radius:8px;padding:12px;\"><div style=\"font-size:10px;letter-spacing:1.5px;color:#94a3b8;margin-bottom:4px;\">LOCATION</div><div style=\"font-size:14px;font-weight:600;color:#0f172a;\">"+u.location+"</div></div>":"")+
-      "</div>"+
-      act+
-      (isSelf?"<div style=\"text-align:center;padding:12px;font-size:13px;color:#94a3b8;\">This is your profile</div>":"")+
-    "</div>"+
-  "</div>";
+  modal.appendChild(header);
+
+  // Body
+  var body = document.createElement("div");
+  body.style.cssText = "padding:24px 28px 28px;";
+
+  // About section
+  var aboutSection = document.createElement("div");
+  aboutSection.style.cssText = "margin-bottom:20px;";
+  var aboutTitle = document.createElement("div");
+  aboutTitle.style.cssText = "font-size:10px;letter-spacing:2px;color:#94a3b8;font-weight:600;margin-bottom:8px;";
+  aboutTitle.textContent = "ABOUT";
+  aboutSection.appendChild(aboutTitle);
+  var aboutText = document.createElement("div");
+  aboutText.style.cssText = "font-size:14px;color:#475569;line-height:1.65;";
+  aboutText.textContent = desc;
+  aboutSection.appendChild(aboutText);
+  body.appendChild(aboutSection);
+
+  // Stats grid
+  var statsGrid = document.createElement("div");
+  statsGrid.style.cssText = "display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;";
+  var stats = [
+    {label:"MEMBER SINCE",val:year},
+    {label:"TIER",val:(u.tier||"Standard").charAt(0).toUpperCase()+(u.tier||"standard").slice(1)},
+    {label:"LOCATION",val:u.location||"South Florida"}
+  ];
+  stats.forEach(function(s){
+    var box = document.createElement("div");
+    box.style.cssText = "background:#f8fafc;border-radius:10px;padding:12px 10px;text-align:center;";
+    box.innerHTML = "<div style='font-size:9px;letter-spacing:1.5px;color:#94a3b8;font-weight:600;margin-bottom:5px;'>"+s.label+"</div><div style='font-size:14px;font-weight:700;color:#0f172a;'>"+s.val+"</div>";
+    statsGrid.appendChild(box);
+  });
+  body.appendChild(statsGrid);
+
+  // Specialties / tags by role
+  var tagData = {
+    contractor:["Seawall Repair","Dock Construction","Pile Driving","Dredging","Permits"],
+    supplier:["Marine Lumber","Vinyl Sheet Piling","Concrete Products","Hardware","Delivery"],
+    marina:["Wet Slips","Dry Storage","Haul-Out","Fuel Dock","Maintenance"],
+    owner:["Waterfront Property","Dock Maintenance","Seawall","Renovation","Permits"]
+  };
+  var tags = tagData[u.role]||[];
+  if (tags.length) {
+    var tagSection = document.createElement("div");
+    tagSection.style.cssText = "margin-bottom:20px;";
+    var tagTitle = document.createElement("div");
+    tagTitle.style.cssText = "font-size:10px;letter-spacing:2px;color:#94a3b8;font-weight:600;margin-bottom:10px;";
+    tagTitle.textContent = "SPECIALTIES";
+    tagSection.appendChild(tagTitle);
+    var tagWrap = document.createElement("div");
+    tagWrap.style.cssText = "display:flex;flex-wrap:wrap;gap:8px;";
+    tags.forEach(function(t){
+      var tag = document.createElement("span");
+      tag.style.cssText = "background:rgba("+
+        (u.role==="supplier"?"8,145,178":"15,45,84")+
+        ",.08);color:"+(u.role==="supplier"?"#0891b2":"#0f2d54")+
+        ";padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;";
+      tag.textContent = t;
+      tagWrap.appendChild(tag);
+    });
+    tagSection.appendChild(tagWrap);
+    body.appendChild(tagSection);
+  }
+
+  // Action buttons
+  var btnRow = document.createElement("div");
+  btnRow.style.cssText = "display:flex;gap:10px;margin-top:4px;";
+
+  if (!isSelf) {
+    // Message button — always
+    var msgBtn = document.createElement("button");
+    msgBtn.style.cssText = "flex:1;background:linear-gradient(135deg,"+color+",#0d1f33);color:white;border:none;border-radius:8px;padding:13px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.3px;";
+    msgBtn.textContent = "💬 Send Message";
+    msgBtn.onclick = function(){
+      ov.remove();
+      if (window._cu) {
+        if (typeof messagePoster==="function") messagePoster({id:uid,title:"Message to "+(company||name)});
+      } else {
+        if (typeof openRealSignIn==="function") openRealSignIn();
+        else if (typeof toast==="function") toast("Sign in to send messages","info");
+      }
+    };
+    btnRow.appendChild(msgBtn);
+
+    // Role-specific second button
+    var secondBtn = document.createElement("button");
+    secondBtn.style.cssText = "flex:1;background:white;border:1.5px solid "+color+";color:"+color+";border-radius:8px;padding:13px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.3px;";
+    if (u.role==="contractor") {
+      secondBtn.textContent = "📋 Invite to Bid";
+      secondBtn.onclick = function(){ if(typeof toast==="function") toast("Invite sent to "+(company||name),"success"); ov.remove(); };
+    } else if (u.role==="supplier") {
+      secondBtn.textContent = "📦 Request Quote";
+      secondBtn.onclick = function(){ if(typeof toast==="function") toast("Quote request sent to "+(company||name),"success"); ov.remove(); };
+    } else if (u.role==="marina") {
+      secondBtn.textContent = "⚓ Request Berth";
+      secondBtn.onclick = function(){ if(typeof toast==="function") toast("Berth request sent to "+(company||name),"success"); ov.remove(); };
+    } else {
+      secondBtn.textContent = "🤝 Connect";
+      secondBtn.onclick = function(){ if(typeof toast==="function") toast("Connection request sent","success"); ov.remove(); };
+    }
+    btnRow.appendChild(secondBtn);
+  } else {
+    var selfNote = document.createElement("div");
+    selfNote.style.cssText = "width:100%;text-align:center;padding:12px;font-size:13px;color:#94a3b8;background:#f8fafc;border-radius:8px;";
+    selfNote.textContent = "This is your profile — visible to all DockWork members";
+    btnRow.appendChild(selfNote);
+  }
+  body.appendChild(btnRow);
+  modal.appendChild(body);
+  ov.appendChild(modal);
   document.body.appendChild(ov);
-  requestAnimationFrame(function(){ requestAnimationFrame(function(){ var p=document.getElementById("dwPP"); if(p) p.style.transform="translateY(0)"; }); });
+
+  // Animate in
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    modal.style.transform = "scale(1)";
+    modal.style.opacity = "1";
+  }); });
 };
+
 
 
 function _emptyDirectoryState(icon, label) {
