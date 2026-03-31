@@ -193,7 +193,7 @@ async function confirmRoleSwitch() {
   <div class="nav-logo" onclick="sp('home')">Dock<em>Work</em></div>
   <ul class="nav-links">
     <li><a class="" onclick="sp('home')">Home</a></li>
-    <li><a onclick="sp('browse')" class="">Browse</a></li>
+    <li><a onclick="sp(\'browse\')" class="">Browse</a></li>
     <li><a onclick="sp('contractors')" class="">Contractors</a></li>
     <li><a onclick="sp('suppliers')" class="active">Suppliers</a></li>
     <li><a onclick="sp('marina-owners')">Marina Owners</a></li>
@@ -303,7 +303,7 @@ async function confirmRoleSwitch() {
         </div>
 
         <!-- Browse -->
-        <div onclick="sp('browse')" style="background:#f5f3ff;border:2px solid #c4b5fd;padding:32px 28px;cursor:pointer;text-align:left;transition:all .25s;border-radius:14px;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 48px rgba(0,0,0,.25)';this.style.background='#ede9fe'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#f5f3ff'">
+        <div onclick="sp(\'browse\')" style="background:#f5f3ff;border:2px solid #c4b5fd;padding:32px 28px;cursor:pointer;text-align:left;transition:all .25s;border-radius:14px;position:relative;overflow:hidden;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 16px 48px rgba(0,0,0,.25)';this.style.background='#ede9fe'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#f5f3ff'">
           <div style="position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#7c3aed,#6366f1);"></div>
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
             <div style="font-size:42px;line-height:1;">🔍</div>
@@ -426,7 +426,7 @@ async function confirmRoleSwitch() {
 
     </div>
     <div class="post-types-row" style="margin-top:28px;">
-      <div class="pt-card" onclick="sp('browse')" style="cursor:pointer;background:#eff6ff;border-color:#bfdbfe;"><div class="pt-icon">🔍</div><div class="pt-name">RFI</div><div class="pt-desc">Scope your project with expert input before committing</div></div>
+      <div class="pt-card" onclick="sp(\'browse\')" style="cursor:pointer;background:#eff6ff;border-color:#bfdbfe;"><div class="pt-icon">🔍</div><div class="pt-name">RFI</div><div class="pt-desc">Scope your project with expert input before committing</div></div>
       <div class="pt-card" onclick="openRealSignUp()" style="cursor:pointer;background:#f0f9ff;border-color:#bae6fd;"><div class="pt-icon">&#x1F3F7;</div><div class="pt-name">RFB</div><div class="pt-desc">Request for Bid — open competitive bidding on a defined scope</div></div>
       <div class="pt-card" onclick="openRealSignUp()" style="cursor:pointer;background:#f0fdf9;border-color:#a7f3d0;"><div class="pt-icon">📋</div><div class="pt-name">RFP</div><div class="pt-desc">Request for Proposal — formal bids with full specs</div></div>
       <div class="pt-card" onclick="openRealSignUp()" style="cursor:pointer;background:#fffbeb;border-color:#fcd34d;"><div class="pt-icon">💲</div><div class="pt-name">RFQ</div><div class="pt-desc">Request specific pricing for a defined scope of work</div></div>
@@ -522,24 +522,24 @@ async function confirmRoleSwitch() {
   <div class="sec" style="background:#fafbfd;">
     <div class="sec-head">
       <div><span class="sec-label">Active Projects</span><div class="h2">Recent <em>postings.</em></div></div>
-      <a class="see-all" onclick="sp('browse')">View all →</a>
+      <a class="see-all" onclick="sp(\'browse\')">View all →</a>
     </div>
     <div class="g3">
       
       
-      <div class="card" style="cursor:pointer;border-left:3px solid #6366f1;" onclick="sp('browse')">
+      <div class="card" style="cursor:pointer;border-left:3px solid #6366f1;" onclick="sp(\'browse\')">
         <div style="display:flex;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:6px;"><span class="badge open">RFP · Marine Electric</span><span style="font-size:13px;color:var(--mist);">4 days ago</span></div>
         <div class="card-t">Marina Shore Power Upgrade — 48 Slip Pedestals, Fort Walton</div>
         <div style="font-size:14px;color:var(--mist);margin-bottom:14px;display:flex;align-items:center;gap:6px;">⛵ Harbour Point Marina <span class="badge verified" style="font-size:7px;">Verified Marina</span></div>
         <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:12px;"><div style="font-family:'Cormorant Garamond',serif;font-size:20px;">$45K–$70K</div><div style="font-size:14px;color:var(--teal);">5 bids</div></div>
       </div>
-      <div class="card" style="cursor:pointer;border-left:3px solid var(--gold);" onclick="sp('browse')">
+      <div class="card" style="cursor:pointer;border-left:3px solid var(--gold);" onclick="sp(\'browse\')">
         <div style="display:flex;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:6px;"><span class="badge open">RFI · Scoping</span><span style="font-size:13px;color:var(--mist);">Today</span></div>
         <div class="card-t">Underwater Pile Assessment — Waterfront Estate, Sarasota</div>
         <div style="font-size:14px;color:var(--mist);margin-bottom:14px;display:flex;align-items:center;gap:6px;">🏡 The Whitmore Estate <span class="badge gold" style="font-size:7px;">Verified Owner</span></div>
         <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:12px;"><div style="font-size:15px;color:var(--mist);">Scoping Stage</div><div style="font-size:14px;color:var(--teal);">2 responses</div></div>
       </div>
-      <div class="card" style="cursor:pointer;border-left:3px solid var(--teal);" onclick="sp('browse')">
+      <div class="card" style="cursor:pointer;border-left:3px solid var(--teal);" onclick="sp(\'browse\')">
         <div style="display:flex;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:6px;"><span class="badge open">RFP · Dredging</span><span style="font-size:13px;color:var(--mist);">Yesterday</span></div>
         <div class="card-t">Marina Basin Dredging &amp; Spoil Disposal — 120,000 CY</div>
         <div style="font-size:14px;color:var(--mist);margin-bottom:14px;display:flex;align-items:center;gap:6px;">⛵ Coastal Bay Yacht Club — Panama City, FL <span class="badge verified" style="font-size:7px;">Verified Marina</span></div>
@@ -579,14 +579,14 @@ async function confirmRoleSwitch() {
     <p style="font-size:16px;color:rgba(255,255,255,.82);max-width:380px;margin:0 auto 32px;line-height:1.8;">Founding members receive a Charter badge and locked founding rate for life. Owners approved instantly. Contractors &amp; suppliers reviewed within 24 hours.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
       <button class="btn-lg gold" onclick="openRealSignUp()">Join DockWork →</button>
-      <button class="btn-lg" style="background:transparent;border:1px solid rgba(255,255,255,.25);color:white;font-size:14px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:13px 30px;cursor:pointer;" onclick="sp('browse')">Browse Projects</button>
+      <button class="btn-lg" style="background:transparent;border:1px solid rgba(255,255,255,.25);color:white;font-size:14px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:13px 30px;cursor:pointer;" onclick="sp(\'browse\')">Browse Projects</button>
     </div>
   </div>
 
   <footer>
     <div class="fg-grid">
       <div><div class="f-logo">Dock<em>Work</em></div><div class="f-desc">Private marketplace for marine construction and supply. Every member verified. Every project protected.</div></div>
-      <div class="f-col"><h4>Platform</h4><ul><li><a onclick="sp('browse')">Browse Projects</a></li><li><a onclick="openPostJob()">Post a Job</a></li><li><a onclick="sp('supplier-profile')">Supplier Catalog</a></li></ul></div>
+      <div class="f-col"><h4>Platform</h4><ul><li><a onclick="sp(\'browse\')">Browse Projects</a></li><li><a onclick="openPostJob()">Post a Job</a></li><li><a onclick="sp('supplier-profile')">Supplier Catalog</a></li></ul></div>
       <div class="f-col"><h4>Membership</h4><ul><li><a onclick="openRealSignUp()">Join Now</a></li><li><a onclick="sp('pricing')">Pricing</a></li><li><a onclick="sp('about')">Standards</a></li></ul></div>
       <div class="f-col"><h4>Dashboards</h4><ul><li><a onclick="openPostJob()">Owner</a></li><li><a onclick="sp('contractor-dash')">Contractor</a></li><li><a onclick="sp('supplier-dash')">Supplier</a></li></ul></div>
     </div>
@@ -852,7 +852,7 @@ async function confirmRoleSwitch() {
   <footer>
     <div class="fg-grid">
       <div><div class="f-logo">Dock<em>Work</em></div><div class="f-desc">Private marketplace for marine construction and supply. Every member verified.</div></div>
-      <div class="f-col"><h4>Platform</h4><ul><li><a onclick="sp('browse')">Browse</a></li><li><a onclick="openPostJob()">Post a Job</a></li><li><a onclick="sp('supplier-profile')">Supplier Catalog</a></li></ul></div>
+      <div class="f-col"><h4>Platform</h4><ul><li><a onclick="sp(\'browse\')">Browse</a></li><li><a onclick="openPostJob()">Post a Job</a></li><li><a onclick="sp('supplier-profile')">Supplier Catalog</a></li></ul></div>
       <div class="f-col"><h4>Membership</h4><ul><li><a onclick="openRealSignUp()">Join Now</a></li><li><a onclick="sp('pricing')">Pricing</a></li><li><a onclick="sp('about')">Standards</a></li></ul></div>
       <div class="f-col"><h4>Dashboards</h4><ul><li><a onclick="openPostJob()">Owner</a></li><li><a onclick="sp('contractor-dash')">Contractor</a></li><li><a onclick="sp('supplier-dash')">Supplier</a></li></ul></div>
     </div>
@@ -881,7 +881,7 @@ async function confirmRoleSwitch() {
         <div class="dns">Tools</div>
         <div class="dn" onclick="dt('owner','photos')"><span class="dn-icon">📷</span>Photo Log</div>
         <div class="dn" onclick="sp('supplier-profile')"><span class="dn-icon">🔩</span>Supplier Catalog</div>
-        <div class="dn" onclick="sp('browse')"><span class="dn-icon">🔍</span>Browse</div>
+        <div class="dn" onclick="sp(\'browse\')"><span class="dn-icon">🔍</span>Browse</div>
       </div>
     </aside>
     <main class="dm">
@@ -2896,7 +2896,7 @@ async function submitForgotPassword(){
     <p style="color:rgba(255,255,255,.7);max-width:540px;margin:0 auto;font-size:15px;line-height:1.7;">DockWork connects waterfront homeowners and HOAs with licensed, vetted marine contractors for dock builds, seawall repairs, boat lifts, and more.</p>
     <div style="display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap;">
       <button class="btn-gold" onclick="openRealSignUp()" style="padding:12px 28px;font-size:14px;">Post a Project &rarr;</button>
-      <button class="btn-ghost" onclick="sp('browse')" style="padding:12px 28px;font-size:14px;color:#fff;border-color:rgba(255,255,255,.3);">Browse Active Projects</button>
+      <button class="btn-ghost" onclick="sp(\'browse\')" style="padding:12px 28px;font-size:14px;color:#fff;border-color:rgba(255,255,255,.3);">Browse Active Projects</button>
     </div>
   </div>
   <div style="max-width:900px;margin:60px auto;padding:0 24px;">
@@ -3053,7 +3053,7 @@ async function loadMyBids() {
     if (r.error) throw r.error;
     var rows = r.data || [];
     if (!rows.length) {
-      list.innerHTML = '<div style="text-align:center;padding:40px 24px;color:#94a3b8;"><div style="font-size:32px;margin-bottom:10px;">📝</div><div style="font-size:15px;font-weight:500;color:#475569;margin-bottom:6px;">No bids yet</div><div style="font-size:13px;line-height:1.7;">Browse open projects and submit your first bid.</div><button class="btn-gold" onclick="sp('browse')" style="margin-top:14px;padding:9px 22px;font-size:13px;">Browse Projects</button></div>';
+      list.innerHTML = '<div style="text-align:center;padding:40px 24px;color:#94a3b8;"><div style="font-size:32px;margin-bottom:10px;">📝</div><div style="font-size:15px;font-weight:500;color:#475569;margin-bottom:6px;">No bids yet</div><div style="font-size:13px;line-height:1.7;">Browse open projects and submit your first bid.</div><button class="btn-gold" onclick="sp(\'browse\')" style="margin-top:14px;padding:9px 22px;font-size:13px;">Browse Projects</button></div>';
       return;
     }
     list.innerHTML = '';
