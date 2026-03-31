@@ -1690,6 +1690,9 @@ db.style.display = (name === 'owner-dash' || name === 'contractor-dash' || name 
 if (name === 'home') {
 setTimeout(animateStats, 300);
 }
+
+  if (name === 'browse') { setTimeout(function(){ if(typeof loadBrowseJobs==='function') loadBrowseJobs(); }, 80); }
+  if (name === 'contractor-dash' || name === 'owner-dash' || name === 'supplier-dash') { setTimeout(function(){ if(typeof loadBrowseJobs==='function'){} }, 80); }
 }
 function toggleMenu() {
 var mm = document.getElementById('mm');
@@ -3343,6 +3346,15 @@ async function loadOwnerProjects() {
 
   // Expose globally so sp() and dt() wrappers can call them
   window._loadBrowseJobs    = loadBrowseJobs;
+  window.loadBrowseJobs      = loadBrowseJobs;
+  window.loadOwnerProjects   = loadOwnerProjects;
+  window.loadContractorJobs  = loadContractorJobs;
+  window.openSupplierQuoteModal = openSupplierQuoteModal;
+  window.openAwardModal      = openAwardModal;
+  window.confirmAward        = confirmAward;
+  window.openRFQModal        = openRFQModal;
+  window.messagePoster       = messagePoster;
+  window.dwSendMessage       = dwSendMessage;
   window._loadOwnerProjects = loadOwnerProjects;
   window._loadContractorJobs = loadContractorJobs;
 
