@@ -1048,6 +1048,7 @@ async function confirmRoleSwitch() {
       </div>
     </main>
   </div>
+</div>
 
 <!-- ═══ SUPPLIER DASHBOARD ═══ -->
 
@@ -1143,8 +1144,6 @@ async function confirmRoleSwitch() {
   </div>
 </div>
 
-</div>
-
 <!-- ═══ SUPPLIER STOREFRONT ═══ -->
 
 <div id="page-supplier-profile" class="page"><div style="text-align:center;padding:80px 24px;color:#94a3b8;">
@@ -1158,29 +1157,34 @@ async function confirmRoleSwitch() {
 <!-- ═══ MESSAGES ═══ -->
 
 <div id="page-messages" class="page">
-<div style="background:white;border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;">
-  <button class="btn-sm" onclick="sp(prevPage||'owner-dash')">← Back</button>
-  <span style="font-size:15px;font-weight:500;color:var(--slate);">Messages</span>
-</div>
+  <div style="background:white;border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;">
+    <button class="btn-sm" onclick="sp(prevPage||'owner-dash')">← Back</button>
+    <span style="font-size:15px;font-weight:500;color:var(--slate);">Messages</span>
+  </div>
   <div class="ml">
     <div class="mlist">
-      <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;"><div style="font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--ink);">Messages</div><button class="btn-sm" style="font-size:10px;" onclick="toast('Select a verified member to start a new conversation.','info')">+ New</button></div>
-            <div style="padding:40px 20px;text-align:center;color:var(--mist);">
+      <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--ink);">Messages</div>
+        <button class="btn-sm" style="font-size:10px;" onclick="toast('Select a verified member to start a new conversation.','info')">+ New</button>
+      </div>
+      <div style="padding:40px 20px;text-align:center;color:var(--mist);">
         <div style="font-size:32px;margin-bottom:12px;">💬</div>
         <div style="font-size:14px;font-weight:500;color:#475569;margin-bottom:6px;">No messages yet</div>
-        <div style="font-size:12px;color:#94a3b8;line-height:1.7;">Click "Message Poster" on a project card to start a conversation.</div>
+        <div style="font-size:12px;color:#94a3b8;line-height:1.7;">Click Message Poster on a project card to start a conversation.</div>
       </div>
-    </div>
     </div>
     <div class="mthread">
       <div class="mth" id="dw-msg-thread-header" style="border-bottom:1px solid var(--border);">
-        <div><div class="mtn" style="color:var(--slate);">Select a conversation</div><div class="mts">Your messages will appear here</div></div>
+        <div>
+          <div class="mtn" style="color:var(--slate);">Select a conversation</div>
+          <div class="mts">Your messages will appear here</div>
+        </div>
       </div>
       <div class="mtb" id="dw-msg-body" style="align-items:center;justify-content:center;">
         <div id="dw-msg-empty" style="text-align:center;color:var(--mist);padding:40px 20px;">
           <div style="font-size:40px;margin-bottom:14px;">💬</div>
           <div style="font-size:15px;font-weight:500;color:var(--slate);margin-bottom:8px;">No messages yet</div>
-          <div style="font-size:13px;color:#94a3b8;line-height:1.7;max-width:260px;margin:0 auto;">Click "Message Poster" on any project card in Browse to start a conversation.</div>
+          <div style="font-size:13px;color:#94a3b8;line-height:1.7;max-width:260px;margin:0 auto;">Click Message Poster on any project card in Browse to start a conversation.</div>
         </div>
       </div>
       <div class="mib">
@@ -1188,6 +1192,8 @@ async function confirmRoleSwitch() {
         <button class="btn-sm gold" style="padding:9px 16px;" onclick="dwSendMessage()">Send</button>
       </div>
     </div>
+  </div>
+</div>
 
 <!-- ═══ NOTIFICATIONS ═══ -->
 
