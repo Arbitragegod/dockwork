@@ -2942,7 +2942,9 @@ async function submitForgotPassword(){
   function browseCard(p) {
     const typeLabel = (p.type || 'RFP').toUpperCase();
     const catLabel  = p.project_type || 'Marine Construction';
-    return '<div class="card" style="padding:28px 24px;cursor:pointer;border-radius:4px;">' +
+    window._dwProjCache = window._dwProjCache || {};
+    window._dwProjCache[p.id] = p;
+    return '<div class="card" style="padding:28px 24px;cursor:pointer;border-radius:4px;" onclick="openBidModal(window._dwProjCache[\''+p.id+'\'])">' +
       '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">' +
         '<span class="bdg op" style="font-size:11px;">' + typeLabel + ' · ' + catLabel + '</span>' +
         '<span style="font-size:12px;color:var(--mist);">' + timeAgo(p.created_at) + '</span>' +
@@ -2953,6 +2955,7 @@ async function submitForgotPassword(){
         '<div style="font-family:\'Cormorant Garamond\',serif;font-size:22px;color:var(--ink);">' + fmtBudget(p.budget_range) + '</div>' +
         '<div style="font-size:12px;color:var(--mist);">Due ' + fmtDeadline(p.deadline) + '</div>' +
       '</div>' +
+      '<button style="margin-top:16px;width:100%;background:#d97706;color:white;border:none;border-radius:4px;padding:10px;font-size:13px;font-weight:600;letter-spacing:.5px;cursor:pointer;" onclick="event.stopPropagation();openBidModal(window._dwProjCache[\''+p.id+'\'])">Bid on This Project →</button>' +
     '</div>';
   }
 
