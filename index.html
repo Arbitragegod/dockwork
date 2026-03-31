@@ -1169,17 +1169,24 @@ async function confirmRoleSwitch() {
     </div>
     </div>
     <div class="mthread">
-      <div class="mth"><div><div class="mtn"><span class="dw-ctc-name"></span></div><div class="mts">Re: Dock Rebuild &amp; Boat Lift — Bid $94,500</div></div><span class="badge gold">Gold Verified</span></div>
-      <div class="mtb">
-        <div class="mb r"><div class="mb-text">Hi, thanks for posting on DockWork. Quick question about the boat lift — are you looking for a 4-post or cantilever style? This will affect the pricing slightly.</div><div class="mb-time">Mar 18 · 9:41 AM</div></div>
-        <div class="mb s"><div class="mb-text">Hi, thanks for the quick response! We were thinking 4-post but open to your recommendation based on the water depth at the site.</div><div class="mb-time">Mar 18 · 11:15 AM</div></div>
-        <div class="mb r"><div class="mb-text">Given the 4.5ft mean low water depth at your location, 4-post is the right call. I've included a 20,000 lb capacity unit in our bid — handles vessels up to 25ft. Happy to walk through the full scope on a call if helpful.</div><div class="mb-time">Mar 18 · 2:03 PM</div></div>
-        <div class="mb s"><div class="mb-text">That sounds perfect. Let's set up a call this week.</div><div class="mb-time">Today · 10:22 AM</div></div>
+      <div class="mth" style="border-bottom:1px solid var(--border);">
+        <div>
+          <div class="mtn" style="color:var(--slate);">Select a conversation</div>
+          <div class="mts">Your messages will appear here</div>
+        </div>
       </div>
-      <div class="mib"><input class="minput" placeholder="Type a message…"><button class="btn-sm gold" style="padding:9px 16px;" onclick="if(_cu){return;}joinPrompt('💬','Messaging — Members Only','Send direct messages to verified contractors and suppliers. Join DockWork to get started.')">Send</button></div>
+      <div class="mtb" id="dw-msg-body" style="align-items:center;justify-content:center;">
+        <div style="text-align:center;color:var(--mist);padding:40px 20px;">
+          <div style="font-size:40px;margin-bottom:14px;">💬</div>
+          <div style="font-size:15px;font-weight:500;color:var(--slate);margin-bottom:8px;">No conversation selected</div>
+          <div style="font-size:13px;color:#94a3b8;line-height:1.7;max-width:260px;margin:0 auto;">Click "Message Poster" on a project card to start a conversation with the project owner.</div>
+        </div>
+      </div>
+      <div class="mib">
+        <input class="minput" id="dw-msg-input" placeholder="Type a message…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();dwSendMessage();}">
+        <button class="btn-sm gold" style="padding:9px 16px;" onclick="dwSendMessage()">Send</button>
+      </div>
     </div>
-  </div>
-</div>
 
 <!-- ═══ NOTIFICATIONS ═══ -->
 
@@ -3410,6 +3417,49 @@ function messagePoster(p) {
   };
 
   setTimeout(function(){ var el = document.getElementById('msgPosterText'); if (el) el.focus(); }, 100);
+}
+
+
+// ── Messaging helpers ─────────────────────────────────────────────────────────
+
+function dwSendMessage() {
+  if (!window._cu) {
+    if (typeof joinPrompt === 'function') joinPrompt('\u{1F4AC}', 'Messaging', 'Sign in to send messages on DockWork.');
+    return;
+  }
+  var input = document.getElementById('dw-msg-input');
+  if (!input) return;
+  var text = input.value.trim();
+  if (!text) return;
+
+  // Append message bubble to thread
+  var body = document.getElementById('dw-msg-body');
+  if (body) {
+    // Clear empty state placeholder if present
+    var placeholder = body.querySelector('div[style*="text-align:center"]');
+    if (placeholder) placeholder.remove();
+    body.style.alignItems = '';
+    body.style.justifyContent = '';
+
+    var bubble = document.createElement('div');
+    bubble.className = 'mb s';
+    bubble.innerHTML = '<div class="mb-text">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div><div class="mb-time">Just now</div>';
+    body.appendChild(bubble);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  // Update thread header if context available
+  if (window._dwMsgContext && window._dwMsgContext.projectTitle) {
+    var mtn = document.querySelector('.mth .mtn');
+    if (mtn) mtn.textContent = window._dwMsgContext.projectTitle.substring(0,40);
+    var mts = document.querySelector('.mth .mts');
+    if (mts) mts.textContent = 'Re: ' + window._dwMsgContext.projectTitle.substring(0,35);
+  }
+
+  input.value = '';
+  input.focus();
+
+  if (typeof toast === 'function') toast('Message sent', 'success');
 }
 </script>
 
