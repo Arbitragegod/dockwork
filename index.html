@@ -2976,8 +2976,9 @@ async function submitForgotPassword(){
         '<div style="font-family:\'Cormorant Garamond\',serif;font-size:17px;color:var(--ink);margin-bottom:3px;">' + (p.title || 'Untitled') + '</div>' +
         '<div style="font-size:12px;color:var(--mist);">' + (p.project_type || '') + ' · ' + (p.location || '') + ' · Due ' + fmtDeadline(p.deadline) + '</div>' +
       '</div>' +
-      '<div style="text-align:right;flex-shrink:0;">' +
+      '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;">' +
         '<div style="font-family:\'Cormorant Garamond\',serif;font-size:17px;color:var(--ink);">' + fmtBudget(p.budget_range) + '</div>' +
+        '<button style="background:#d97706;color:white;border:none;border-radius:4px;padding:7px 18px;font-size:12px;font-weight:600;letter-spacing:.5px;cursor:pointer;white-space:nowrap;" onclick="event.stopPropagation();openBidModal(window._dwProjCache[\''+p.id+'\'])">Bid →</button>' +
       '</div>' +
     '</div>';
   }
