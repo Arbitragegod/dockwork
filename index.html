@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<meta charset="UTF-8">
+< if (tab === 'quotes' && dash === 'supplier') { loadMySupplierQuotes(); }meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DockWork — The Private Marine Construction Marketplace</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1092,113 +1092,7 @@ async function confirmRoleSwitch() {
         <div class="fbar"><div class="fc active" onclick="sortChip(this)">All</div><div class="fc" onclick="sortChip(this)">Open</div><div class="fc" onclick="sortChip(this)">Quoted</div><div class="fc" onclick="sortChip(this)">Awarded</div></div>
         
         <div style="text-align:center;padding:40px 24px;color:#94a3b8;"><div style="font-size:36px;margin-bottom:12px;">&#x1F4E5;</div><div style="font-size:15px;font-weight:500;color:#475569;margin-bottom:8px;">No RFQs yet</div><div style="font-size:13px;line-height:1.7;">Quote requests from verified contractors will appear here.</div></div>
-        <div class="card"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;"><div><span class="badge closed">Quoted</span><div class="br-title">Stainless Dock Hardware — Bulk Order</div><div style="font-size:14px;color:var(--mist);">Shoreline Marine · Quoted $4,200</div></div><button class="btn-sm" onclick="toast('Opening quote details.','info')">View Quote</button></div></div>
-      </div>
-      <div id="supplier-quotes" style="display:none;">
-          <div class="dt">My Submitted Quotes</div>
-          <div class="dss">All material quotes you have submitted on active projects.</div>
-          <div id="dw-my-quotes-list" style="margin-top:8px;"></div>
-        </div>
-        <div id="supplier-catalog" style="display:none;">
-        <div class="dt">My Catalog</div><div class="dss">Products visible to verified contractors. Owners see category names only.</div>
-        <button class="btn-sm gold" style="margin-bottom:16px;" onclick="if(_cu){return;}joinPrompt('📦','Manage Catalog — Members Only','List your products and start receiving RFQs from verified contractors. Apply as a Certified Supplier.')">+ Add Product</button>
-        <div class="prod-g">
-          <div class="prod"><span class="prod-icon">🪵</span><div class="prod-name">Marine PT Lumber</div><div class="prod-cat">Lumber &amp; Decking</div><div class="prod-act">Request Quote →</div></div>
-          <div class="prod"><span class="prod-icon">🔩</span><div class="prod-name">316 SS Hardware</div><div class="prod-cat">Fasteners &amp; Fittings</div><div class="prod-act">Request Quote →</div></div>
-          <div class="prod"><span class="prod-icon">⛽</span><div class="prod-name">Marine Sealants</div><div class="prod-cat">Coatings &amp; Epoxy</div><div class="prod-act">Request Quote →</div></div>
-          <div class="prod"><span class="prod-icon">🏗️</span><div class="prod-name">Dock Float Systems</div><div class="prod-cat">Floating Docks</div><div class="prod-act">Request Quote →</div></div>
-          <div class="prod"><span class="prod-icon">💡</span><div class="prod-name">Shore Power Pedestals</div><div class="prod-cat">Marine Electrical</div><div class="prod-act">Request Quote →</div></div>
-          <div class="prod"><span class="prod-icon">⚓</span><div class="prod-name">Pile Wrap &amp; Protection</div><div class="prod-cat">Structural Protection</div><div class="prod-act">Request Quote →</div></div>
-        </div>
-      </div>
-    </main>
-  </div>
-</div>
-
-<!-- ═══ CONTRACTOR PROFILE ═══ -->
-
-<div id="page-contractor-profile" class="page">
-  <div class="prof-head">
-    <button class="btn-ghost" style="margin-bottom:18px;border-color:rgba(255,255,255,.2);color:white;" onclick="sp(prevPage||'contractors')">← Back</button>
-    <button class="edit-profile-btn" onclick="openCust('page-contractor-profile','<span class="dw-ctc-name"></span>','&#x2693;')">&#x270F; Edit Profile</button>
-    <div class="prof-av">⚓</div>
-    <div class="prof-name"><span class="dw-ctc-name"></span></div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;"><span class="badge gold">Gold Verified</span><span class="badge charter">Charter Member</span><span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;background:rgba(8,145,178,.3);color:var(--teal-light);padding:3px 8px;border:1px solid rgba(8,145,178,.4);">Accepting Bids</span></div>
-    <div style="font-size:15px;color:rgba(255,255,255,.78);margin-bottom:3px;">Dock &amp; Pier · Seawall · Boat Lifts · Marine Electric</div>
-    <div style="font-size:15px;color:rgba(255,255,255,.78);">📍 Tampa, FL · Licensed FL &amp; AL · Est. 2010</div>
-    <div class="prof-stats">
-      <div><div class="ps-num"><span class="dw-stat-done">0</span></div><div class="ps-lbl">Jobs completed</div></div>
-      <div><div class="ps-num"><span class="dw-stat-rating">-</span>★</div><div class="ps-lbl">Rating</div></div>
-      <div><div class="ps-num">14 yrs</div><div class="ps-lbl">In business</div></div>
-      <div><div class="ps-num">$2M GL</div><div class="ps-lbl">Insurance</div></div>
-    </div>
-  </div>
-  <div style="padding:28px 18px;">
-    <div class="g2" style="gap:24px;">
-      <div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--ink);margin-bottom:14px;">About</div>
-        <p style="font-size:16px;color:var(--slate-light);line-height:1.8;margin-bottom:18px;">Third-generation marine contractor specializing in dock construction, seawall repair, and boat lift installation along the Southeast coast. FL CGC Licensed, fully insured, 10-year structural warranty on all new builds.</p>
-        <div style="background:#f8fafc;border:1px solid var(--bone);padding:16px;border-radius:var(--radius);">
-          <div style="font-size:14px;font-weight:500;color:var(--slate);margin-bottom:8px;">Verified Credentials</div>
-          <div style="font-size:14px;color:var(--mist);display:flex;flex-direction:column;gap:5px;"><span>✓ FL CGC License — Active</span><span>✓ FL Marine Specialty Contractor License — Active</span><span>✓ $2M General Liability — Current</span><span>✓ Marine Contractor Bond — Active</span><span>✓ 3 Verified References on File</span></div>
-        </div>
-      </div>
-      <div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--ink);margin-bottom:14px;">Member Reviews</div>
-        <div class="rev"><div class="rev-stars">★★★★★</div><div class="rev-text">"Exceptional work on our dock rebuild. On time, on budget, quality is outstanding. Would hire again without hesitation."</div><div class="rev-auth">— Verified Member · Palm Beach, FL</div></div>
-        <div class="rev"><div class="rev-stars">★★★★★</div><div class="rev-text">"Professional from start to finish. Handled permits, kept us updated daily, and the photo log was a great touch."</div><div class="rev-auth">— Harbour Point Marina · Verified Marina</div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ SUPPLIER STOREFRONT ═══ -->
-
-<div id="page-supplier-profile" class="page"><div style="text-align:center;padding:80px 24px;color:#94a3b8;">
-  <div style="font-size:48px;margin-bottom:16px;">🛒</div>
-  <div style="font-size:20px;font-weight:600;color:#475569;margin-bottom:8px;">Supplier Profile</div>
-  <div style="font-size:14px;line-height:1.7;">This profile page will be populated when a certified supplier joins DockWork.</div>
-  <button class="btn-ghost" onclick="sp('suppliers')" style="margin-top:20px;">Browse Suppliers &rarr;</button>
-</div>
-</div>
-
-<!-- ═══ MESSAGES ═══ -->
-
-<div id="page-messages" class="page">
-<div style="background:white;border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;">
-  <button class="btn-sm" onclick="sp(prevPage||'owner-dash')">← Back</button>
-  <span style="font-size:15px;font-weight:500;color:var(--slate);">Messages</span>
-</div>
-  <div class="ml">
-    <div class="mlist">
-      <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;"><div style="font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--ink);">Messages</div><button class="btn-sm" style="font-size:10px;" onclick="toast('Select a verified member to start a new conversation.','info')">+ New</button></div>
-            <div style="padding:40px 20px;text-align:center;color:var(--mist);">
-        <div style="font-size:32px;margin-bottom:12px;">💬</div>
-        <div style="font-size:14px;font-weight:500;color:#475569;margin-bottom:6px;">No messages yet</div>
-        <div style="font-size:12px;color:#94a3b8;line-height:1.7;">Click "Message Poster" on a project card to start a conversation.</div>
-      </div>
-    </div>
-    </div>
-    <div class="mthread">
-      <div class="mth" id="dw-msg-thread-header" style="border-bottom:1px solid var(--border);">
-        <div><div class="mtn" style="color:var(--slate);">Select a conversation</div><div class="mts">Your messages will appear here</div></div>
-      </div>
-      <div class="mtb" id="dw-msg-body" style="align-items:center;justify-content:center;">
-        <div id="dw-msg-empty" style="text-align:center;color:var(--mist);padding:40px 20px;">
-          <div style="font-size:40px;margin-bottom:14px;">💬</div>
-          <div style="font-size:15px;font-weight:500;color:var(--slate);margin-bottom:8px;">No messages yet</div>
-          <div style="font-size:13px;color:#94a3b8;line-height:1.7;max-width:260px;margin:0 auto;">Click "Message Poster" on any project card in Browse to start a conversation.</div>
-        </div>
-      </div>
-      <div class="mib">
-        <input class="minput" id="dw-msg-input" placeholder="Type a message…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();dwSendMessage();}">
-        <button class="btn-sm gold" style="padding:9px 16px;" onclick="dwSendMessage()">Send</button>
-      </div>
-    </div>
-
-<!-- ═══ NOTIFICATIONS ═══ -->
-
-<div id="page-notifications" class="page"><div style="text-align:center;padding:64px 24px;color:#94a3b8;"><div style="font-size:48px;margin-bottom:16px;">&#x1F514;</div><div style="font-size:20px;font-weight:500;color:#475569;margin-bottom:8px;">No notifications yet</div><div style="font-size:14px;line-height:1.7;">Activity on your projects and bids will appear here.</div></div></div>
+        
 </div>
 
 <!-- ═══ CONTRACTORS SHOWCASE ═══ -->
@@ -4012,6 +3906,46 @@ window.dwEditProfile = async function() {
       saveStatus.style.color='#dc2626'; saveStatus.textContent='Error: '+e.message;
     }
   };
+};
+</script>
+<script>
+window.loadMySupplierQuotes = async function() {
+  var list = document.getElementById('dw-my-quotes-list');
+  if (!list) return;
+  if (!window._cu) { list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--mist);font-size:13px;">Sign in to view your quotes.</div>'; return; }
+  list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--mist);font-size:13px;">Loading...</div>';
+  var res = await _supabase.from('dw_quotes').select('id,project_id,amount,status,note,created_at').eq('supplier_id', window._cu.id).order('created_at', {ascending:false});
+  var quotes = res.data || [];
+  if (!quotes.length) {
+    list.innerHTML = '<div style="text-align:center;padding:24px;color:var(--mist);font-size:13px;">No quotes submitted yet.</div>';
+    return;
+  }
+  list.innerHTML = '';
+  // Fetch project titles
+  var projectIds = quotes.map(function(q){return q.project_id;}).filter(Boolean);
+  var projRes = projectIds.length ? await _supabase.from('dw_projects').select('id,title').in('id', projectIds) : {data:[]};
+  var projMap = {};
+  (projRes.data || []).forEach(function(p){ projMap[p.id] = p.title; });
+  quotes.forEach(function(q) {
+    var card = document.createElement('div');
+    card.className = 'card';
+    card.style.marginBottom = '10px';
+    var statusColor = {pending:'var(--gold)',accepted:'var(--teal)',rejected:'#ef4444',awarded:'var(--teal)'}[q.status] || 'var(--mist)';
+    var projTitle = projMap[q.project_id] || 'Project';
+    var amt = q.amount ? '
+</html> + Number(q.amount).toLocaleString() : 'N/A';
+    var date = new Date(q.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    card.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">'
+      + '<div><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">'
+      + '<span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:'+statusColor+';color:white;">'+q.status.charAt(0).toUpperCase()+q.status.slice(1)+'</span>'
+      + '<span style="font-size:11px;color:var(--mist);">'+date+'</span></div>'
+      + '<div style="font-weight:600;font-size:14px;color:var(--ink);margin-bottom:2px;">'+projTitle+'</div>'
+      + (q.note ? '<div style="font-size:13px;color:var(--mist);">'+q.note+'</div>' : '')
+      + '</div>'
+      + '<div style="font-size:18px;font-weight:700;color:var(--ocean);">'+amt+'</div>'
+      + '</div>';
+    list.appendChild(card);
+  });
 };
 </script>
 </body>
