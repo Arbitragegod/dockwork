@@ -2461,9 +2461,9 @@ function _memberCard(user, type) {
     '</div>';
   }
 
-  // marina / homeowner card
-  return '<div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;background:#fff;">' +
-    '<div style="display:flex;align-items:center;gap:12px;">' +
+  // marina / homeowner card — same clickable card as contractor/supplier
+  return '<div class="ctc-card" data-uid="' + user.id + '" style="border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;background:#fff;cursor:pointer;" onclick="dwShowProfile(\'' + user.id + '\'">' +
+    '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">' +
       '<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0d2b45,#1a3d5c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;flex-shrink:0;">' + initials + '</div>' +
       '<div>' +
         '<div style="font-weight:600;font-size:14px;color:#1e293b;">' + (company || name) + '</div>' +
