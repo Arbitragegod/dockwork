@@ -1703,10 +1703,36 @@ for (var i = 0; i < panels.length; i++) {
 panels[i].style.display = 'none';
 }
 var panel = document.getElementById(dash + '-' + tab);
-if (panel) panel.style.display = 'block';
+if (panel) { panel.style.display = 'block'; if (tab === 'quotes') loadMyQuotes(); }
 var navItems = document.querySelectorAll('#page-' + dash + '-dash .dn');
 for (var j = 0; j < navItems.length; j++) {
 navItems[j].classList.remove('active');
+}
+function loadMyQuotes() {
+  var list = document.getElementById('dw-my-quotes-list');
+  if (!list) return;
+  if (!window._cu) { list.innerHTML = '<div style="color:#94a3b8;font-size:13px;padding:12px 0;">Sign in to see your quotes.</div>'; return; }
+  list.innerHTML = '<div style="color:#94a3b8;font-size:12px;padding:8px 0;">Loading...</div>';
+  _supabase.from('dw_quotes').select('*, dw_projects(title, location, type)').eq('supplier_id', window._cu.id).order('created_at', {ascending: false}).then(function(res) {
+    var rows = res.data || [];
+    if (!rows.length) { list.innerHTML = '<div style="color:#94a3b8;font-size:13px;padding:12px 0;text-align:center;">No quotes submitted yet.</div>'; return; }
+    list.innerHTML = rows.map(function(q) {
+      var proj = q.dw_projects || {};
+      var date = new Date(q.created_at).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+      var statusColor = {pending:'#f59e0b', accepted:'#16a34a', rejected:'#dc2626'}[q.status] || '#64748b';
+      return '<div style="border:1.5px solid #e2e8f0;border-radius:10px;padding:14px 16px;margin-bottom:10px;background:white;">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">' +
+          '<div style="font-weight:600;font-size:13px;color:#0f172a;">' + (proj.title || 'Project') + '</div>' +
+          '<span style="font-size:11px;font-weight:700;color:'+statusColor+';background:'+statusColor+'18;padding:2px 8px;border-radius:20px;">' + (q.status||'pending').toUpperCase() + '</span>' +
+        '</div>' +
+        '<div style="font-size:13px;color:#0f2d54;font-weight:700;margin-bottom:4px;">$' + Number(q.amount).toLocaleString() + '</div>' +
+        (q.note ? '<div style="font-size:12px;color:#64748b;margin-bottom:4px;">' + q.note + '</div>' : '') +
+        '<div style="font-size:11px;color:#94a3b8;">Submitted ' + date + (proj.location ? ' &bull; ' + proj.location : '') + '</div>' +
+      '</div>';
+    }).join('');
+  }).catch(function(e) {
+    list.innerHTML = '<div style="color:#dc2626;font-size:12px;">Error loading quotes.</div>';
+  });
 }
 }
 function openModal() {
@@ -2654,7 +2680,7 @@ function _memberCard(user, type) {
   }
 
   // marina / homeowner card
-  return '<div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;background:#fff;">' +
+  return '<div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;background:#fff;cursor:pointer;" onclick="dwShowProfile(\'' + user.id + '\')">' +
     '<div style="display:flex;align-items:center;gap:12px;">' +
       '<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0d2b45,#1a3d5c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;flex-shrink:0;">' + initials + '</div>' +
       '<div>' +
