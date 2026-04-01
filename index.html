@@ -1807,12 +1807,12 @@ cards[i].style.display = cats.indexOf(tag.toLowerCase()) >= 0 ? '' : 'none';
 function toast(msg, type, duration) {
 var t = type || 'success';
 var d = duration || 3500;
-var icons = {success: '✓', info: 'ℹ', warning: '⚡', error: '✕'};
+var icons = {success: '\u2713', info: '\u2139', warning: '\u26a1', error: '\u2715'};
 var wrap = document.getElementById('toastWrap');
 if (!wrap) return;
 var el = document.createElement('div');
 el.className = 'toast ' + t;
-el.innerHTML = '<span class="toast-icon">' + (icons[t] || '✓') + '</span><span>' + msg + '</span>';
+el.innerHTML = '<span class="toast-icon">' + (icons[t] || '\u2713') + '</span><span>' + msg + '</span>';
 wrap.appendChild(el);
 setTimeout(function() { el.classList.add('show'); }, 10);
 setTimeout(function() {
@@ -1940,7 +1940,7 @@ tick();
 setInterval(tick, 1000);
 setTimeout(animateStats, 500);
 };
-/* ── AUTH SYSTEM ── */
+/* \u2500\u2500 AUTH SYSTEM \u2500\u2500 */
 var _cu = null; // current user
  // selected role
 
@@ -1968,7 +1968,7 @@ function _updateDashboard() {
   var role = _cu.role || '';
   var el;
 
-  // ── Role label map ──────────────────────────────────────────────────────────
+  // \u2500\u2500 Role label map \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   var roleLabels = {
     owner: 'Homeowner / HOA',
     marina: 'Marina Operator',
@@ -1978,7 +1978,7 @@ function _updateDashboard() {
   };
   var roleLabel = roleLabels[role] || 'Member';
 
-  // ── Update all name/greeting spans ──────────────────────────────────────────
+  // \u2500\u2500 Update all name/greeting spans \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   if ((el=document.getElementById('dw-greeting'))) el.textContent = greet;
   if ((el=document.getElementById('dw-firstname'))) el.textContent = first;
   if ((el=document.getElementById('dw-user-name'))) el.textContent = name;
@@ -1988,7 +1988,7 @@ function _updateDashboard() {
   document.querySelectorAll('.dw-sup-name').forEach(function(e){e.textContent=company;});
   document.querySelectorAll('.dw-marina-name').forEach(function(e){e.textContent=company;});
 
-  // ── Role label top-left ─────────────────────────────────────────────────────
+  // \u2500\u2500 Role label top-left \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   document.querySelectorAll('.dw-role-label, .dw-role-badge').forEach(function(e){
     e.textContent = roleLabel;
   });
@@ -1999,15 +1999,15 @@ function _updateDashboard() {
     }
   });
 
-  // ── Zero out all hardcoded stats (real data loaded async below) ─────────────
+  // \u2500\u2500 Zero out all hardcoded stats (real data loaded async below) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   document.querySelectorAll('.dw-stat-matches, .dw-stat-active, .dw-stat-done, .dw-stat-rating, .dw-stat-projects, .dw-stat-bids, .dw-stat-awarded, .dw-stat-rfq').forEach(function(e){
     e.textContent = '0';
   });
   document.querySelectorAll('.dw-stat-rating').forEach(function(e){ e.textContent = '-'; });
 
-  // ── Load real counts from Supabase async ────────────────────────────────────
+  // \u2500\u2500 Load real counts from Supabase async \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   if (_supabase) {
-    // Browse count — total open projects
+    // Browse count \u2014 total open projects
     _supabase.from('dw_projects').select('id', {count:'exact', head:true}).eq('status','open').then(function(r){
       var count = (r && r.count) || 0;
       document.querySelectorAll('.dw-browse-count').forEach(function(e){ e.textContent = count; });
@@ -2078,7 +2078,7 @@ function _updateEditBtns() {
   if (btn) btn.style.display='inline-block';
 }
 
-/* ── CUSTOMIZATION MODAL ── */
+/* \u2500\u2500 CUSTOMIZATION MODAL \u2500\u2500 */
 var _custTarget = null;
 var _custBg = 'linear-gradient(135deg,#0c3a6e,#1256a8)';
 var _custImg = null;
@@ -2207,7 +2207,7 @@ function custSave() {
   if (typeof toast==='function') toast('Profile updated!');
 }
 
-/* ── DASHBOARD MY PROFILE HELPERS ── */
+/* \u2500\u2500 DASHBOARD MY PROFILE HELPERS \u2500\u2500 */
 function dashSetBg(el, bg, prevId, pageId) {
   var pb = document.getElementById(prevId);
   if (pb) pb.style.background = bg;
@@ -2254,7 +2254,7 @@ window.addEventListener('load', function(){
 });
 
 
-/* ── REAL SIGN IN (placeholder for registered users) ── */
+/* \u2500\u2500 REAL SIGN IN (placeholder for registered users) \u2500\u2500 */
 function openRealSignIn() {
   var ov = document.getElementById('realSiOverlay');
   if (ov) ov.classList.add('open');
@@ -2276,7 +2276,7 @@ function _showInfoToast(msg) {
 
 
 
-  _showInfoToast('✓ RFQ sent! The supplier will receive your quote request.');
+  _showInfoToast('\u2713 RFQ sent! The supplier will receive your quote request.');
 
 
 
@@ -2294,7 +2294,7 @@ function _showInfoToast(msg) {
 function handleInviteToBid() {
   if (!_cu) { joinPrompt('&#x2693;','Invite to Bid','Sign in to invite a contractor.'); return; }
   if (_cu.role==='contractor') { _showInfoToast('Contractors cannot invite other contractors to bid.'); return; }
-  _showInfoToast('✓ Bid invitation sent! The contractor will be notified.');
+  _showInfoToast('\u2713 Bid invitation sent! The contractor will be notified.');
 }
 function handleInviteSupplierQuote() {
   if (!_cu) { joinPrompt('&#x1F527;','Request a Quote','Sign in to send a supplier RFQ.'); return; }
@@ -2302,12 +2302,12 @@ function handleInviteSupplierQuote() {
     _showInfoToast('Suppliers cannot send RFQs to other suppliers.');
     return;
   }
-  _showInfoToast('✓ RFQ sent! The supplier will receive your quote request.');
+  _showInfoToast('\u2713 RFQ sent! The supplier will receive your quote request.');
 }
 function handleSubmitQuote(jobType) {
   if (!_cu) { joinPrompt('&#x1F4CB;','Submit a Quote','Sign in to respond to this posting.'); return; }
   if (_cu.role==='owner'||_cu.role==='marina'||_cu.role==='dolphin') {
-    _showInfoToast('Owners and Marina Operators post jobs — they do not submit bids.');
+    _showInfoToast('Owners and Marina Operators post jobs \u2014 they do not submit bids.');
     return;
   }
   if (_cu.role==='supplier'||_cu.role==='ddinc') {
@@ -2315,13 +2315,13 @@ function handleSubmitQuote(jobType) {
       _showInfoToast('Suppliers can only provide quotes on RFQ postings.');
       return;
     }
-    _showInfoToast('✓ Quote submitted! The posting party will be notified.');
+    _showInfoToast('\u2713 Quote submitted! The posting party will be notified.');
     return;
   }
-  // Contractor or other — can bid on anything
-  _showInfoToast('✓ Bid submitted! The project owner has been notified.');
+  // Contractor or other \u2014 can bid on anything
+  _showInfoToast('\u2713 Bid submitted! The project owner has been notified.');
 }
-  _showInfoToast('✓ Bid submitted! The project owner will be notified.');
+  _showInfoToast('\u2713 Bid submitted! The project owner will be notified.');
 
 function openSupplierRecModal(){var ov=document.getElementById('supRecOverlay');if(ov)ov.style.display='flex';}
 function closeSupplierRecModal(){var ov=document.getElementById('supRecOverlay');if(ov)ov.style.display='none';}
@@ -2332,29 +2332,29 @@ function openCtcSupModal(){
 }
 function closeCtcSupModal(){var ov=document.getElementById('ctcSupRecOverlay');if(ov)ov.style.display='none';}
 
-/* ── MEMBERSHIP RECOMMENDATION ENGINE ── */
+/* \u2500\u2500 MEMBERSHIP RECOMMENDATION ENGINE \u2500\u2500 */
 var _ctcData = [
-  {id:'contractor-profile',name:'<span class="dw-ctc-name"></span>',icon:'⚓',tier:'charter',cats:["Dock", "Pier", "Seawall", "Boat Lift", "Electric"],rating:'<span class="dw-stat-rating">-</span>',yrs:16,specs:'Dock & Pier · Seawall · Boat Lifts · Marine Electric',loc:'Tampa, FL',accepting:true,hasLogo:false},
-  {id:'ctc-shoreline',name:'Shoreline Marine Construction',icon:'⚓',tier:'gold',cats:["Dock", "Pier", "Seawall", "Boat Lift", "Piling"],rating:'4.8',yrs:11,specs:'Dock & Pier · Seawall · Boat Lifts · Piling',loc:'Fort Lauderdale, FL',accepting:true,hasLogo:false},
-  {id:'ctc-premier',name:'Premier Waterfront Renovations',icon:'🚢',tier:'charter',cats:["Dock", "Pier", "Seawall", "Composite"],rating:'<span class="dw-stat-rating">-</span>',yrs:18,specs:'Composite Decking · Dock & Pier · Seawall',loc:'Palm Beach, FL',accepting:true,hasLogo:false},
-  {id:'ctc-tidewater',name:'Tidewater Marine Electric Inc.',icon:'⚡',tier:'gold',cats:["Electrical", "Electric", "Shore Power"],rating:'<span class="dw-stat-rating">-</span>',yrs:14,specs:'Marine Electrical · Shore Power · Pedestal Replacement',loc:'Sarasota, FL',accepting:false,hasLogo:false},
-  {id:'ctc-coastal-dive',name:'Coastal Dive & Salvage LLC',icon:'🌊',tier:'gold',cats:["Underwater", "Dredging", "Salvage"],rating:'4.8',yrs:15,specs:'Underwater Inspection · Salvage · Dredging',loc:'Miami, FL',accepting:true,hasLogo:false},
-  {id:'ctc-bluewater',name:'Blue Water Marine Builders',icon:'🛳',tier:'verified',cats:["Dock", "Pier", "Seawall", "Boat Lift"],rating:'4.7',yrs:10,specs:'Dock & Pier · Seawall · Piling · Boat Lifts',loc:'Naples, FL',accepting:true,hasLogo:false},
-  {id:'ctc-marsh-creek',name:'Marsh Creek Marine Construction',icon:'⚓',tier:'charter',cats:["Dock", "Pier", "Seawall", "Dredging"],rating:'4.8',yrs:21,specs:'Dock & Pier · Seawall · Dredging · Piling',loc:'Jacksonville, FL',accepting:true,hasLogo:false},
-  {id:'ctc-gulf-state',name:'Gulf State Underwater Services',icon:'🌊',tier:'gold',cats:["Underwater", "Dredging", "Salvage"],rating:'4.7',yrs:18,specs:'Underwater Inspection · Dredging · Salvage',loc:'',accepting:false,hasLogo:false},
-  {id:'ctc-suncoast',name:'Suncoast Dock & Lift Co.',icon:'☀',tier:'verified',cats:["Dock", "Pier", "Boat Lift"],rating:'4.6',yrs:6,specs:'Dock & Pier · Boat Lifts · Piling',loc:'Clearwater, FL',accepting:true,hasLogo:false},
-  {id:'ctc-atlantic-shore',name:'Atlantic Shore Builders LLC',icon:'🏖',tier:'charter',cats:["Dock", "Pier", "Seawall"],rating:'4.8',yrs:25,specs:'Dock & Pier · Seawall · Piling · Structural',loc:'Daytona Beach, FL',accepting:true,hasLogo:false},
+  {id:'contractor-profile',name:'<span class="dw-ctc-name"></span>',icon:'\u2693',tier:'charter',cats:["Dock", "Pier", "Seawall", "Boat Lift", "Electric"],rating:'<span class="dw-stat-rating">-</span>',yrs:16,specs:'Dock & Pier \u00b7 Seawall \u00b7 Boat Lifts \u00b7 Marine Electric',loc:'Tampa, FL',accepting:true,hasLogo:false},
+  {id:'ctc-shoreline',name:'Shoreline Marine Construction',icon:'\u2693',tier:'gold',cats:["Dock", "Pier", "Seawall", "Boat Lift", "Piling"],rating:'4.8',yrs:11,specs:'Dock & Pier \u00b7 Seawall \u00b7 Boat Lifts \u00b7 Piling',loc:'Fort Lauderdale, FL',accepting:true,hasLogo:false},
+  {id:'ctc-premier',name:'Premier Waterfront Renovations',icon:'\u{1f6a2}',tier:'charter',cats:["Dock", "Pier", "Seawall", "Composite"],rating:'<span class="dw-stat-rating">-</span>',yrs:18,specs:'Composite Decking \u00b7 Dock & Pier \u00b7 Seawall',loc:'Palm Beach, FL',accepting:true,hasLogo:false},
+  {id:'ctc-tidewater',name:'Tidewater Marine Electric Inc.',icon:'\u26a1',tier:'gold',cats:["Electrical", "Electric", "Shore Power"],rating:'<span class="dw-stat-rating">-</span>',yrs:14,specs:'Marine Electrical \u00b7 Shore Power \u00b7 Pedestal Replacement',loc:'Sarasota, FL',accepting:false,hasLogo:false},
+  {id:'ctc-coastal-dive',name:'Coastal Dive & Salvage LLC',icon:'\u{1f30a}',tier:'gold',cats:["Underwater", "Dredging", "Salvage"],rating:'4.8',yrs:15,specs:'Underwater Inspection \u00b7 Salvage \u00b7 Dredging',loc:'Miami, FL',accepting:true,hasLogo:false},
+  {id:'ctc-bluewater',name:'Blue Water Marine Builders',icon:'\u{1f6f3}',tier:'verified',cats:["Dock", "Pier", "Seawall", "Boat Lift"],rating:'4.7',yrs:10,specs:'Dock & Pier \u00b7 Seawall \u00b7 Piling \u00b7 Boat Lifts',loc:'Naples, FL',accepting:true,hasLogo:false},
+  {id:'ctc-marsh-creek',name:'Marsh Creek Marine Construction',icon:'\u2693',tier:'charter',cats:["Dock", "Pier", "Seawall", "Dredging"],rating:'4.8',yrs:21,specs:'Dock & Pier \u00b7 Seawall \u00b7 Dredging \u00b7 Piling',loc:'Jacksonville, FL',accepting:true,hasLogo:false},
+  {id:'ctc-gulf-state',name:'Gulf State Underwater Services',icon:'\u{1f30a}',tier:'gold',cats:["Underwater", "Dredging", "Salvage"],rating:'4.7',yrs:18,specs:'Underwater Inspection \u00b7 Dredging \u00b7 Salvage',loc:'',accepting:false,hasLogo:false},
+  {id:'ctc-suncoast',name:'Suncoast Dock & Lift Co.',icon:'\u2600',tier:'verified',cats:["Dock", "Pier", "Boat Lift"],rating:'4.6',yrs:6,specs:'Dock & Pier \u00b7 Boat Lifts \u00b7 Piling',loc:'Clearwater, FL',accepting:true,hasLogo:false},
+  {id:'ctc-atlantic-shore',name:'Atlantic Shore Builders LLC',icon:'\u{1f3d6}',tier:'charter',cats:["Dock", "Pier", "Seawall"],rating:'4.8',yrs:25,specs:'Dock & Pier \u00b7 Seawall \u00b7 Piling \u00b7 Structural',loc:'Daytona Beach, FL',accepting:true,hasLogo:false},
 ];
 var _supData = [
-  {id:'supplier-profile',name:'<span class="dw-sup-name"></span>',icon:'🔩',tier:'charter',cats:["Lumber", "Dock", "Hardware", "Seawall", "Electrical"],rating:'4.8',yrs:12,specs:'Lumber · Hardware · Dock Equipment · Electrical',loc:'',accepting:true,hasLogo:false},
-  {id:'dd-profile',name:'Verified Supplier',icon:'DD',tier:'charter',cats:["Lumber", "Composite", "Dock", "Hardware", "Seawall", "Piling"],rating:'<span class="dw-stat-rating">-</span>',yrs:40,specs:'Composite Decking · Lumber · Piling · Seawall · Hardware',loc:'Palm Beach, FL',accepting:true,hasLogo:true},
-  {id:'supplier-profile',name:'SeaFast Structural Supply',icon:'🏗',tier:'gold',cats:["Pile", "Structural", "Float", "Dock", "Hardware"],rating:'4.8',yrs:15,specs:'Piling · Floating Docks · Structural Hardware',loc:'Mobile, AL',accepting:true,hasLogo:false},
-  {id:'supplier-profile',name:'Coastal Power Systems',icon:'⚡',tier:'gold',cats:["Electrical", "Boat Lift", "Equipment", "Shore Power"],rating:'<span class="dw-stat-rating">-</span>',yrs:17,specs:'Shore Power · Marine Electrical · Pedestals',loc:'Fort Lauderdale, FL',accepting:true,hasLogo:false},
-  {id:'supplier-profile',name:'Atlantic Marine Lumber',icon:'🪵',tier:'gold',cats:["Lumber", "Dock", "Seawall", "Composite", "Decking"],rating:'4.7',yrs:21,specs:'Lumber · Composite Decking · Seawall Materials',loc:'Charleston, SC',accepting:true,hasLogo:false},
-  {id:'supplier-profile',name:'Harbor Electrical Supply',icon:'⚡',tier:'verified',cats:["Electrical", "Shore Power", "Hardware"],rating:'4.6',yrs:11,specs:'Marina Electrical · Shore Power Hardware',loc:'Tampa, FL',accepting:true,hasLogo:false},
-  {id:'supplier-profile',name:'DockTech Composites',icon:'🎨',tier:'verified',cats:["Composite", "Decking", "Dock", "Coating"],rating:'4.5',yrs:8,specs:'Composite Decking · Dock Coating Systems',loc:'Sarasota, FL',accepting:true,hasLogo:false},
-  {id:'supplier-profile',name:'Gulf Pile & Marine',icon:'🏗',tier:'gold',cats:["Pile", "Seawall", "Mooring", "Hardware", "Structural"],rating:'4.8',yrs:19,specs:'Piling · Seawall · Mooring Systems',loc:'',accepting:true,hasLogo:false},
-  {id:'supplier-profile',name:'Marine Lift Specialists',icon:'🚤',tier:'verified',cats:["Boat Lift", "Equipment", "Hardware", "Float"],rating:'4.5',yrs:14,specs:'Boat Lifts · Marine Equipment · Dock Hardware',loc:'St. Petersburg, FL',accepting:true,hasLogo:false},
+  {id:'supplier-profile',name:'<span class="dw-sup-name"></span>',icon:'\u{1f529}',tier:'charter',cats:["Lumber", "Dock", "Hardware", "Seawall", "Electrical"],rating:'4.8',yrs:12,specs:'Lumber \u00b7 Hardware \u00b7 Dock Equipment \u00b7 Electrical',loc:'',accepting:true,hasLogo:false},
+  {id:'dd-profile',name:'Verified Supplier',icon:'DD',tier:'charter',cats:["Lumber", "Composite", "Dock", "Hardware", "Seawall", "Piling"],rating:'<span class="dw-stat-rating">-</span>',yrs:40,specs:'Composite Decking \u00b7 Lumber \u00b7 Piling \u00b7 Seawall \u00b7 Hardware',loc:'Palm Beach, FL',accepting:true,hasLogo:true},
+  {id:'supplier-profile',name:'SeaFast Structural Supply',icon:'\u{1f3d7}',tier:'gold',cats:["Pile", "Structural", "Float", "Dock", "Hardware"],rating:'4.8',yrs:15,specs:'Piling \u00b7 Floating Docks \u00b7 Structural Hardware',loc:'Mobile, AL',accepting:true,hasLogo:false},
+  {id:'supplier-profile',name:'Coastal Power Systems',icon:'\u26a1',tier:'gold',cats:["Electrical", "Boat Lift", "Equipment", "Shore Power"],rating:'<span class="dw-stat-rating">-</span>',yrs:17,specs:'Shore Power \u00b7 Marine Electrical \u00b7 Pedestals',loc:'Fort Lauderdale, FL',accepting:true,hasLogo:false},
+  {id:'supplier-profile',name:'Atlantic Marine Lumber',icon:'\u{1fab5}',tier:'gold',cats:["Lumber", "Dock", "Seawall", "Composite", "Decking"],rating:'4.7',yrs:21,specs:'Lumber \u00b7 Composite Decking \u00b7 Seawall Materials',loc:'Charleston, SC',accepting:true,hasLogo:false},
+  {id:'supplier-profile',name:'Harbor Electrical Supply',icon:'\u26a1',tier:'verified',cats:["Electrical", "Shore Power", "Hardware"],rating:'4.6',yrs:11,specs:'Marina Electrical \u00b7 Shore Power Hardware',loc:'Tampa, FL',accepting:true,hasLogo:false},
+  {id:'supplier-profile',name:'DockTech Composites',icon:'\u{1f3a8}',tier:'verified',cats:["Composite", "Decking", "Dock", "Coating"],rating:'4.5',yrs:8,specs:'Composite Decking \u00b7 Dock Coating Systems',loc:'Sarasota, FL',accepting:true,hasLogo:false},
+  {id:'supplier-profile',name:'Gulf Pile & Marine',icon:'\u{1f3d7}',tier:'gold',cats:["Pile", "Seawall", "Mooring", "Hardware", "Structural"],rating:'4.8',yrs:19,specs:'Piling \u00b7 Seawall \u00b7 Mooring Systems',loc:'',accepting:true,hasLogo:false},
+  {id:'supplier-profile',name:'Marine Lift Specialists',icon:'\u{1f6a4}',tier:'verified',cats:["Boat Lift", "Equipment", "Hardware", "Float"],rating:'4.5',yrs:14,specs:'Boat Lifts \u00b7 Marine Equipment \u00b7 Dock Hardware',loc:'St. Petersburg, FL',accepting:true,hasLogo:false},
 ];
 
 /* -- SUPPLIER REC MODAL -- */
@@ -2506,7 +2506,7 @@ function submitPostProject() {
   if(btn){btn.textContent='Posting...';btn.disabled=true;}
   setTimeout(function(){
     closePostProject();
-    _showInfoToast('✓ Project posted! "'+title+'" is now live and accepting bids.');
+    _showInfoToast('\u2713 Project posted! "'+title+'" is now live and accepting bids.');
   },600);
 }
 
@@ -2535,12 +2535,12 @@ async function doRealSignIn() {
     return;
   }
   var btn = document.querySelector('#authFormSignIn .btn-gold');
-  if (btn) { btn.textContent = 'Signing in…'; btn.disabled = true; }
+  if (btn) { btn.textContent = 'Signing in\u2026'; btn.disabled = true; }
 
   var result = await _supabase.auth.signInWithPassword({ email: email, password: password });
   if (result.error) {
     if (errEl) { errEl.textContent = result.error.message; errEl.style.display = 'block'; }
-    if (btn) { btn.textContent = 'Sign In →'; btn.disabled = false; }
+    if (btn) { btn.textContent = 'Sign In \u2192'; btn.disabled = false; }
     return;
   }
 
@@ -2566,7 +2566,7 @@ async function doRealSignIn() {
   _updateNav();
   _updateDashboard();
   sp(_cu.dash);
-  _showInfoToast('✓ Welcome back, ' + name + '!');
+  _showInfoToast('\u2713 Welcome back, ' + name + '!');
 }
 async function doRealSignUp() {
   var nameEl = document.getElementById('signupName');
@@ -2584,18 +2584,18 @@ async function doRealSignUp() {
   if (!password || password.length < 6) { if(errEl){errEl.textContent='Password must be at least 6 characters.';errEl.style.display='block';} return; }
   if (!role) role = 'owner';
   var btn = document.getElementById('signupSubmitBtn') || document.querySelector('#authFormSignUp .btn-gold');
-  if (btn) { btn.textContent = 'Creating account…'; btn.disabled = true; }
+  if (btn) { btn.textContent = 'Creating account\u2026'; btn.disabled = true; }
   try {
     var result = await _supabase.auth.signUp({ email: email, password: password });
     if (result.error) {
       if (errEl) { errEl.textContent = result.error.message; errEl.style.display = 'block'; }
-      if (btn) { btn.textContent = 'Create Account →'; btn.disabled = false; }
+      if (btn) { btn.textContent = 'Create Account \u2192'; btn.disabled = false; }
       return;
     }
     var user = result.data && result.data.user;
     if (!user) {
       if (errEl) { errEl.textContent = 'Unexpected error. Please try again.'; errEl.style.display = 'block'; }
-      if (btn) { btn.textContent = 'Create Account →'; btn.disabled = false; }
+      if (btn) { btn.textContent = 'Create Account \u2192'; btn.disabled = false; }
       return;
     }
     var company = document.getElementById('signupCompany') ? document.getElementById('signupCompany').value.trim() : '';
@@ -2606,10 +2606,10 @@ async function doRealSignUp() {
     _updateNav();
     _updateDashboard();
     sp(_cu.dash);
-    _showInfoToast('✓ Welcome to DockWork, ' + name + '!');
+    _showInfoToast('\u2713 Welcome to DockWork, ' + name + '!');
   } catch(e) {
     if (errEl) { errEl.textContent = 'Something went wrong. Please try again.'; errEl.style.display = 'block'; }
-    if (btn) { btn.textContent = 'Create Account →'; btn.disabled = false; }
+    if (btn) { btn.textContent = 'Create Account \u2192'; btn.disabled = false; }
   }
 }
 async function realSignOut(){
@@ -2626,15 +2626,15 @@ async function realSignOut(){
 })();
 
 
-// ── MEMBER DIRECTORY LOADERS ──────────────────────────────────────────────────
+// \u2500\u2500 MEMBER DIRECTORY LOADERS \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
-var _roleIcons = {owner:'🏡', marina:'⚓', contractor:'🔨', supplier:'🛒'};
+var _roleIcons = {owner:'\u{1f3e1}', marina:'\u2693', contractor:'\u{1f528}', supplier:'\u{1f6d2}'};
 var _roleLabels = {owner:'Homeowner / HOA', marina:'Marina Operator', contractor:'Marine Contractor', supplier:'Marine Supplier'};
 
 function _memberCard(user, type) {
     window._dwUserCache = window._dwUserCache || {};
     window._dwUserCache[user.id] = user;
-  var icon = _roleIcons[user.role] || '👤';
+  var icon = _roleIcons[user.role] || '\u{1f464}';
   var label = _roleLabels[user.role] || 'Member';
   var name = user.full_name || user.email.split('@')[0];
   var company = user.company_name || '';
@@ -2693,7 +2693,7 @@ async function _loadDirectoryPage(pageId, role, gridClass, icon, label) {
   var grid = document.createElement('div');
   grid.className = gridClass;
   grid.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:16px;';
-  grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:#94a3b8;font-size:13px;">Loading members…</div>';
+  grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:#94a3b8;font-size:13px;">Loading members\u2026</div>';
   container.appendChild(grid);
   page.appendChild(container);
 
@@ -2711,7 +2711,7 @@ async function _loadDirectoryPage(pageId, role, gridClass, icon, label) {
   }
 }
 
-// ── Hook into sp() navigation to load directories on visit ───────────────────
+// \u2500\u2500 Hook into sp() navigation to load directories on visit \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 var _origSp = typeof sp === 'function' ? sp : null;
 function _hookDirectories() {
   var _baseSp = window.sp;
@@ -2720,10 +2720,10 @@ function _hookDirectories() {
     if (page === 'browse') { setTimeout(function(){ if(typeof window.loadBrowseJobs==='function') window.loadBrowseJobs(); }, 80); }
     if (page === 'owner-dash') { setTimeout(function(){ if(typeof window.loadOwnerProjects==='function') window.loadOwnerProjects(); }, 150); }
     if (page === 'contractor-dash') { setTimeout(function(){ if(typeof window.loadContractorJobs==='function') window.loadContractorJobs(); }, 150); }
-    if (page === 'contractors') _loadDirectoryPage('page-contractors','contractor','ctc-grid','🔨','Contractors');
-    if (page === 'suppliers') _loadDirectoryPage('page-suppliers','supplier','ctc-grid','🛒','Suppliers');
-    if (page === 'marina-owners') _loadDirectoryPage('page-marina-owners','marina','marina-grid','⚓','Marina Operators');
-    if (page === 'homeowners') _loadDirectoryPage('page-homeowners','owner','homeowner-grid','🏡','Homeowners');
+    if (page === 'contractors') _loadDirectoryPage('page-contractors','contractor','ctc-grid','\u{1f528}','Contractors');
+    if (page === 'suppliers') _loadDirectoryPage('page-suppliers','supplier','ctc-grid','\u{1f6d2}','Suppliers');
+    if (page === 'marina-owners') _loadDirectoryPage('page-marina-owners','marina','marina-grid','\u2693','Marina Operators');
+    if (page === 'homeowners') _loadDirectoryPage('page-homeowners','owner','homeowner-grid','\u{1f3e1}','Homeowners');
   };
 }
 
@@ -2743,7 +2743,7 @@ function openForgotPassword(){
   document.getElementById('forgotPwError').style.display='none';
   document.getElementById('forgotPwForm').style.display='block';
   var b=document.getElementById('forgotSubmitBtn');
-  if(b){b.textContent='Send Reset Link →';b.disabled=false;}
+  if(b){b.textContent='Send Reset Link \u2192';b.disabled=false;}
   document.getElementById('forgotPasswordOverlay').style.display='flex';
   setTimeout(function(){var e=document.getElementById('forgotEmail');if(e)e.focus();},100);
 }
@@ -2760,7 +2760,7 @@ async function submitForgotPassword(){
   var btn=document.getElementById('forgotSubmitBtn');
   err.style.display='none';
   if(!email||!email.includes('@')){err.textContent='Please enter a valid email address.';err.style.display='block';return;}
-  btn.textContent='Sending…';btn.disabled=true;
+  btn.textContent='Sending\u2026';btn.disabled=true;
   try{
     var r=await _supabase.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+'/?reset=1'});
     if(r.error) throw new Error(r.error.message);
@@ -2770,7 +2770,7 @@ async function submitForgotPassword(){
   }catch(e){
     err.textContent=e.message||'Something went wrong. Please try again.';
     err.style.display='block';
-    btn.textContent='Send Reset Link →';btn.disabled=false;
+    btn.textContent='Send Reset Link \u2192';btn.disabled=false;
   }
 }
 </script>
