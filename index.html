@@ -114,7 +114,7 @@
 .sup-rec-card.featured{border-left:3px solid var(--gold);background:rgba(184,147,74,.04);}
 .sup-rec-av{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden;}
 .sup-rec-av img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
-.dw-mcard:hover{box-shadow:0 8px 28px rgba(0,0,0,.12);transform:translateY(-2px);transition:box-shadow .15s,transform .15s;}</style>
+</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 var _newRole = null;
 
@@ -2639,42 +2639,32 @@ function _memberCard(user, type) {
   var company = user.company_name || '';
   var displayName = company || name;
   var initials = displayName.split(' ').map(function(w){return w[0];}).join('').toUpperCase().substring(0,2);
-  var year = new Date(user.created_at||Date.now()).getFullYear();
+  var year = new Date(user.created_at || Date.now()).getFullYear();
   var tier = user.tier || 'standard';
-  var tierLabel = tier.charAt(0).toUpperCase() + tier.slice(1);
-  var RC = {contractor:'#d97706',supplier:'#0891b2',marina:'#0f2d54',owner:'#16a34a'};
+  var RC = {contractor:'#d97706', supplier:'#0891b2', marina:'#0f2d54', owner:'#16a34a'};
   var color = RC[user.role] || '#0f2d54';
   var loc = user.location || 'South Florida';
   var tagMap = {
-    contractor: ['Seawall Repair','Dock Construction','FDEP Permitting'],
-    supplier:   ['Marine Lumber','Pilings','Dock Hardware'],
-    marina:     ['Wet Slip Rental','Dry Storage','Haul-Out'],
-    owner:      ['Seawall','Dock Replacement','Boat Lift']
+    contractor: ['Seawall Repair', 'Dock Construction', 'FDEP Permitting'],
+    supplier:   ['Marine Lumber', 'Pilings', 'Dock Hardware'],
+    marina:     ['Wet Slip Rental', 'Dry Storage', 'Haul-Out'],
+    owner:      ['Seawall', 'Dock Replacement', 'Boat Lift']
   };
-  var roleTags = (tagMap[user.role] || []).slice(0, 3);
-  var tagHtml = roleTags.map(function(t) {
-    return '<span style="display:inline-block;background:' + color + '18;color:' + color + ';font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;margin:2px 3px 2px 0;">' + t + '</span>';
+  var tags = (tagMap[user.role] || []).map(function(t) {
+    return '<span style="background:' + color + '18;color:' + color + ';font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;margin:0 4px 4px 0;display:inline-block;">' + t + '</span>';
   }).join('');
-  var tierColor = tier === 'charter' ? '#f59e0b' : tier === 'professional' ? '#6366f1' : '#94a3b8';
-  return '<div class="ctc-card dw-mcard" onclick="dwShowProfile('' + user.id + '')"'
-    + ' style="border:1.5px solid #e2e8f0;border-radius:14px;overflow:hidden;background:#fff;cursor:pointer;">'
-    + '<div style="height:6px;background:' + color + ';"></div>'
-    + '<div style="padding:20px 20px 16px;">'
-      + '<div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;">'
-        + '<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,' + color + ',#0d1f33);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;">' + initials + '</div>'
-        + '<div style="flex:1;min-width:0;">'
-          + '<div style="font-weight:700;font-size:15px;color:#0f172a;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + displayName + '</div>'
-          + '<div style="font-size:11px;font-weight:600;color:' + color + ';letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;">' + label + '</div>'
-          + '<span style="font-size:10px;font-weight:600;color:' + tierColor + ';background:' + tierColor + '18;padding:2px 8px;border-radius:10px;">' + tierLabel + '</span>'
+  return '<div class="ctc-card" onclick="dwShowProfile('' + user.id + '')" style="border:1.5px solid #e2e8f0;border-radius:14px;overflow:hidden;background:#fff;cursor:pointer;margin-bottom:4px;">'
+    + '<div style="height:5px;background:' + color + ';"></div>'
+    + '<div style="padding:18px;">'
+      + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">'
+        + '<div style="width:52px;height:52px;border-radius:50%;background:' + color + ';display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:17px;flex-shrink:0;">' + initials + '</div>'
+        + '<div>'
+          + '<div style="font-weight:700;font-size:14px;color:#0f172a;">' + displayName + '</div>'
+          + '<div style="font-size:11px;color:' + color + ';font-weight:600;text-transform:uppercase;letter-spacing:.5px;">' + label + '</div>'
+          + '<div style="font-size:11px;color:#94a3b8;">' + loc + ' &middot; Since ' + year + '</div>'
         + '</div>'
       + '</div>'
-      + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;font-size:12px;color:#64748b;">'
-        + '<span>' + loc + '</span>'
-        + '<span style="opacity:.4;margin:0 4px;">|</span>'
-        + '<span>Since ' + year + '</span>'
-      + '</div>'
-      + '<div style="border-top:1px solid #f1f5f9;padding-top:12px;">' + tagHtml + '</div>'
-      + '<div style="margin-top:12px;text-align:right;font-size:11px;font-weight:700;color:' + color + ';letter-spacing:.5px;">VIEW PROFILE &gt;</div>'
+      + '<div>' + tags + '</div>'
     + '</div>'
   + '</div>';
 }
@@ -3679,15 +3669,460 @@ function dwSendMessage() {
 
 
 
+<script>
+window._dwUserCache = window._dwUserCache || {};
 
+window.dwShowProfile = function(uid) {
+  var u = window._dwUserCache[uid];
+  if (!u) { console.warn('no cache for', uid); return; }
+  var RL = {contractor:'Licensed Contractor',supplier:'Material Supplier',marina:'Marina Operator',owner:'Property Owner'};
+  var RC = {contractor:'#d97706',supplier:'#0891b2',marina:'#0f2d54',owner:'#16a34a'};
+  var label = RL[u.role]||'Member', color = RC[u.role]||'#0f2d54';
+  var name = u.full_name||u.email.split('@')[0], company = u.company_name||'';
+  var display = company||name;
+  var initials = display.split(' ').map(function(w){return w[0];}).join('').toUpperCase().substring(0,2);
+  var year = new Date(u.created_at||Date.now()).getFullYear();
+  var isSelf = window._cu && window._cu.id===uid;
+  var ex=document.getElementById('dwProfOv'); if(ex) ex.remove();
+  var ov=document.createElement('div'); ov.id='dwProfOv';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9200;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;';
+  ov.onclick=function(e){if(e.target===ov)ov.remove();};
+  var modal=document.createElement('div');
+  modal.style.cssText='background:white;width:100%;max-width:400px;border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.3);transform:scale(1);opacity:1;';
+  var hd=document.createElement('div');
+  hd.style.cssText='background:linear-gradient(135deg,'+color+',#0d1f33);padding:22px 20px 18px;display:flex;align-items:center;gap:14px;position:relative;';
+  var xb=document.createElement('button'); xb.textContent='x';
+  xb.style.cssText='position:absolute;top:10px;right:10px;background:rgba(255,255,255,.18);border:none;color:white;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:14px;';
+  xb.onclick=function(){ov.remove();};
+  var av=document.createElement('div');
+  av.style.cssText='width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:white;flex-shrink:0;';
+  av.textContent=initials;
+  var info=document.createElement('div'); info.style.flex='1';
+  var lbl=document.createElement('div'); lbl.style.cssText='font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.6);margin-bottom:3px;font-weight:600;'; lbl.textContent=label.toUpperCase();
+  var nm=document.createElement('div'); nm.style.cssText='font-size:16px;font-weight:700;color:white;line-height:1.2;'; nm.textContent=display;
+  info.appendChild(lbl); info.appendChild(nm);
+  if(company&&company!==name){var sub=document.createElement('div');sub.style.cssText='font-size:11px;color:rgba(255,255,255,.6);margin-top:1px;';sub.textContent=name;info.appendChild(sub);}
+  hd.appendChild(xb); hd.appendChild(av); hd.appendChild(info); modal.appendChild(hd);
+  var sr=document.createElement('div'); sr.style.cssText='display:flex;border-bottom:1px solid #e2e8f0;';
+  [{l:'SINCE',v:year},{l:'TIER',v:(u.tier||'Standard').charAt(0).toUpperCase()+(u.tier||'standard').slice(1)},{l:'AREA',v:u.location||'South FL'}].forEach(function(s,i){
+    var b=document.createElement('div'); b.style.cssText='flex:1;padding:11px 6px;text-align:center;'+(i<2?'border-right:1px solid #e2e8f0;':'');
+    var l2=document.createElement('div'); l2.style.cssText='font-size:9px;letter-spacing:1.5px;color:#94a3b8;font-weight:600;'; l2.textContent=s.l;
+    var v2=document.createElement('div'); v2.style.cssText='font-size:13px;font-weight:700;color:#0f172a;margin-top:2px;'; v2.textContent=s.v;
+    b.appendChild(l2); b.appendChild(v2); sr.appendChild(b);
+  });
+  modal.appendChild(sr);
+  var bd=document.createElement('div'); bd.style.cssText='padding:16px 18px 18px;';
+  var descs={contractor:'Licensed marine contractor - seawall repair, dock construction, pile driving, and coastal work throughout South Florida.',supplier:'Verified marine materials supplier - pilings, lumber, vinyl sheet piling, hardware, and delivery throughout South Florida.',marina:'Full-service marina - slip rentals, dry storage, haul-out, fuel dock, and maintenance coordination.',owner:'Waterfront property owner seeking licensed contractors and verified suppliers for marine construction.'};
+  var dsc=document.createElement('div'); dsc.style.cssText='font-size:13px;color:#475569;line-height:1.6;margin-bottom:14px;'; dsc.textContent=descs[u.role]||'DockWork verified member.';
+  bd.appendChild(dsc);
+  var vb=document.createElement('button');
+  vb.style.cssText='width:100%;background:linear-gradient(135deg,'+color+',#0d1f33);color:white;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;';
+  vb.textContent='View Full Profile';
+  vb.onclick=function(){ov.remove();window.dwFullProfile(uid);};
+  bd.appendChild(vb);
+  if(!isSelf){
+    var ar=document.createElement('div'); ar.style.cssText='display:flex;gap:8px;';
+    var msg=document.createElement('button'); msg.style.cssText='flex:1;background:white;border:1.5px solid #e2e8f0;color:#0f172a;border-radius:8px;padding:9px;font-size:13px;font-weight:600;cursor:pointer;'; msg.textContent='Message';
+    msg.onclick=function(){ov.remove();if(window._cu){if(typeof messagePoster==='function')messagePoster({id:uid,title:'Message to '+display});}else if(typeof openRealSignIn==='function')openRealSignIn();};
+    var act=document.createElement('button'); act.style.cssText='flex:1;background:white;border:1.5px solid '+color+';color:'+color+';border-radius:8px;padding:9px;font-size:13px;font-weight:600;cursor:pointer;';
+    act.textContent={contractor:'Invite to Bid',supplier:'Request Quote',marina:'Request Berth',owner:'Connect'}[u.role]||'Connect';
+    act.onclick=function(){if(typeof toast==='function')toast('Request sent to '+display,'success');ov.remove();};
+    ar.appendChild(msg); ar.appendChild(act); bd.appendChild(ar);
+  }
+  modal.appendChild(bd); ov.appendChild(modal); document.body.appendChild(ov);
+  
+};
+
+
+window.dwFullProfile = async function(uid) {
+  var u = window._dwUserCache[uid]; if (!u) return;
+  var RL={contractor:'Licensed Contractor',supplier:'Material Supplier',marina:'Marina Operator',owner:'Property Owner'};
+  var RC={contractor:'#d97706',supplier:'#0891b2',marina:'#0f2d54',owner:'#16a34a'};
+  var label=RL[u.role]||'Member', color=RC[u.role]||'#0f2d54';
+  var name=u.full_name||u.email.split('@')[0], company=u.company_name||'';
+  var display=company||name;
+  var initials=display.split(' ').map(function(w){return w[0];}).join('').toUpperCase().substring(0,2);
+  var year=new Date(u.created_at||Date.now()).getFullYear();
+  var isSelf=window._cu&&window._cu.id===uid;
+
+  var prof={};
+  try{var pr=await _supabase.from('dw_profiles').select('*').eq('id',uid).single();if(pr.data)prof=pr.data;}catch(e){}
+
+  var displayName=prof.display_name||display;
+  var tagline=prof.tagline||'';
+  var bio=prof.bio||'';
+  var bannerColor=prof.banner_color||color;
+  var bannerUrl=prof.banner_url||'';
+  var logoUrl=prof.logo_url||'';
+  var accentColor=prof.accent_color||color;
+  var website=prof.website||'';
+  var phone=prof.phone||'';
+  var serviceArea=prof.service_area||u.location||'South Florida';
+  var yearsExp=prof.years_in_business||prof.years_experience||0;
+  var offerings=prof.offerings||[];
+
+  var ex=document.getElementById('dwFullProf'); if(ex) ex.remove();
+  var fp=document.createElement('div'); fp.id='dwFullProf';
+  fp.style.cssText='position:fixed;inset:0;background:#f0f4f8;z-index:9100;overflow-y:auto;font-family:DM Sans,system-ui,sans-serif;';
+
+  // \u2500\u2500 HERO \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  var hero=document.createElement('div');
+  var heroBg=bannerUrl
+    ?'background:linear-gradient(to bottom,rgba(0,0,0,.55) 0%,rgba(0,0,0,.7) 100%),url('+bannerUrl+') center/cover no-repeat;'
+    :'background:linear-gradient(135deg,'+bannerColor+' 0%,#05111f 100%);';
+  hero.style.cssText=heroBg+'position:relative;min-height:340px;display:flex;flex-direction:column;justify-content:space-between;';
+
+  // Back button
+  var bk=document.createElement('button'); bk.textContent='Back';
+  bk.style.cssText='position:absolute;top:20px;left:24px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:white;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:13px;font-weight:600;backdrop-filter:blur(6px);z-index:2;';
+  bk.onclick=function(){fp.remove();};
+  hero.appendChild(bk);
+
+  // Edit button if own profile
+  if(isSelf){
+    var eb=document.createElement('button');eb.textContent='Edit Profile';
+    eb.style.cssText='position:absolute;top:20px;right:24px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:13px;font-weight:600;backdrop-filter:blur(6px);z-index:2;';
+    eb.onclick=function(){fp.remove();if(typeof dwEditProfile==='function')dwEditProfile();};
+    hero.appendChild(eb);
+  }
+
+  // Hero content
+  var hc=document.createElement('div'); hc.style.cssText='padding:80px 40px 40px;display:flex;align-items:flex-end;gap:28px;flex-wrap:wrap;';
+
+  // Logo / profile picture \u2014 prominent
+  var logoWrap=document.createElement('div');
+  logoWrap.style.cssText='flex-shrink:0;';
+  if(logoUrl){
+    var logoBox=document.createElement('div');
+    logoBox.style.cssText='width:110px;height:110px;border-radius:16px;background:white;border:4px solid rgba(255,255,255,.9);overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;padding:10px;box-sizing:border-box;';
+    var li=document.createElement('img');li.src=logoUrl;li.style.cssText='max-width:100%;max-height:100%;object-fit:contain;';
+    logoBox.appendChild(li); logoWrap.appendChild(logoBox);
+  } else {
+    var initBox=document.createElement('div');
+    initBox.style.cssText='width:110px;height:110px;border-radius:16px;background:linear-gradient(135deg,'+accentColor+',#0d1f33);border:4px solid rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:800;color:white;box-shadow:0 8px 32px rgba(0,0,0,.4);';
+    initBox.textContent=initials; logoWrap.appendChild(initBox);
+  }
+
+  var heroText=document.createElement('div'); heroText.style.cssText='flex:1;min-width:200px;padding-bottom:4px;';
+  var roleChip=document.createElement('div');
+  roleChip.style.cssText='display:inline-block;background:'+accentColor+';color:white;font-size:10px;font-weight:700;letter-spacing:2px;padding:4px 12px;border-radius:20px;margin-bottom:10px;text-transform:uppercase;';
+  roleChip.textContent=label;
+  var nameH=document.createElement('div');
+  nameH.style.cssText='font-size:36px;font-weight:800;color:white;line-height:1.1;margin-bottom:6px;text-shadow:0 2px 8px rgba(0,0,0,.3);letter-spacing:-.5px;';
+  nameH.textContent=displayName;
+  var tgH=document.createElement('div');
+  tgH.style.cssText='font-size:16px;color:rgba(255,255,255,.85);font-style:italic;margin-bottom:12px;';
+  tgH.textContent=tagline;
+  var metaChips=document.createElement('div'); metaChips.style.cssText='display:flex;flex-wrap:wrap;gap:8px;';
+  [{v:serviceArea,i:'L'},{v:'Member since '+year,i:'C'},{v:(u.tier||'Standard').charAt(0).toUpperCase()+(u.tier||'standard').slice(1)+' Member',i:'T'}].forEach(function(m){
+    var chip=document.createElement('span');
+    chip.style.cssText='background:rgba(255,255,255,.15);backdrop-filter:blur(4px);color:rgba(255,255,255,.9);font-size:12px;font-weight:500;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.2);';
+    chip.textContent=m.v; metaChips.appendChild(chip);
+  });
+  heroText.appendChild(roleChip); heroText.appendChild(nameH);
+  if(tagline) heroText.appendChild(tgH);
+  heroText.appendChild(metaChips);
+  hc.appendChild(logoWrap); hc.appendChild(heroText); hero.appendChild(hc);
+
+  // Stats bar
+  var stats=document.createElement('div');
+  stats.style.cssText='background:rgba(0,0,0,.4);backdrop-filter:blur(8px);border-top:1px solid rgba(255,255,255,.1);display:flex;';
+  var statItems=[];
+  if(yearsExp) statItems.push({n:yearsExp+'+',l:'Years Experience'});
+  if(offerings.length) statItems.push({n:offerings.length,l:'Products & Services'});
+  if(website) statItems.push({n:'View Website',l:website.replace(/https?:\/\//,'').split('/')[0],link:website});
+  statItems.push({n:(u.tier||'Standard').toUpperCase(),l:'Member Tier'});
+  statItems.forEach(function(s,i){
+    var sb=document.createElement('div');
+    sb.style.cssText='flex:1;padding:16px 20px;text-align:center;'+(i<statItems.length-1?'border-right:1px solid rgba(255,255,255,.1);':'');
+    var sn=document.createElement('div');
+    sn.style.cssText='font-size:20px;font-weight:800;color:white;line-height:1;margin-bottom:3px;';
+    if(s.link){var sa=document.createElement('a');sa.href=s.link;sa.target='_blank';sa.style.cssText='color:'+accentColor+';text-decoration:none;font-size:13px;font-weight:700;';sa.textContent=s.n;sn.appendChild(sa);}
+    else sn.textContent=s.n;
+    var sl=document.createElement('div');sl.style.cssText='font-size:10px;letter-spacing:1.5px;color:rgba(255,255,255,.55);font-weight:600;text-transform:uppercase;';sl.textContent=s.l;
+    sb.appendChild(sn);sb.appendChild(sl);stats.appendChild(sb);
+  });
+  hero.appendChild(stats); fp.appendChild(hero);
+
+  // \u2500\u2500 BODY \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  var body=document.createElement('div'); body.style.cssText='max-width:960px;margin:0 auto;padding:32px 24px;display:grid;grid-template-columns:1fr 300px;gap:28px;align-items:start;';
+  var left=document.createElement('div');
+
+  function mkCard(title,accent,fn){
+    var c=document.createElement('div');c.style.cssText='background:white;border-radius:14px;padding:28px;margin-bottom:24px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e8eef4;';
+    var th=document.createElement('div');th.style.cssText='display:flex;align-items:center;gap:10px;margin-bottom:18px;';
+    var tbar=document.createElement('div');tbar.style.cssText='width:4px;height:20px;background:'+accent+';border-radius:2px;flex-shrink:0;';
+    var tt=document.createElement('div');tt.style.cssText='font-size:11px;letter-spacing:2.5px;color:#0f172a;font-weight:800;text-transform:uppercase;';tt.textContent=title;
+    th.appendChild(tbar);th.appendChild(tt);c.appendChild(th);fn(c);return c;
+  }
+
+  // About card
+  if(bio) left.appendChild(mkCard('About',accentColor,function(c){
+    var p=document.createElement('div');p.style.cssText='font-size:15px;color:#334155;line-height:1.8;';p.textContent=bio;c.appendChild(p);
+    if(yearsExp||phone||website){
+      var facts=document.createElement('div');facts.style.cssText='display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;padding-top:18px;border-top:1px solid #f1f5f9;';
+      [{l:'Est.',v:yearsExp?'30+ years':''},{l:'Phone',v:phone},{l:'Web',v:website?website.replace(/https?:\/\//,'').split('/')[0]:'',link:website}].forEach(function(f){
+        if(!f.v)return;
+        var chip=document.createElement('div');chip.style.cssText='background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 14px;';
+        var fl=document.createElement('div');fl.style.cssText='font-size:9px;letter-spacing:1.5px;color:#94a3b8;font-weight:700;text-transform:uppercase;margin-bottom:2px;';fl.textContent=f.l;
+        var fv=document.createElement('div');fv.style.cssText='font-size:13px;font-weight:600;color:#0f172a;';
+        if(f.link){var fa=document.createElement('a');fa.href=f.link;fa.target='_blank';fa.style.cssText='color:'+accentColor+';text-decoration:none;';fa.textContent=f.v;fv.appendChild(fa);}
+        else fv.textContent=f.v;
+        chip.appendChild(fl);chip.appendChild(fv);facts.appendChild(chip);
+      });
+      c.appendChild(facts);
+    }
+  }));
+
+  // Products & Services \u2014 visual grid
+  if(offerings.length) left.appendChild(mkCard('Products & Services',accentColor,function(c){
+    var cats={};
+    offerings.forEach(function(o){var cat=o.cat||'General';if(!cats[cat])cats[cat]=[];cats[cat].push(o);});
+    Object.keys(cats).forEach(function(cat){
+      var cl=document.createElement('div');cl.style.cssText='font-size:9px;letter-spacing:2px;color:#94a3b8;font-weight:700;text-transform:uppercase;margin-bottom:10px;margin-top:10px;';cl.textContent=cat;c.appendChild(cl);
+      var grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:8px;';
+      cats[cat].forEach(function(o){
+        var item=document.createElement('div');
+        item.style.cssText='background:linear-gradient(135deg,#f8fafc,#f1f5f9);border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s;cursor:default;';
+        item.onmouseenter=function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,.1)';};
+        item.onmouseleave=function(){this.style.transform='';this.style.boxShadow='';};
+        var accent2=document.createElement('div');accent2.style.cssText='position:absolute;top:0;left:0;right:0;height:3px;background:'+accentColor+';';
+        var on=document.createElement('div');on.style.cssText='font-size:13px;font-weight:700;color:#0f172a;margin-bottom:5px;padding-top:4px;';on.textContent=o.name;
+        var od=document.createElement('div');od.style.cssText='font-size:11px;color:#64748b;line-height:1.5;margin-bottom:8px;';od.textContent=(o.desc||'').substring(0,80)+(o.desc&&o.desc.length>80?'...':'');
+        var op=document.createElement('div');op.style.cssText='font-size:11px;font-weight:700;color:'+accentColor+';text-transform:uppercase;letter-spacing:.5px;';op.textContent=o.price?'$'+o.price+' '+o.unit:o.unit||'Contact for Quote';
+        item.appendChild(accent2);item.appendChild(on);item.appendChild(od);item.appendChild(op);grid.appendChild(item);
+      });
+      c.appendChild(grid);
+    });
+  }));
+
+  // Brands / credentials
+  var servs={contractor:['Seawall Repair','Dock Construction','Pile Driving','FDEP Permitting','Dredging','Boat Lift Install'],supplier:['Marine-Grade Lumber','Vinyl Sheet Piling','Concrete Pilings','Dock Hardware','Boat Lift Parts','Composite Decking'],marina:['Wet Slips','Dry Storage','Haul-Out','Fuel Dock','Maintenance','Transient Dockage'],owner:['Seawall Inspection','Dock Replacement','Boat Lift Upgrade']};
+  if(!offerings.length) left.appendChild(mkCard('Services Offered',accentColor,function(c){
+    var g=document.createElement('div');g.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px;';
+    (servs[u.role]||[]).forEach(function(s){
+      var item=document.createElement('div');item.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;';
+      var dot=document.createElement('div');dot.style.cssText='width:6px;height:6px;border-radius:50%;background:'+accentColor+';flex-shrink:0;';
+      var st=document.createElement('span');st.style.cssText='font-size:13px;color:#334155;font-weight:500;';st.textContent=s;
+      item.appendChild(dot);item.appendChild(st);g.appendChild(item);
+    });
+    c.appendChild(g);
+  }));
+
+  body.appendChild(left);
+
+  // \u2500\u2500 RIGHT SIDEBAR \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  var right=document.createElement('div'); right.style.cssText='position:sticky;top:24px;';
+
+  // CTA card
+  var ctaCard=document.createElement('div');
+  ctaCard.style.cssText='border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.12);margin-bottom:20px;';
+  var ctaTop=document.createElement('div');
+  ctaTop.style.cssText='background:linear-gradient(135deg,'+accentColor+',#05111f);padding:20px 22px;';
+  var ctaTitle=document.createElement('div');ctaTitle.style.cssText='font-size:11px;letter-spacing:2px;color:rgba(255,255,255,.6);margin-bottom:6px;font-weight:600;';ctaTitle.textContent='GET IN TOUCH';
+  var ctaName=document.createElement('div');ctaName.style.cssText='font-size:17px;font-weight:700;color:white;margin-bottom:2px;';ctaName.textContent=displayName;
+  var ctaSub=document.createElement('div');ctaSub.style.cssText='font-size:12px;color:rgba(255,255,255,.65);';ctaSub.textContent=label;
+  ctaTop.appendChild(ctaTitle);ctaTop.appendChild(ctaName);ctaTop.appendChild(ctaSub);
+  var ctaBody=document.createElement('div');ctaBody.style.cssText='background:white;padding:16px 18px;';
+  if(!isSelf){
+    var c1=document.createElement('button');
+    c1.style.cssText='width:100%;background:linear-gradient(135deg,'+accentColor+',#05111f);color:white;border:none;border-radius:9px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;letter-spacing:.2px;box-shadow:0 4px 12px rgba(0,0,0,.2);';
+    c1.textContent={contractor:'Request Bid',supplier:'Request Quote',marina:'Request Berth',owner:'View Projects'}[u.role]||'Connect';
+    c1.onmouseenter=function(){this.style.opacity='.9';};c1.onmouseleave=function(){this.style.opacity='1';};
+    c1.onclick=function(){fp.remove();if(window._cu){if(typeof messagePoster==='function')messagePoster({id:uid,title:'Message to '+displayName});}else if(typeof openRealSignIn==='function')openRealSignIn();};
+    var c2=document.createElement('button');
+    c2.style.cssText='width:100%;background:white;border:2px solid '+accentColor+';color:'+accentColor+';border-radius:9px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;';
+    c2.textContent='Send Message';
+    c2.onclick=function(){if(typeof toast==='function')toast('Request sent!','success');fp.remove();};
+    ctaBody.appendChild(c1);ctaBody.appendChild(c2);
+    if(phone||website){
+      var divider=document.createElement('div');divider.style.cssText='border-top:1px solid #f1f5f9;margin:14px 0;';
+      ctaBody.appendChild(divider);
+      if(phone){var ph=document.createElement('div');ph.style.cssText='font-size:13px;color:#475569;padding:4px 0;display:flex;justify-content:space-between;';var phl=document.createElement('span');phl.style.color='#94a3b8';phl.textContent='Phone';var phv=document.createElement('span');phv.style.fontWeight='600';phv.textContent=phone;ph.appendChild(phl);ph.appendChild(phv);ctaBody.appendChild(ph);}
+      if(website){var wl2=document.createElement('div');wl2.style.cssText='font-size:13px;color:#475569;padding:4px 0;display:flex;justify-content:space-between;';var wll=document.createElement('span');wll.style.color='#94a3b8';wll.textContent='Website';var wlv=document.createElement('a');wlv.href=website;wlv.target='_blank';wlv.style.cssText='color:'+accentColor+';font-weight:600;text-decoration:none;';wlv.textContent=website.replace(/https?:\/\//,'').split('/')[0];wl2.appendChild(wll);wl2.appendChild(wlv);ctaBody.appendChild(wl2);}
+    }
+  } else {
+    var selfNote=document.createElement('div');selfNote.style.cssText='text-align:center;color:#94a3b8;font-size:13px;padding:8px 0 4px;';selfNote.textContent='This is your public profile';
+    var editBtn2=document.createElement('button');editBtn2.style.cssText='width:100%;background:linear-gradient(135deg,'+accentColor+',#05111f);color:white;border:none;border-radius:9px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;margin-top:10px;';editBtn2.textContent='Edit My Profile';
+    editBtn2.onclick=function(){fp.remove();if(typeof dwEditProfile==='function')dwEditProfile();};
+    ctaBody.appendChild(selfNote);ctaBody.appendChild(editBtn2);
+  }
+  ctaCard.appendChild(ctaTop);ctaCard.appendChild(ctaBody);right.appendChild(ctaCard);
+
+  // Member info card
+  var mi=document.createElement('div');mi.style.cssText='background:white;border-radius:14px;padding:20px 22px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e8eef4;';
+  var mit=document.createElement('div');mit.style.cssText='font-size:10px;letter-spacing:2px;color:#94a3b8;font-weight:700;text-transform:uppercase;margin-bottom:14px;';mit.textContent='Member Details';mi.appendChild(mit);
+  [{l:'Role',v:label},{l:'Member Since',v:year},{l:'Tier',v:(u.tier||'Standard').charAt(0).toUpperCase()+(u.tier||'standard').slice(1)},{l:'Service Area',v:serviceArea}].forEach(function(item){
+    var r=document.createElement('div');r.style.cssText='display:flex;justify-content:space-between;align-items:flex-start;font-size:13px;padding:7px 0;border-bottom:1px solid #f8fafc;';
+    var il=document.createElement('span');il.style.cssText='color:#94a3b8;font-weight:500;flex-shrink:0;margin-right:12px;';il.textContent=item.l;
+    var iv=document.createElement('span');iv.style.cssText='color:#0f172a;font-weight:600;text-align:right;';iv.textContent=item.v;
+    r.appendChild(il);r.appendChild(iv);mi.appendChild(r);
+  });
+  right.appendChild(mi);
+  body.appendChild(right);fp.appendChild(body);
+  document.body.appendChild(fp);
+};
+
+window.dwEditProfile = async function() {
+  if (!window._cu) { if (typeof openRealSignIn==='function') openRealSignIn(); return; }
+  var uid = window._cu.id;
+  var RC = {contractor:'#d97706',supplier:'#0891b2',marina:'#0f2d54',owner:'#16a34a'};
+  var color = RC[window._cu.role||'owner'] || '#0f2d54';
+  var prof = {};
+  try { var pr = await _supabase.from('dw_profiles').select('*').eq('id',uid).single(); if (pr.data) prof = pr.data; } catch(e) {}
+
+  var ex = document.getElementById('dwEditOv'); if (ex) ex.remove();
+  var ov = document.createElement('div'); ov.id = 'dwEditOv';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9300;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;overflow-y:auto;';
+  ov.onclick = function(e) { if (e.target===ov) ov.remove(); };
+
+  var modal = document.createElement('div');
+  modal.style.cssText = 'background:#f8fafc;width:100%;max-width:560px;border-radius:16px;overflow:hidden;box-shadow:0 32px 100px rgba(0,0,0,.3);';
+
+  // Header
+  var hd = document.createElement('div'); hd.style.cssText = 'background:linear-gradient(135deg,'+color+',#0d1f33);padding:18px 22px;display:flex;justify-content:space-between;align-items:center;';
+  var ht = document.createElement('div');
+  var hs = document.createElement('div'); hs.style.cssText='font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.6);margin-bottom:2px;'; hs.textContent='MY PROFILE';
+  var htt = document.createElement('div'); htt.style.cssText='font-size:17px;font-weight:700;color:white;'; htt.textContent='Edit Profile & Storefront';
+  ht.appendChild(hs); ht.appendChild(htt);
+  var hx = document.createElement('button'); hx.textContent='X'; hx.style.cssText='background:rgba(255,255,255,.15);border:none;color:white;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:15px;'; hx.onclick=function(){ov.remove();};
+  hd.appendChild(ht); hd.appendChild(hx); modal.appendChild(hd);
+
+  var body = document.createElement('div'); body.style.cssText='padding:20px;max-height:75vh;overflow-y:auto;';
+
+  // Helper: create a section card
+  function sec(title) {
+    var s = document.createElement('div'); s.style.cssText='background:white;border-radius:10px;padding:18px;margin-bottom:14px;';
+    var t = document.createElement('div'); t.style.cssText='font-size:9px;letter-spacing:2px;color:'+color+';font-weight:700;margin-bottom:14px;'; t.textContent=title;
+    s.appendChild(t); return s;
+  }
+  // Helper: labeled input row
+  function row(id, label, val, ph, type) {
+    var w = document.createElement('div'); w.style.marginBottom='10px';
+    var l = document.createElement('label'); l.style.cssText='font-size:10px;color:#64748b;font-weight:600;display:block;margin-bottom:4px;'; l.textContent=label;
+    var i = document.createElement('input'); i.id=id; i.value=val||''; i.placeholder=ph||''; i.type=type||'text';
+    i.style.cssText='width:100%;border:1.5px solid #e2e8f0;border-radius:7px;padding:9px 11px;font-size:13px;box-sizing:border-box;outline:none;font-family:inherit;transition:border .15s;';
+    i.onfocus=function(){this.style.borderColor=color;}; i.onblur=function(){this.style.borderColor='#e2e8f0';};
+    w.appendChild(l); w.appendChild(i); return w;
+  }
+  // Helper: two-column grid
+  function grid2() { var g=document.createElement('div'); g.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:0 14px;'; return g; }
+
+  // --- Section: Appearance ---
+  var appSec = sec('APPEARANCE');
+  var previewBan = document.createElement('div');
+  previewBan.style.cssText='height:70px;border-radius:8px;margin-bottom:14px;transition:background .3s;display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(255,255,255,.7);';
+  previewBan.textContent='Banner Preview';
+  var currentBg = prof.banner_url||'';
+  var currentColor = prof.banner_color||color;
+  function updatePreview(){previewBan.style.background=currentBg?'linear-gradient(rgba(0,0,0,.3),rgba(0,0,0,.3)),url('+currentBg+') center/cover':'linear-gradient(135deg,'+currentColor+',#0d1f33)';}
+  updatePreview();
+  appSec.appendChild(previewBan);
+
+  // Color picker row
+  var cpRow = document.createElement('div'); cpRow.style.cssText='display:flex;align-items:center;gap:10px;margin-bottom:10px;';
+  var cpLabel = document.createElement('label'); cpLabel.style.cssText='font-size:10px;color:#64748b;font-weight:600;'; cpLabel.textContent='BANNER COLOR';
+  var cp = document.createElement('input'); cp.type='color'; cp.id='pe-bcolor'; cp.value=currentColor;
+  cp.style.cssText='width:38px;height:34px;border:1.5px solid #e2e8f0;border-radius:7px;padding:2px;cursor:pointer;';
+  var cpVal = document.createElement('span'); cpVal.style.cssText='font-size:12px;color:#64748b;'; cpVal.textContent=currentColor;
+  cp.oninput=function(){currentColor=this.value;cpVal.textContent=this.value;updatePreview();};
+  cpRow.appendChild(cpLabel); cpRow.appendChild(cp); cpRow.appendChild(cpVal);
+  appSec.appendChild(cpRow);
+
+  var banRow = row('pe-banner','BANNER IMAGE URL (overrides color)',prof.banner_url||'','https://yoursite.com/banner.jpg');
+  banRow.querySelector('input').oninput=function(){currentBg=this.value.trim();updatePreview();};
+  appSec.appendChild(banRow);
+  appSec.appendChild(row('pe-logo','PROFILE PICTURE / LOGO URL',prof.logo_url||'','https://yoursite.com/logo.png'));
+
+  // Logo preview
+  var logoPreviewRow = document.createElement('div'); logoPreviewRow.style.cssText='display:flex;align-items:center;gap:10px;margin-top:6px;';
+  var logoThumb = document.createElement('div'); logoThumb.id='pe-logo-thumb';
+  logoThumb.style.cssText='width:48px;height:48px;border-radius:8px;border:1.5px solid #e2e8f0;background:#f1f5f9;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:#94a3b8;';
+  if(prof.logo_url){var pImg=document.createElement('img');pImg.src=prof.logo_url;pImg.style='width:100%;height:100%;object-fit:cover;';logoThumb.innerHTML='';logoThumb.appendChild(pImg);}
+  else logoThumb.textContent='No logo';
+  var logoHint = document.createElement('div'); logoHint.style.cssText='font-size:11px;color:#94a3b8;line-height:1.5;'; logoHint.textContent='Paste any image URL. PNG, JPG, or SVG with transparent background works best.';
+  appSec.querySelector('#pe-logo').oninput=function(){
+    var url=this.value.trim();
+    if(url){var i=document.createElement('img');i.src=url;i.style='width:100%;height:100%;object-fit:cover;';logoThumb.innerHTML='';logoThumb.appendChild(i);}
+    else{logoThumb.innerHTML='';logoThumb.textContent='No logo';}
+  };
+  logoPreviewRow.appendChild(logoThumb); logoPreviewRow.appendChild(logoHint);
+  appSec.appendChild(logoPreviewRow);
+  body.appendChild(appSec);
+
+  // --- Section: Identity ---
+  var idSec = sec('IDENTITY');
+  var idGrid = grid2();
+  idGrid.appendChild(row('pe-name','DISPLAY NAME',prof.display_name||window._cu.name||'','Your name or business name'));
+  idGrid.appendChild(row('pe-tagline','TAGLINE',prof.tagline||'','One line description'));
+  idSec.appendChild(idGrid);
+  var bioWrap = document.createElement('div'); bioWrap.style.marginBottom='10px';
+  var bioLabel = document.createElement('label'); bioLabel.style.cssText='font-size:10px;color:#64748b;font-weight:600;display:block;margin-bottom:4px;'; bioLabel.textContent='BIO / ABOUT';
+  var bioTa = document.createElement('textarea'); bioTa.id='pe-bio';
+  bioTa.style.cssText='width:100%;height:80px;border:1.5px solid #e2e8f0;border-radius:7px;padding:9px 11px;font-size:13px;line-height:1.55;resize:vertical;outline:none;box-sizing:border-box;font-family:inherit;transition:border .15s;';
+  bioTa.placeholder='Describe your business, experience, and specialties...'; bioTa.value=prof.bio||'';
+  bioTa.onfocus=function(){this.style.borderColor=color;}; bioTa.onblur=function(){this.style.borderColor='#e2e8f0';};
+  bioWrap.appendChild(bioLabel); bioWrap.appendChild(bioTa); idSec.appendChild(bioWrap);
+  body.appendChild(idSec);
+
+  // --- Section: Contact ---
+  var ctSec = sec('CONTACT & BUSINESS');
+  var ctGrid = grid2();
+  ctGrid.appendChild(row('pe-phone','PHONE',prof.phone||'','(561) 000-0000'));
+  ctGrid.appendChild(row('pe-website','WEBSITE',prof.website||'','https://yoursite.com'));
+  ctGrid.appendChild(row('pe-area','SERVICE AREA',prof.service_area||'South Florida','Palm Beach, Broward, Miami-Dade'));
+  ctGrid.appendChild(row('pe-years','YEARS EXPERIENCE',prof.years_experience||'','15','number'));
+  ctGrid.appendChild(row('pe-license','LICENSE NUMBER',prof.license_number||'','e.g. CG-C000000'));
+  ctGrid.appendChild(row('pe-ig','INSTAGRAM',prof.instagram||'','@handle'));
+  ctSec.appendChild(ctGrid);
+  body.appendChild(ctSec);
+
+  // --- Save button ---
+  var saveBtn = document.createElement('button'); saveBtn.id='pe-save';
+  saveBtn.style.cssText='width:100%;background:linear-gradient(135deg,'+color+',#0d1f33);color:white;border:none;border-radius:9px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.2px;margin-bottom:8px;';
+  saveBtn.textContent='Save Profile';
+  var saveStatus = document.createElement('div'); saveStatus.style.cssText='text-align:center;font-size:13px;min-height:20px;';
+  body.appendChild(saveBtn); body.appendChild(saveStatus);
+  modal.appendChild(body); ov.appendChild(modal); document.body.appendChild(ov);
+
+  saveBtn.onclick = async function() {
+    saveBtn.textContent='Saving...'; saveBtn.disabled=true; saveStatus.textContent='';
+    try {
+      var payload = {
+        id: uid,
+        display_name: document.getElementById('pe-name').value.trim()||null,
+        tagline: document.getElementById('pe-tagline').value.trim()||null,
+        bio: document.getElementById('pe-bio').value.trim()||null,
+        banner_color: document.getElementById('pe-bcolor').value||null,
+        banner_url: document.getElementById('pe-banner').value.trim()||null,
+        logo_url: document.getElementById('pe-logo').value.trim()||null,
+        phone: document.getElementById('pe-phone').value.trim()||null,
+        website: document.getElementById('pe-website').value.trim()||null,
+        service_area: document.getElementById('pe-area').value.trim()||'South Florida',
+        years_experience: parseInt(document.getElementById('pe-years').value)||null,
+        license_number: document.getElementById('pe-license').value.trim()||null,
+        instagram: document.getElementById('pe-ig').value.trim().replace('@','')||null,
+        updated_at: new Date().toISOString()
+      };
+      var r = await _supabase.from('dw_profiles').upsert([payload], {onConflict:'id'});
+      if (r.error) throw new Error(r.error.message);
+      saveBtn.textContent='Save Profile'; saveBtn.disabled=false;
+      saveStatus.style.color='#16a34a'; saveStatus.textContent='Profile saved successfully!';
+      setTimeout(function(){ov.remove();if(typeof toast==='function')toast('Profile updated!','success');},1200);
+    } catch(e) {
+      saveBtn.textContent='Save Profile'; saveBtn.disabled=false;
+      saveStatus.style.color='#dc2626'; saveStatus.textContent='Error: '+e.message;
+    }
+  };
+};
+</script>
 <script>
 window._dwUserCache = window._dwUserCache || {};
 window.dwShowProfile = function(uid) {
-  var cache = window._dwUserCache || {};
-  var u = cache[uid];
-  if (!u) { if(typeof toast==='function') toast('Profile not found','info'); return; }
-  var RL = {contractor:'Licensed Contractor',supplier:'Material Supplier',marina:'Marina Operator',owner:'Property Owner'};
-  var RC = {contractor:'#d97706',supplier:'#0891b2',marina:'#0f2d54',owner:'#16a34a'};
+  var u = window._dwUserCache[uid];
+  if (!u) { console.warn('no cache for uid', uid); return; }
+  var RL = {contractor:'Licensed Contractor', supplier:'Material Supplier', marina:'Marina Operator', owner:'Property Owner'};
+  var RC = {contractor:'#d97706', supplier:'#0891b2', marina:'#0f2d54', owner:'#16a34a'};
   var label = RL[u.role] || 'Member';
   var color = RC[u.role] || '#0f2d54';
   var name = u.full_name || u.email.split('@')[0];
@@ -3705,42 +4140,43 @@ window.dwShowProfile = function(uid) {
   var hd = document.createElement('div');
   hd.style.cssText = 'background:linear-gradient(135deg,'+color+',#0d1f33);padding:22px 20px;display:flex;align-items:center;gap:14px;position:relative;';
   var xb = document.createElement('button'); xb.textContent = 'x';
-  xb.style.cssText = 'position:absolute;top:10px;right:10px;background:rgba(255,255,255,.2);border:none;color:white;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1;';
+  xb.style.cssText = 'position:absolute;top:10px;right:10px;background:rgba(255,255,255,.2);border:none;color:white;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;';
   xb.onclick = function(){ ov.remove(); };
   var av = document.createElement('div');
-  av.style.cssText = 'width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:white;flex-shrink:0;';
+  av.style.cssText = 'width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:white;flex-shrink:0;';
   av.textContent = initials;
-  var nm = document.createElement('div'); nm.style.flex = '1';
-  var n1 = document.createElement('div'); n1.style.cssText = 'font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.6);margin-bottom:3px;'; n1.textContent = label.toUpperCase();
-  var n2 = document.createElement('div'); n2.style.cssText = 'font-size:17px;font-weight:700;color:white;line-height:1.2;'; n2.textContent = display;
-  nm.appendChild(n1); nm.appendChild(n2);
-  if(company && company !== name){ var n3=document.createElement('div');n3.style.cssText='font-size:12px;color:rgba(255,255,255,.6);margin-top:2px;';n3.textContent=name;nm.appendChild(n3); }
-  hd.appendChild(xb); hd.appendChild(av); hd.appendChild(nm); modal.appendChild(hd);
+  var ni = document.createElement('div'); ni.style.flex = '1';
+  var n1 = document.createElement('div'); n1.style.cssText = 'font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.6);margin-bottom:2px;'; n1.textContent = label.toUpperCase();
+  var n2 = document.createElement('div'); n2.style.cssText = 'font-size:17px;font-weight:700;color:white;'; n2.textContent = display;
+  ni.appendChild(n1); ni.appendChild(n2);
+  hd.appendChild(xb); hd.appendChild(av); hd.appendChild(ni); modal.appendChild(hd);
   var sr = document.createElement('div'); sr.style.cssText = 'display:flex;border-bottom:1px solid #e2e8f0;';
   [{l:'SINCE',v:year},{l:'TIER',v:(u.tier||'Standard').charAt(0).toUpperCase()+(u.tier||'standard').slice(1)},{l:'AREA',v:u.location||'South FL'}].forEach(function(s,i){
-    var box = document.createElement('div'); box.style.cssText = 'flex:1;padding:12px 8px;text-align:center;'+(i<2?'border-right:1px solid #e2e8f0;':'');
+    var b = document.createElement('div'); b.style.cssText = 'flex:1;padding:12px 8px;text-align:center;'+(i<2?'border-right:1px solid #e2e8f0;':'');
     var l2 = document.createElement('div'); l2.style.cssText = 'font-size:9px;letter-spacing:1.5px;color:#94a3b8;font-weight:600;'; l2.textContent = s.l;
     var v2 = document.createElement('div'); v2.style.cssText = 'font-size:14px;font-weight:700;color:#0f172a;margin-top:2px;'; v2.textContent = s.v;
-    box.appendChild(l2); box.appendChild(v2); sr.appendChild(box);
+    b.appendChild(l2); b.appendChild(v2); sr.appendChild(b);
   });
   modal.appendChild(sr);
-  var bd = document.createElement('div'); bd.style.cssText = 'padding:18px 20px 20px;';
-  var descs = {contractor:'Licensed marine contractor - seawall repair, dock construction, pile driving throughout South Florida.',supplier:'Verified marine materials supplier - pilings, lumber, vinyl, hardware and delivery throughout South Florida.',marina:'Full-service marina - slip rentals, dry storage, haul-out, fuel dock, and maintenance.',owner:'Waterfront property owner seeking licensed contractors and verified suppliers.'};
+  var bd = document.createElement('div'); bd.style.cssText = 'padding:18px 20px;';
+  var descs = {
+    contractor:'Licensed marine contractor serving South Florida. Seawall repair, dock construction, pile driving and permitting.',
+    supplier:'Verified marine materials supplier. Pilings, lumber, vinyl, hardware and delivery throughout South Florida.',
+    marina:'Full-service marina. Slip rentals, dry storage, haul-out, fuel dock and maintenance.',
+    owner:'Waterfront property owner seeking licensed contractors and verified suppliers.'
+  };
   var dsc = document.createElement('div'); dsc.style.cssText = 'font-size:13px;color:#475569;line-height:1.65;margin-bottom:16px;'; dsc.textContent = descs[u.role] || 'DockWork verified member.';
   bd.appendChild(dsc);
   if(!isSelf){
     var row = document.createElement('div'); row.style.cssText = 'display:flex;gap:8px;';
     var mb = document.createElement('button'); mb.textContent = 'Message';
     mb.style.cssText = 'flex:1;background:white;border:1.5px solid #e2e8f0;color:#0f172a;border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;';
-    mb.onclick = function(){ ov.remove(); if(typeof openRealSignIn==='function'&&!window._cu) openRealSignIn(); else if(typeof toast==='function') toast('Messaging coming soon','info'); };
+    mb.onclick = function(){ ov.remove(); if(typeof toast==='function') toast('Messaging coming soon','info'); };
     var ab = document.createElement('button');
     ab.textContent = {contractor:'Invite to Bid',supplier:'Request Quote',marina:'Request Berth',owner:'Connect'}[u.role]||'Connect';
     ab.style.cssText = 'flex:1;background:linear-gradient(135deg,'+color+',#0d1f33);color:white;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;';
-    ab.onclick = function(){ if(typeof toast==='function') toast('Request sent to '+display,'success'); ov.remove(); };
+    ab.onclick = function(){ if(typeof toast==='function') toast('Request sent!','success'); ov.remove(); };
     row.appendChild(mb); row.appendChild(ab); bd.appendChild(row);
-  } else {
-    var selfNote = document.createElement('div'); selfNote.style.cssText = 'text-align:center;font-size:13px;color:#94a3b8;padding:8px 0;'; selfNote.textContent = 'This is your public profile.';
-    bd.appendChild(selfNote);
   }
   modal.appendChild(bd); ov.appendChild(modal); document.body.appendChild(ov);
 };
