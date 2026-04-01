@@ -3824,22 +3824,7 @@ window.dwEditProfile = async function() {
   var banRow = row('pe-banner','BANNER IMAGE URL (overrides color)',prof.banner_url||'','https://yoursite.com/banner.jpg');
   banRow.querySelector('input').oninput=function(){currentBg=this.value.trim();updatePreview();};
   appSec.appendChild(banRow);
-  appSec.appendChild(row('pe-logo','PROFILE PICTURE / LOGO URL',prof.logo_url||'','https://yoursite.com/logo.png'));
-
-  // Logo preview
-  var logoPreviewRow = document.createElement('div'); logoPreviewRow.style.cssText='display:flex;align-items:center;gap:10px;margin-top:6px;';
-  var logoThumb = document.createElement('div'); logoThumb.id='pe-logo-thumb';
-  logoThumb.style.cssText='width:48px;height:48px;border-radius:8px;border:1.5px solid #e2e8f0;background:#f1f5f9;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:#94a3b8;';
-  if(prof.logo_url){var pImg=document.createElement('img');pImg.src=prof.logo_url;pImg.style='width:100%;height:100%;object-fit:cover;';logoThumb.innerHTML='';logoThumb.appendChild(pImg);}
-  else logoThumb.textContent='No logo';
-  var logoHint = document.createElement('div'); logoHint.style.cssText='font-size:11px;color:#94a3b8;line-height:1.5;'; logoHint.textContent='Paste any image URL. PNG, JPG, or SVG with transparent background works best.';
-  appSec.querySelector('#pe-logo').oninput=function(){
-    var url=this.value.trim();
-    if(url){var i=document.createElement('img');i.src=url;i.style='width:100%;height:100%;object-fit:cover;';logoThumb.innerHTML='';logoThumb.appendChild(i);}
-    else{logoThumb.innerHTML='';logoThumb.textContent='No logo';}
-  };
-  logoPreviewRow.appendChild(logoThumb); logoPreviewRow.appendChild(logoHint);
-  appSec.appendChild(logoPreviewRow);
+  var logoZone=window._makeUploadZone('PROFILE PICTURE / LOGO',prof.logo_url||'',function(url){window._pe_logo_url=url;},'avatars',uid); appSec.appendChild(logoZone);
   body.appendChild(appSec);
 
   // --- Section: Identity ---
@@ -3947,6 +3932,83 @@ window.loadMySupplierQuotes = async function() {
     list.appendChild(card);
   });
 };
+</script>
+<script>
+
+window._uploadToSupabase = async function(file, bucket, uid) {
+  var ext = file.name.split('.').pop().toLowerCase();
+  var path = uid + '/' + Date.now() + '.' + ext;
+  var res = await _supabase.storage.from(bucket).upload(path, file, {upsert:true, contentType:file.type});
+  if(res.error) throw new Error(res.error.message);
+  var pub = _supabase.storage.from(bucket).getPublicUrl(path);
+  return pub.data.publicUrl;
+};
+
+window._makeUploadZone = function(labelText, currentUrl, onUploaded, bucket, uid) {
+  var wrap = document.createElement('div');
+  wrap.style.cssText = 'margin-bottom:14px;';
+
+  var lbl = document.createElement('div');
+  lbl.style.cssText = 'font-size:10px;color:#64748b;font-weight:600;margin-bottom:6px;letter-spacing:.5px;';
+  lbl.textContent = labelText;
+  wrap.appendChild(lbl);
+
+  var zone = document.createElement('div');
+  zone.style.cssText = 'border:2px dashed #cbd5e1;border-radius:10px;padding:20px;text-align:center;cursor:pointer;background:#f8fafc;transition:border-color .15s,background .15s;position:relative;';
+
+  var preview = document.createElement('div');
+  preview.style.cssText = 'margin-bottom:10px;';
+
+  var img = document.createElement('img');
+  img.style.cssText = 'max-height:80px;max-width:100%;border-radius:6px;object-fit:cover;display:' + (currentUrl?'block':'none') + ';margin:0 auto 6px;';
+  if(currentUrl) img.src = currentUrl;
+  preview.appendChild(img);
+
+  var placeholderTxt = document.createElement('div');
+  placeholderTxt.style.cssText = 'font-size:13px;color:#94a3b8;margin-bottom:4px;';
+  placeholderTxt.textContent = currentUrl ? 'Current image' : 'Drop image here or click to browse';
+
+  var subTxt = document.createElement('div');
+  subTxt.style.cssText = 'font-size:11px;color:#cbd5e1;';
+  subTxt.textContent = 'JPG, PNG, WEBP up to 5MB';
+
+  var inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = 'image/jpeg,image/png,image/webp,image/gif';
+  inp.style.cssText = 'position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;';
+
+  var statusTxt = document.createElement('div');
+  statusTxt.style.cssText = 'font-size:11px;font-weight:600;margin-top:6px;min-height:16px;';
+
+  zone.appendChild(preview); zone.appendChild(placeholderTxt); zone.appendChild(subTxt);
+  zone.appendChild(inp); zone.appendChild(statusTxt);
+  wrap.appendChild(zone);
+
+  var handleFile = async function(file) {
+    if(!file || !file.type.startsWith('image/')) return;
+    if(file.size > 5*1024*1024) { statusTxt.style.color='#dc2626'; statusTxt.textContent='File too large (max 5MB)'; return; }
+    statusTxt.style.color='#0891b2'; statusTxt.textContent='Uploading...';
+    zone.style.borderColor='#0891b2'; zone.style.background='#f0f9ff';
+    try {
+      var url = await window._uploadToSupabase(file, bucket, uid);
+      img.src = url; img.style.display='block';
+      placeholderTxt.textContent = 'Uploaded successfully';
+      statusTxt.style.color='#16a34a'; statusTxt.textContent='Saved';
+      zone.style.borderColor='#16a34a'; zone.style.background='#f0fdf4';
+      onUploaded(url);
+    } catch(e) {
+      statusTxt.style.color='#dc2626'; statusTxt.textContent='Error: ' + e.message;
+      zone.style.borderColor='#dc2626'; zone.style.background='#fef2f2';
+    }
+  };
+
+  inp.onchange = function() { if(this.files[0]) handleFile(this.files[0]); };
+  zone.ondragover = function(e) { e.preventDefault(); zone.style.borderColor='#0891b2'; zone.style.background='#f0f9ff'; };
+  zone.ondragleave = function() { zone.style.borderColor='#cbd5e1'; zone.style.background='#f8fafc'; };
+  zone.ondrop = function(e) { e.preventDefault(); zone.style.borderColor='#cbd5e1'; zone.style.background='#f8fafc'; if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); };
+
+  return wrap;
+};
+
 </script>
 </body>
 </html>
