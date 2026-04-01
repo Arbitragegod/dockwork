@@ -114,7 +114,7 @@
 .sup-rec-card.featured{border-left:3px solid var(--gold);background:rgba(184,147,74,.04);}
 .sup-rec-av{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden;}
 .sup-rec-av img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
-</style>
+.dw-mcard:hover{box-shadow:0 8px 28px rgba(0,0,0,.12);transform:translateY(-2px);transition:box-shadow .15s,transform .15s;}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 var _newRole = null;
 
@@ -2656,11 +2656,8 @@ function _memberCard(user, type) {
     return '<span style="display:inline-block;background:' + color + '18;color:' + color + ';font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;margin:2px 3px 2px 0;">' + t + '</span>';
   }).join('');
   var tierColor = tier === 'charter' ? '#f59e0b' : tier === 'professional' ? '#6366f1' : '#94a3b8';
-  return '<div class="ctc-card"'
-    + ' onclick="dwShowProfile('' + user.id + '')"'
-    + ' style="border:1.5px solid #e2e8f0;border-radius:14px;overflow:hidden;background:#fff;cursor:pointer;transition:box-shadow .15s,transform .15s;"'
-    + ' onmouseenter="this.style.boxShadow='0 8px 32px rgba(0,0,0,.12)';this.style.transform='translateY(-2px)'"'
-    + ' onmouseleave="this.style.boxShadow='';this.style.transform=''">'
+  return '<div class="ctc-card dw-mcard" onclick="dwShowProfile('' + user.id + '')"'
+    + ' style="border:1.5px solid #e2e8f0;border-radius:14px;overflow:hidden;background:#fff;cursor:pointer;">'
     + '<div style="height:6px;background:' + color + ';"></div>'
     + '<div style="padding:20px 20px 16px;">'
       + '<div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;">'
@@ -2677,7 +2674,7 @@ function _memberCard(user, type) {
         + '<span>Since ' + year + '</span>'
       + '</div>'
       + '<div style="border-top:1px solid #f1f5f9;padding-top:12px;">' + tagHtml + '</div>'
-      + '<div style="margin-top:12px;text-align:right;"><span style="font-size:11px;font-weight:700;color:' + color + ';letter-spacing:.5px;">VIEW PROFILE &gt;</span></div>'
+      + '<div style="margin-top:12px;text-align:right;font-size:11px;font-weight:700;color:' + color + ';letter-spacing:.5px;">VIEW PROFILE &gt;</div>'
     + '</div>'
   + '</div>';
 }
