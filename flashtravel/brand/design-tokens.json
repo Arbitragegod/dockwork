@@ -1,0 +1,51 @@
+{
+  "color": {
+    "sand": "#fdf8f1",
+    "sandDeep": "#f5ecdc",
+    "ink": "#1a2540",
+    "inkSoft": "#3a4661",
+    "inkMute": "#6b7589",
+    "line": "#e8dec9",
+    "coral": "#ff5b3a",
+    "coralDeep": "#e84a2a",
+    "ocean": "#1090c2",
+    "oceanDeep": "#0a6e96",
+    "sunshine": "#ffc83d",
+    "palm": "#2da76b",
+    "palmDeep": "#1f8453",
+    "logBg": "#0e1626",
+    "logInk": "#cfd5e3",
+    "logMute": "#6b7796",
+    "logSuccess": "#5edc97",
+    "logWarn": "#ffc83d"
+  },
+  "font": {
+    "headline": "Fraunces, ui-serif, Georgia, serif",
+    "body": "'Inter Tight', ui-sans-serif, system-ui, sans-serif",
+    "mono": "'JetBrains Mono', ui-monospace, 'Courier New', monospace"
+  },
+  "radius": {
+    "sm": "6px",
+    "md": "12px",
+    "lg": "20px",
+    "xl": "28px",
+    "pill": "999px"
+  },
+  "shadow": {
+    "card": "0 1px 2px rgba(26,37,64,0.04), 0 8px 24px rgba(26,37,64,0.06)",
+    "cardHover": "0 2px 6px rgba(26,37,64,0.06), 0 18px 40px rgba(26,37,64,0.1)",
+    "panel": "-24px 0 60px rgba(26,37,64,0.14)"
+  },
+  "status": {
+    "review": { "bg": "#fff0eb", "ink": "#c83d20", "dot": "#ff5b3a" },
+    "generating": { "bg": "#fff7d6", "ink": "#8a6a00", "dot": "#ffc83d" },
+    "live": { "bg": "#dff5e8", "ink": "#1f8453", "dot": "#2da76b" },
+    "draft": { "bg": "#eef2f7", "ink": "#6b7589", "dot": "#9aa3b5" }
+  },
+  "category": {
+    "cruise": { "bg": "#dff0f8", "ink": "#0a6e96" },
+    "all-inclusive": { "bg": "#fff0eb", "ink": "#c83d20" },
+    "disney": { "bg": "#fff7d6", "ink": "#8a6a00" },
+    "sandals-beaches": { "bg": "#dff5e8", "ink": "#1f8453" }
+  }
+}
